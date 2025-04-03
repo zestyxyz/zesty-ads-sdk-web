@@ -1,4 +1,4 @@
-# ads-sdk
+# zesty-ads-sdk-web
 
 The Zesty Ads SDK allows developers to integrate their app into the Zesty Network. More [docs](https://docs.zesty.xyz)
 
