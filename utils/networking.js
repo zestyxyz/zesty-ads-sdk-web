@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { formats } from '../utils/formats.js';
 import { checkUserPlatform } from '../utils/helpers.js';
 import { parse as parseUUID } from 'uuid'
@@ -199,9 +198,10 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
         if (currentTries[adUnitId] == retryCount) {
           try {
             const url = encodeURI(window.location.href).replace(/\/$/, ''); // If URL ends with a slash, remove it
-            const res = await axios.get(`${DB_ENDPOINT}/ad?ad_unit_id=${adUnitId}&url=${url}`);
-            if (res.data) {
-              resolve(res.data);
+            const res = await fetch(`${DB_ENDPOINT}/ad?ad_unit_id=${adUnitId}&url=${url}`);
+            if (res.status == 200) {
+              const data = await res.json();
+              resolve(data);
             } else {
               // No active campaign, just display default banner
               resolve(getDefaultBanner(format, style, shouldOverride, overrideEntry.format));
@@ -231,11 +231,13 @@ const sendOnLoadMetric = async (adUnitId, campaignId = null) => {
   const { platform, confidence } = await checkUserPlatform();
 
   try {
-    await axios.post(
-      BEACON_GRAPHQL_URI,
-      { query: `mutation { increment(eventType: visits, spaceId: \"${adUnitId}\", campaignId: \"${campaignId}\", platform: { name: ${platform}, confidence: ${confidence} }) { message } }` },
-      { headers: { 'Content-Type': 'application/json' } }
-    )
+    await fetch(BEACON_GRAPHQL_URI, {
+      method: 'POST',
+      body: JSON.stringify({ query: `mutation { increment(eventType: visits, spaceId: \"${adUnitId}\", campaignId: \"${campaignId}\", platform: { name: ${platform}, confidence: ${confidence} }) { message } }` }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   } catch (e) {
     console.log("Failed to emit onload event", e.message)
   }
@@ -245,11 +247,11 @@ const sendOnClickMetric = async (adUnitId, campaignId = null) => {
   const { platform, confidence } = await checkUserPlatform();
 
   try {
-    await axios.post(
-      BEACON_GRAPHQL_URI,
-      { query: `mutation { increment(eventType: clicks, spaceId: \"${adUnitId}\", campaignId: \"${campaignId}\", platform: { name: ${platform}, confidence: ${confidence} }) { message } }` },
-      { headers: { 'Content-Type': 'application/json' } }
-    )
+    await fetch(BEACON_GRAPHQL_URI, {
+      method: 'POST',
+      body: JSON.stringify({ query: `mutation { increment(eventType: clicks, spaceId: \"${adUnitId}\", campaignId: \"${campaignId}\", platform: { name: ${platform}, confidence: ${confidence} }) { message } }` }),
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (e) {
     console.log("Failed to emit onclick event", e.message)
   }
@@ -258,11 +260,11 @@ const sendOnClickMetric = async (adUnitId, campaignId = null) => {
 const analyticsSession = async (adUnitId, campaignId) => {
   const { platform, confidence } = await checkUserPlatform();
   try {
-    await axios.post(
-      BEACON_GRAPHQL_URI,
-      { query: `mutation { increment(eventType: session, spaceId: \"${adUnitId}\", campaignId: \"${campaignId}\", platform: { name: ${platform}, confidence: ${confidence} }) { message } }` },
-      { headers: { 'Content-Type': 'application/json' } }
-    )
+    await fetch(BEACON_GRAPHQL_URI, {
+      method: 'POST',
+      body: JSON.stringify({ query: `mutation { increment(eventType: session, spaceId: \"${adUnitId}\", campaignId: \"${campaignId}\", platform: { name: ${platform}, confidence: ${confidence} }) { message } }` }),
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (e) {
     console.log(`Failed to emit session analytics`, e.message)
   }
