@@ -6,6 +6,7 @@ Currently, we support the following platforms:
 
 - [aframe](https://github.com/zestyxyz/ads-sdk/tree/main/aframe)
 - [babylon.js](https://github.com/zestyxyz/ads-sdk/tree/main/babylonjs)
+- [playcanvas](https://github.com/zestyxyz/ads-sdk/tree/main/playcanvas)
 - [react-three-fiber](https://github.com/zestyxyz/ads-sdk/tree/main/r3f)
 - [three.js](https://github.com/zestyxyz/ads-sdk/tree/main/threejs)
 - [unity](https://github.com/zestyxyz/ads-sdk/tree/main/unity)
