@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Playcanvas Test</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "playcanvas": "https://cdn.jsdelivr.net/npm/playcanvas/+esm"
+            }
+        }
+        </script>
+    <style>
+      html, body {
+        margin: 0;
+      }
+
+      canvas {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id='application'></canvas>
+    <script type="module">
+      import * as pc from 'playcanvas';
+
+      pc.WasmModule.setConfig('Ammo', {
+          glueUrl: `ammo.wasm.js`,
+          wasmUrl: `ammo.wasm.wasm`,
+          fallbackUrl: `ammo.js`
+      });
+      await new Promise((resolve) => {
+          pc.WasmModule.getInstance('Ammo', () => resolve());
+      });
+
+      const canvas = document.getElementById('application');
+      const app = new pc.Application(canvas);
+      app.setCanvasResolution(pc.RESOLUTION_AUTO);
+      app.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
+      app.start();
+
+      await import("../../playcanvas/dist/zesty-playcanvas-sdk.js");
+
+      // create a camera
+      const camera = new pc.Entity();
+      camera.addComponent('camera', {
+          clearColor: new pc.Color(0.3, 0.3, 0.7)
+      });
+      camera.setPosition(0, 0, 3.5);
+      app.root.addChild(camera);
+
+      // create a light
+      const light = new pc.Entity();
+      light.addComponent('light');
+      light.setPosition(2, 2, -2);
+      light.setEulerAngles(45, -35, 0);
+      app.root.addChild(light);
+
+      // create a banner
+      const createBanner = (adUnitId, format) => {
+        const banner = new pc.Entity();
+        banner.addComponent('script');
+        banner.script.create('zesty-banner');
+        banner.script['zesty-banner'].adUnitId = adUnitId;
+        banner.script['zesty-banner'].format = format;
+        banner.script['zesty-banner'].cameraEntity = camera;
+        banner.setEulerAngles(90, 0, 0);
+        return banner;
+      }
+      const banner1 = createBanner('00000000-0000-0000-0000-000000000000', 1);
+      banner1.setPosition(0, 1, -2);
+      const banner2 = createBanner('00000000-0000-0000-0000-000000000000', 2);
+      banner2.setPosition(0, 0, -2);
+      const banner3 = createBanner('00000000-0000-0000-0000-000000000000', 3);
+      banner3.setPosition(0, -1, -2);
+      app.root.addChild(banner1);
+      app.root.addChild(banner2);
+      app.root.addChild(banner3);
+
+      window.banner1 = banner1;
+      window.banner2 = banner2;
+      window.banner3 = banner3;
+    </script>
+  </body>
+</html>
