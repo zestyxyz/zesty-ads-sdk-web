@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { fetchCampaignAd } from '../../utils/networking.js';
+import { fetchCampaignAd, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID } from '../../utils/networking.js';
 
 const DEFAULT_BANNER = 'https://cdn.zesty.xyz/sdk/assets/zesty-banner-tall.png'
 
@@ -21,7 +21,7 @@ const MOCK_IFRAME_SETUP2 = {
 test.describe('fetchCampaignAd', () => {
   test('fetchCampaignAd should return a default banner if no URI is given', () => {
     return expect(fetchCampaignAd()).resolves.toMatchObject(
-      { Ads: [{ asset_url: DEFAULT_BANNER, cta_url: 'https://relay.zesty.xyz' }], CampaignId: 'DefaultCampaign'}
+      { Ads: [{ asset_url: DEFAULT_BANNER, cta_url: DEFAULT_CTA_URL }], CampaignId: DEFAULT_CAMPAIGN_ID }
     )
   });
 

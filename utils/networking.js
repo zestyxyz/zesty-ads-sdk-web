@@ -5,6 +5,8 @@ import Beacon from 'sig-beacon';
 
 const BEACON_API_BASE = 'https://beacon.zesty.market'
 const BEACON_GRAPHQL_URI = 'https://beacon2.zesty.market/zgraphql'
+const DEFAULT_CTA_URL = 'https://relay.zesty.xyz/';
+const DEFAULT_CAMPAIGN_ID = 'DefaultCampaign';
 
 const DB_ENDPOINT = 'https://api.zesty.market/api';
 // TODO: Determine best way to enable switching to staging
@@ -135,7 +137,7 @@ const getOverrideUnitInfo = (adUnitId) => {
 }
 
 const getDefaultBanner = (format, style, shouldOverride = false, overrideFormat = null) => {
-  return { Ads: [{ asset_url: formats[shouldOverride ? overrideFormat : format].style[style], cta_url: 'https://relay.zesty.xyz' }], CampaignId: 'DefaultCampaign' }
+  return { Ads: [{ asset_url: formats[shouldOverride ? overrideFormat : format].style[style], cta_url: DEFAULT_CTA_URL }], CampaignId: DEFAULT_CAMPAIGN_ID }
 }
 
 const fetchCampaignAd = async (adUnitId, format = 'tall', style = 'standard') => {
@@ -270,4 +272,4 @@ const analyticsSession = async (adUnitId, campaignId) => {
   }
 }
 
-export { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, analyticsSession, getOverrideUnitInfo, AD_REFRESH_INTERVAL };
+export { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, analyticsSession, getOverrideUnitInfo, AD_REFRESH_INTERVAL, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID };

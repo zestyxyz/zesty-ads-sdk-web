@@ -8,6 +8,8 @@ cd babylonjs && yarn && yarn run build
 cd ..
 cd beacon && yarn && yarn run build
 cd ..
+cd playcanvas && yarn && yarn run build:editor && yarn run build:no-editor
+cd ..
 cd r3f && yarn && yarn run build
 cd ..
 cd threejs && yarn && yarn run build
@@ -20,6 +22,7 @@ cd ..
 cp -R aframe/dist dist
 cp -R babylonjs/dist/* dist
 cp -R beacon/dist* dist
+cp -R playcanvas/dist/* dist
 cp -R r3f/dist/* dist
 cp -R threejs/dist/* dist
 cp unity/zesty-unity-sdk.unitypackage dist
