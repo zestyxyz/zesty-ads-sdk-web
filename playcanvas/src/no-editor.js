@@ -1,4 +1,4 @@
-import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, AD_REFRESH_INTERVAL } from '../../utils/networking';
+import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, AD_REFRESH_INTERVAL, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID } from '../../utils/networking';
 import { openURL, visibilityCheck } from '../../utils/helpers';
 import * as pc from 'playcanvas';
 import { formats } from '../../utils/formats';
@@ -26,8 +26,8 @@ const FORMATS = {
 
 // initialize code called once per entity
 ZestyBanner.prototype.initialize = function() {
-    this.ctaUrl = "https://relay.zesty.xyz";
-    this.campaignId = "DefaultCampaign";
+    this.ctaUrl = DEFAULT_CTA_URL;
+    this.campaignId = DEFAULT_CAMPAIGN_ID;
 
     // Create banner material
     this.bannerMaterial = new pc.StandardMaterial();
