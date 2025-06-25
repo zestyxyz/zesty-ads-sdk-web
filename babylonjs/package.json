@@ -1,6 +1,6 @@
 {
     "name": "@zestymarket/babylonjs-sdk",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "description": "This is the babylon.js SDK for Zesty Banner integration.",
     "main": "dist/zesty-babylonjs-sdk.js",
     "scripts": {
