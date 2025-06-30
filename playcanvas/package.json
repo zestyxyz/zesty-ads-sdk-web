@@ -1,7 +1,7 @@
 {
-  "name": "playcanvas",
-  "version": "3.1.0",
-  "main": "index.js",
+  "name": "@zestymarket/playcanvas-sdk",
+  "version": "3.1.1",
+  "main": "dist/zesty-playcanvas-sdk.js",
   "scripts": {
     "build:editor": "esbuild src/editor.js --minify --sourcemap --format=esm --bundle --outfile=dist/zesty-playcanvas-sdk-editor.js --external:playcanvas",
     "build:no-editor": "esbuild src/no-editor.js --minify --sourcemap --format=esm --bundle --outfile=dist/zesty-playcanvas-sdk.js --external:playcanvas",
