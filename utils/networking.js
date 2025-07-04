@@ -9,8 +9,7 @@ const DEFAULT_CTA_URL = 'https://relay.zesty.xyz/';
 const DEFAULT_CAMPAIGN_ID = 'DefaultCampaign';
 
 const DB_ENDPOINT = 'https://api.zesty.market/api';
-// TODO: Determine best way to enable switching to staging
-// const STAGING_DB_ENDPOINT = 'https://api-staging.zesty.market/api';
+const STAGING_DB_ENDPOINT = 'https://api-staging.zesty.market/api';
 
 // Prebid variables
 const AD_REFRESH_INTERVAL = 5000;
@@ -29,7 +28,19 @@ let divCount = 0;
 const beacon = new Beacon('https://relay.zesty.xyz');
 beacon.signal();
 
+// Check if the Zesty debug param is present
+const Params = URLSearchParams ? URLSearchParams : Map; // Shadowing with Map in case unavailable
+const urlParams = new Params(globalThis.location?.search);
+const isDebug = urlParams.get('debug') === 'true';
+const isStaging = urlParams.get('staging') === 'true';
+
 const initPrebid = (adUnitId, format) => {
+  if (isDebug) {
+    console.log("Debug mode enabled, skipping Prebid initialization.");
+    prebidInit = true;
+    return;
+  }
+
   // Create div for prebid to target
   const div = document.createElement('div');
   div.id = 'zesty-div';
@@ -140,10 +151,19 @@ const getDefaultBanner = (format, style, shouldOverride = false, overrideFormat 
   return { Ads: [{ asset_url: formats[shouldOverride ? overrideFormat : format].style[style], cta_url: DEFAULT_CTA_URL }], CampaignId: DEFAULT_CAMPAIGN_ID }
 }
 
+const getSampleBanner = (format) => {
+  const ENDPOINT = isStaging ? STAGING_DB_ENDPOINT : DB_ENDPOINT;
+  return { Ads: [{ asset_url: `${ENDPOINT}/ad/sample?format=${format}&timestamp=${Date.now()}`, cta_url: DEFAULT_CTA_URL }], CampaignId: DEFAULT_CAMPAIGN_ID }
+}
+
 const fetchCampaignAd = async (adUnitId, format = 'tall', style = 'standard') => {
   if (['tall', 'wide', 'square'].includes(format)) {
     console.warn(`The old Zesty banner formats (tall, wide, and square) are being deprecated and will be removed in a future version. Please update to one of the new IAB formats (mobile-phone-interstitial, billboard, and medium-rectangle).
 Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
+  }
+
+  if (isDebug) {
+    return new Promise(res => res(getSampleBanner(format)));
   }
 
   // Early exit if ad unit ID is an invalid format and would not map to a Zesty ad unit
