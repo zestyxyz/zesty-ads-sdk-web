@@ -51,7 +51,7 @@ test.describe('Navigation', () => {
     await page.waitForFunction(() => window.banner1?.findComponent('render')?.material?.diffuseMap?.name != null);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
-      page.evaluate(() => window.banner1.script['zesty-banner'].onSelect({ x: window.banner1._app.renderer.scene.device.canvas.width / 2, y: window.banner1._app.renderer.scene.device.canvas.height / 2 }))
+      page.evaluate(() => window.banner1.script['zesty-banner'].onSelect({ x: window.banner1._app.renderer.scene.device.canvas.width / 2, y: window.banner1._app.renderer.scene.device.canvas.height / 4 }))
     ])
     await newPage.waitForLoadState();
     const title = await newPage.title();

@@ -16,6 +16,7 @@ ZestyBanner.attributes.add("format", {
     default: 1,
 });
 ZestyBanner.attributes.add("cameraEntity", { type: "entity" });
+ZestyBanner.attributes.add("useActiveCamera", { type: "boolean", default: false });
 
 const FORMATS = {
     1: "medium-rectangle",
@@ -28,20 +29,20 @@ ZestyBanner.prototype.initialize = function() {
     this.ctaUrl = DEFAULT_CTA_URL;
     this.campaignId = DEFAULT_CAMPAIGN_ID;
 
-    // Create banner material
+    // Create banner entity and material
+    this.bannerEntity = new pc.Entity();
     this.bannerMaterial = new pc.StandardMaterial();
     
     // Create banner texture
-    setInterval(() => this.refreshIfVisible.bind(this)(), AD_REFRESH_INTERVAL);
+    setInterval(this.refreshIfVisible.bind(this), AD_REFRESH_INTERVAL);
     sendOnLoadMetric(this.adUnitId, this.campaignId);
 
     // Create banner entity and configure
     const width = formats[FORMATS[this.format]].width;
     const height = formats[FORMATS[this.format]].height;
-    const bannerEntity = new pc.Entity();
-    bannerEntity.addComponent("render", { type: "plane", material: this.bannerMaterial });
-    bannerEntity.addComponent("collision", { type: "box", halfExtents: new pc.Vec3(width / 2, 0.001, height / 2) });
-    bannerEntity.setLocalScale(width, 1, height);
+    this.bannerEntity.addComponent("render", { type: "plane", material: this.bannerMaterial });
+    this.bannerEntity.addComponent("collision", { type: "box", halfExtents: new pc.Vec3(width / 2, 0.001, height / 2) });
+    this.bannerEntity.setLocalScale(width, 1, height);
 
     // Click handling
     document.body.addEventListener('mousedown', this.onSelect.bind(this), false);
@@ -54,7 +55,7 @@ ZestyBanner.prototype.initialize = function() {
         this.onSelect(null, inputSource).bind(this);
     });
 
-    this.entity.addChild(bannerEntity);
+    this.entity.addChild(this.bannerEntity);
 };
 
 ZestyBanner.prototype.loadBanner = async function() {
@@ -67,13 +68,17 @@ ZestyBanner.prototype.loadBanner = async function() {
 
 ZestyBanner.prototype.refreshIfVisible = function() {
     /** @type {import("playcanvas").CameraComponent} */
-    const camera = this.cameraEntity.camera;
-    const bb = new pc.BoundingBox(this.entity.getPosition(), this.entity.getScale().mul(0.5));
+    const camera = this.useActiveCamera ? this.app.scene._activeCamera : this.cameraEntity.camera;
+    if (!camera) return;
+    const cameraEntity = this.useActiveCamera ? this.app.scene._activeCamera.node : this.cameraEntity;
+
+    const bb = new pc.BoundingBox();
+    bb.copy(this.bannerEntity.render.meshInstances[0].aabb);
     const isVisible = visibilityCheck(
         bb.getMin().toArray(),
         bb.getMax().toArray(),
         camera.projectionMatrix.data,
-        camera.entity.getWorldTransform().data,
+        cameraEntity.getWorldTransform().data,
     );
     if (isVisible) {
         const self = this;
@@ -106,12 +111,13 @@ ZestyBanner.prototype.onSelect = function(e, inputSource) {
 
         to = new pc.Vec3().copy(from).add(direction.mulScalar(rayLength));
     } else {
-        from = this.cameraEntity.camera.screenToWorld(e.x, e.y, this.cameraEntity.camera.nearClip);
-        to = this.cameraEntity.camera.screenToWorld(e.x, e.y, this.cameraEntity.camera.farClip);
+        const cameraEntity = this.useActiveCamera ? this.app.scene._activeCamera.node : this.cameraEntity;
+        from = cameraEntity.camera.screenToWorld(e.x, e.y, cameraEntity.camera.nearClip);
+        to = cameraEntity.camera.screenToWorld(e.x, e.y, cameraEntity.camera.farClip);
     }
 
     var result = this.app.systems.rigidbody.raycastFirst(from, to);
-    if (result) {
+    if (result && result.entity == this.bannerEntity) {
         this.app.xr.end();
         sendOnClickMetric(this.adUnitId, this.campaignId);
         openURL(this.ctaUrl);
