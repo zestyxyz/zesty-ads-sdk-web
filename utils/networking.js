@@ -29,7 +29,8 @@ const beacon = new Beacon('https://relay.zesty.xyz');
 beacon.signal();
 
 // Check if the Zesty debug param is present
-const urlParams = new URLSearchParams(window.location.search);
+const Params = URLSearchParams ? URLSearchParams : Map; // Shadowing with Map in case unavailable
+const urlParams = new Params(globalThis.location?.search);
 const isDebug = urlParams.get('debug') === 'true';
 const isStaging = urlParams.get('staging') === 'true';
 
