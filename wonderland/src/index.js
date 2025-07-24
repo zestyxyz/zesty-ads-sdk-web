@@ -51,6 +51,10 @@ export class ZestyBanner extends Component {
     dynamicFormats: Property.bool(true),
     /* Load networking logic at runtime, if false at build time */
     dynamicNetworking: Property.bool(true),
+    /** Custom default image for use when no ad campaign is running */
+    customDefaultImage: Property.string(''),
+    /** Custom default CTA URL for use when no ad campaign is running */
+    customDefaultCtaUrl: Property.string(''),
   };
   static onRegister(engine) {
     engine.registerComponent(CursorTarget);
@@ -154,7 +158,9 @@ export class ZestyBanner extends Component {
     this.loadBanner(
       this.adUnit,
       this.formatKeys[this.format],
-      this.styleKeys[this.style]
+      this.styleKeys[this.style],
+      this.customDefaultImage,
+      this.customDefaultCtaUrl
     ).then(banner => {
       this.banner = banner;
       if (this.scaleToRatio) {
@@ -250,10 +256,10 @@ export class ZestyBanner extends Component {
     }
   }
 
-  async loadBanner(adUnit, format, style) {
+  async loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl) {
     const activeCampaign = this.dynamicNetworking && this.dynamicNetworkFunctions?.fetchCampaignAd ?
-      await this.dynamicNetworkFunctions.fetchCampaignAd(adUnit, format, style) :
-      await fetchCampaignAd(adUnit, format, style);
+      await this.dynamicNetworkFunctions.fetchCampaignAd(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl) :
+      await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
     const { asset_url: image, cta_url: url } = activeCampaign.Ads[0];
     this.campaignId = activeCampaign.CampaignId;

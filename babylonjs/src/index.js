@@ -8,7 +8,7 @@ import { version } from '../package.json';
 console.log('Zesty SDK Version: ', version);
 
 export default class ZestyBanner {
-  constructor(adUnit, format, style, height, scene, webXRExperienceHelper = null, beacon = true) {
+  constructor(adUnit, format, style, height, scene, webXRExperienceHelper = null, beacon = true, config = {}) {
     const options = {
       height: height,
       width: formats[format].width * height
@@ -18,7 +18,7 @@ export default class ZestyBanner {
     this.scene = scene;
     this.xr = webXRExperienceHelper;
 
-    loadBanner(adUnit, format, style).then(data => {
+    loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl).then(data => {
       this.zestyBanner.material = data.mat;
       this.zestyBanner.actionManager = new BABYLON.ActionManager(scene);
       this.zestyBanner.url = data.url;
@@ -53,7 +53,7 @@ export default class ZestyBanner {
         camera.getWorldMatrix().asArray()
       );
       if (isVisible) {
-        loadBanner(adUnit, format, style).then(banner => {
+        loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl).then(banner => {
           this.zestyBanner.material.diffuseTexture.updateURL(banner.src);
         });
       }
@@ -76,8 +76,8 @@ export default class ZestyBanner {
   }
 }
 
-async function loadBanner(adUnit, format, style) {
-  const activeBanner = await fetchCampaignAd(adUnit, format, style);
+async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl) {
+  const activeBanner = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 
