@@ -43,7 +43,10 @@
                 const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 10, height: 10 });
                 ground.material = groundMaterial;
 
-                const zestyBanner1 = new ZestyBanner("00000000-0000-0000-0000-000000000000", 'medium-rectangle', 'standard', 1, scene, xrHelper);
+                const zestyBanner1 = new ZestyBanner("00000000-0000-0000-0000-000000000000", 'medium-rectangle', 'standard', 1, scene, xrHelper, true, {
+                    customDefaultImage: "https://picsum.photos/300/250",
+                    customDefaultCtaUrl: "https://www.example.com",
+                });
                 zestyBanner1.position = new BABYLON.Vector3(0, 2, 2);
 
                 const zestyBanner2 = new ZestyBanner("10000000-0000-4000-8000-000000000000", 'billboard', 'standard', 1, scene, xrHelper);

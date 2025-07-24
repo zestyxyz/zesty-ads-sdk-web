@@ -37,7 +37,7 @@ test.describe('Default banners', () => {
     const banner1 = await page.evaluate(
       () => window.scene.meshes[4].material.diffuseTexture.name
     );
-    expect(banner1.split('/').pop()).toBe('zesty-default-medium-rectangle.png');
+    expect(banner1.split('/').pop()).toBe('250');
   });
 
   test('The billboard banner is present', async ({ page }) => {
