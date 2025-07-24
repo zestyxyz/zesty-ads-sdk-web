@@ -998,7 +998,9 @@
                         "style": "standard",
                         "dynamicNetworking": false,
                         "dynamicFormats": false,
-                        "assignAlphaMaskTexture": true
+                        "assignAlphaMaskTexture": true,
+                        "customDefaultCtaUrl": "https://www.example.com",
+                        "customDefaultImage": "https://picsum.photos/300/250"
                     },
                     "active": true
                 }
