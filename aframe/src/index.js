@@ -42,6 +42,8 @@ AFRAME.registerComponent('zesty-banner', {
     style: { type: 'string', default: defaultStyle, oneOf: ['standard', 'minimal'] },
     height: { type: 'float', default: 1 },
     beacon: { type: 'boolean', default: true },
+    customDefaultImage: { type: 'string' },
+    customDefaultCtaUrl: { type: 'string' },
   },
 
   init: function() {
@@ -69,7 +71,7 @@ AFRAME.registerComponent('zesty-banner', {
   registerEntity: function() {
     const adUnit = this.data.adUnit;
     const format = this.data.format || defaultFormat;
-    createBanner(this.el, adUnit, format, this.data.style, this.data.height, this.data.beacon);
+    createBanner(this.el, adUnit, format, this.data.style, this.data.height, this.data.beacon, this.data.customDefaultImage, this.data.customDefaultCtaUrl);
   },
 
   // Every 30sec check for `visible` component
@@ -95,7 +97,7 @@ AFRAME.registerComponent('zesty-banner', {
   }
 });
 
-async function createBanner(el, adUnit, format, style, height, beacon) {
+async function createBanner(el, adUnit, format, style, height, beacon, customDefaultImage, customDefaultCtaUrl) {
   let overrideEntry = getOverrideUnitInfo(adUnit);
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.format;
   const adjustedFormat = shouldOverride ? overrideEntry.format : format;
@@ -109,8 +111,10 @@ async function createBanner(el, adUnit, format, style, height, beacon) {
     scene.appendChild(assets);
   }
 
+  const image = customDefaultImage.length > 0 ? customDefaultImage : formats[adjustedFormat].style[style];
+
   const plane = document.createElement('a-plane');
-  plane.setAttribute('src', `${formats[adjustedFormat].style[style]}`);
+  plane.setAttribute('src', image);
   plane.setAttribute('width', adjustedWidth);
   plane.setAttribute('height', adjustedHeight);
   // for textures that are 1024x1024, not setting this causes white border
@@ -133,22 +137,22 @@ async function createBanner(el, adUnit, format, style, height, beacon) {
       if (!visibilityCheck([min.x, min.y, min.z], [max.x, max.y, max.z], camera.projectionMatrix.toArray(), camera.matrixWorld.toArray())) return;
     }
 
-    const bannerPromise = loadBanner(adUnit, format, style, beacon).then(banner => {
+    const bannerPromise = loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl).then(banner => {
       if (banner.img && typeof banner.img != 'string') {
         assets.appendChild(banner.img);
       }
       return banner;
     });
   
-    bannerPromise.then(banner => updateBanner(banner, plane, el, adUnit, adjustedFormat, style, adjustedHeight, beacon));
+    bannerPromise.then(banner => updateBanner(banner, plane, el, adUnit, adjustedFormat, style, adjustedHeight, beacon, customDefaultImage, customDefaultCtaUrl));
   }
 
   getBanner();
   setInterval(getBanner, AD_REFRESH_INTERVAL);
 }
 
-async function loadBanner(adUnit, format, style) {
-  const activeCampaign = await fetchCampaignAd(adUnit, format, style);
+async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl) {
+  const activeCampaign = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeCampaign.Ads[0];
 
@@ -173,7 +177,7 @@ async function loadBanner(adUnit, format, style) {
   }
 }
 
-async function updateBanner(banner, plane, el, adUnit, format, style, height, beacon) {
+async function updateBanner(banner, plane, el, adUnit, format, style, height, beacon, customDefaultImage, customDefaultCtaUrl) {
   let overrideEntry = getOverrideUnitInfo(adUnit);
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.oldFormat;
 
