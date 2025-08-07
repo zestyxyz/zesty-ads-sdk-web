@@ -1,5 +1,5 @@
 import { sendOnLoadMetric, sendOnClickMetric, fetchCampaignAd } from '../../utils/networking';
-import { formats, defaultFormat, defaultStyle } from '../../utils/formats';
+import { formats, defaultFormat } from '../../utils/formats';
 import { openURL } from '../../utils/helpers';
 import { version } from '../package.json';
 
@@ -10,7 +10,6 @@ class Zesty extends HTMLElement {
     super();
     this.adUnit = '';
     this.format = defaultFormat;
-    this.bannerstyle = defaultStyle;
     this.width = '100%';
     this.height = '100%';
     this.shadow = this.attachShadow({ mode: 'open' });
@@ -24,17 +23,14 @@ class Zesty extends HTMLElement {
 
     this.adUnit = this.hasAttribute('ad-unit') ? this.getAttribute('ad-unit') : this.adUnit;
     this.format = this.hasAttribute('format') ? this.getAttribute('format') : this.format;
-    this.bannerstyle = this.hasAttribute('bannerstyle')
-      ? this.getAttribute('bannerstyle')
-      : this.bannerstyle;
     this.height = this.hasAttribute('height') ? this.getAttribute('height') : this.height;
     this.width = this.hasAttribute('width') ? this.getAttribute('width') : this.width;
     this.beacon = this.hasAttribute('beacon') ? this.getAttribute('beacon') : this.beacon;
 
     this.adjustHeightandWidth();
 
-    async function loadBanner(adUnit, format, style, shadow, width, height, beacon) {
-      const activeCampaign = await fetchCampaignAd(adUnit, format, style);
+    async function loadBanner(adUnit, format, shadow, width, height, beacon) {
+      const activeCampaign = await fetchCampaignAd(adUnit, format);
 
       const { id, asset_url: image, cta_url: url } = activeCampaign.Ads[0];
 
@@ -71,7 +67,6 @@ class Zesty extends HTMLElement {
     loadBanner(
       this.adUnit,
       this.format,
-      this.bannerstyle,
       this.shadow,
       this.width,
       this.height,
