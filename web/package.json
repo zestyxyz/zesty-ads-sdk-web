@@ -1,7 +1,7 @@
 {
   "name": "@zestymarket/web-sdk",
-  "version": "3.0.0",
-  "description": "Web SDK for Zesty Banner integration into an HTML page.",
+  "version": "3.1.0",
+  "description": "Web SDK for Zesty Banner integration into an HTML page via WebComponents.",
   "main": "dist/zesty-web-sdk.js",
   "scripts": {
     "test": "webpack --mode=development",
@@ -10,13 +10,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zestymarket/zesty-sdk.git"
+    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git"
   },
   "author": "",
   "bugs": {
-    "url": "https://github.com/zestymarket/zesty-sdk/issues"
+    "url": "https://github.com/zestyxyz/zesty-ads-sdk-web/issues"
   },
-  "homepage": "https://github.com/zestymarket/zesty-sdk#readme",
+  "homepage": "https://github.com/zestyxyz/zesty-ads-sdk-web#readme",
   "dependencies": {},
   "devDependencies": {
     "webpack": "^5.73.0",
