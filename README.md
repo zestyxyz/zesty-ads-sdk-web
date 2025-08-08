@@ -10,6 +10,7 @@ Currently, we support the following platforms:
 - [react-three-fiber](https://github.com/zestyxyz/ads-sdk/tree/main/r3f)
 - [three.js](https://github.com/zestyxyz/ads-sdk/tree/main/threejs)
 - [unity](https://github.com/zestyxyz/ads-sdk/tree/main/unity)
+- [web](https://github.com/zestyxyz/ads-sdk/tree/main/web)
 - [wonderland](https://github.com/zestyxyz/ads-sdk/tree/main/wonderland)
 
 ## Getting Started
