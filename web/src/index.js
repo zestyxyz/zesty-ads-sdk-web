@@ -1,4 +1,4 @@
-import { sendOnLoadMetric, sendOnClickMetric, fetchCampaignAd } from '../../utils/networking';
+import { sendOnLoadMetric, sendOnClickMetric, fetchCampaignAd, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats, defaultFormat } from '../../utils/formats';
 import { openURL } from '../../utils/helpers';
 import { version } from '../package.json';
@@ -35,6 +35,7 @@ class Zesty extends HTMLElement {
       const { id, asset_url: image, cta_url: url } = activeCampaign.Ads[0];
 
       const img = document.createElement('img');
+      shadow.innerHTML = '';
       shadow.appendChild(img);
       img.setAttribute('id', id);
       img.style.width = width;
@@ -72,6 +73,16 @@ class Zesty extends HTMLElement {
       this.height,
       this.beacon
     );
+    setInterval(() => {
+      loadBanner(
+        this.adUnit,
+        this.format,
+        this.shadow,
+        this.width,
+        this.height,
+        this.beacon
+      )
+    }, AD_REFRESH_INTERVAL);
   }
 
   /**

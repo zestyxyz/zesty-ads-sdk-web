@@ -1,4 +1,12 @@
 import { test, expect } from '@playwright/test';
+import {
+  injectIFrame,
+  EXAMPLE_URL,
+  EXAMPLE_IMAGE,
+  EXAMPLE_IMAGE2,
+  PREBID_LOAD_TEST_WAIT_INTERVAL,
+  PREBID_REFRESH_TEST_WAIT_INTERVAL
+} from './test-constants.mjs';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('http://localhost:8080/tests/web/');
@@ -9,89 +17,37 @@ test.describe('Initial load', () => {
     await expect(page).toHaveTitle('Web Test');
   });
 
-  test('All 9 banners are currently loaded', async ({ page }) => {
+  test('All 3 banners are currently loaded', async ({ page }) => {
     const bannerCount = await page.evaluate(
       () => document.getElementsByTagName('zesty-web').length
     );
-    expect(bannerCount).toBe(9);
+    expect(bannerCount).toBe(3);
   });
 });
 
-test.describe('Standard styles', () => {
-  test('The tall standard banner is present', async ({ page }) => {
+test.describe('Default banners', () => {
+  test('The medium-rectangle banner is displaying the correct default image', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
     const banner1 = await page.evaluate(
       () => document.getElementById('banner1').shadowRoot.children[0].src
     );
-    expect(banner1.split('/').pop()).toBe('zesty-banner-tall.png');
+    expect(banner1.split('/').pop()).toBe('zesty-default-medium-rectangle.png');
   });
 
-  test('The wide standard banner is present', async ({ page }) => {
+  test('The billboard banner is displaying the correct default image', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner2').shadowRoot.children[0]);
     const banner2 = await page.evaluate(
       () => document.getElementById('banner2').shadowRoot.children[0].src
     );
-    expect(banner2.split('/').pop()).toBe('zesty-banner-wide.png');
+    expect(banner2.split('/').pop()).toBe('zesty-default-billboard.png');
   });
 
-  test('The square standard banner is present', async ({ page }) => {
+  test('The mobile-phone-interstitial banner is displaying the correct default image', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner3').shadowRoot.children[0]);
     const banner3 = await page.evaluate(
       () => document.getElementById('banner3').shadowRoot.children[0].src
     );
-    expect(banner3.split('/').pop()).toBe('zesty-banner-square.png');
-  });
-});
-
-test.describe('Minimal styles', () => {
-  test('The tall standard banner is present', async ({ page }) => {
-    await page.waitForFunction(() => document.getElementById('banner4').shadowRoot.children[0]);
-    const banner4 = await page.evaluate(
-      () => document.getElementById('banner4').shadowRoot.children[0].src
-    );
-    expect(banner4.split('/').pop()).toBe('zesty-banner-tall-minimal.png');
-  });
-
-  test('The wide standard banner is present', async ({ page }) => {
-    await page.waitForFunction(() => document.getElementById('banner5').shadowRoot.children[0]);
-    const banner5 = await page.evaluate(
-      () => document.getElementById('banner5').shadowRoot.children[0].src
-    );
-    expect(banner5.split('/').pop()).toBe('zesty-banner-wide-minimal.png');
-  });
-
-  test('The square standard banner is present', async ({ page }) => {
-    await page.waitForFunction(() => document.getElementById('banner6').shadowRoot.children[0]);
-    const banner6 = await page.evaluate(
-      () => document.getElementById('banner6').shadowRoot.children[0].src
-    );
-    expect(banner6.split('/').pop()).toBe('zesty-banner-square-minimal.png');
-  });
-});
-
-test.describe('Transparent styles', () => {
-  test('The tall transparent banner is present', async ({ page }) => {
-    await page.waitForFunction(() => document.getElementById('banner7').shadowRoot.children[0]);
-    const banner7 = await page.evaluate(
-      () => document.getElementById('banner7').shadowRoot.children[0].src
-    );
-    expect(banner7.split('/').pop()).toBe('zesty-banner-tall-transparent.png');
-  });
-
-  test('The wide transparent banner is present', async ({ page }) => {
-    await page.waitForFunction(() => document.getElementById('banner8').shadowRoot.children[0]);
-    const banner8 = await page.evaluate(
-      () => document.getElementById('banner8').shadowRoot.children[0].src
-    );
-    expect(banner8.split('/').pop()).toBe('zesty-banner-wide-transparent.png');
-  });
-
-  test('The square transparent banner is present', async ({ page }) => {
-    await page.waitForFunction(() => document.getElementById('banner9').shadowRoot.children[0]);
-    const banner9 = await page.evaluate(
-      () => document.getElementById('banner9').shadowRoot.children[0].src
-    );
-    expect(banner9.split('/').pop()).toBe('zesty-banner-square-transparent.png');
+    expect(banner3.split('/').pop()).toBe('zesty-default-mobile-phone-interstitial.png');
   });
 });
 
@@ -105,5 +61,38 @@ test.describe('Navigation', () => {
     await newPage.waitForLoadState();
     const title = await newPage.title();
     expect(title).not.toBe('Web Test');
+  });
+});
+
+test.describe('Prebid', () => {
+  test('Ad creative is loaded once bids is no longer null', async ({ page }) => {
+    await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
+    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
+    const img = await page.evaluate(
+      () => document.getElementById('banner1').shadowRoot.children[0].src
+    );
+    expect(img.split('/').pop()).toBe('250');
+  });
+
+  test('Ad creative links out to correct URL', async ({ page }) => {
+    await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
+    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
+    const link = await page.evaluate(() => document.getElementById('banner1').shadowRoot.children[0].getAttribute('data-url'));
+    expect(link).toContain(EXAMPLE_URL);
+  });
+
+  test('A new ad creative is loaded after passing visibility check', async ({ page }) => {
+    await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
+    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
+    await page.evaluate(() => document.querySelector('#injected').remove());
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2);
+    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
+    const img = await page.evaluate(
+      () => document.getElementById('banner1').shadowRoot.children[0].src
+    );
+    expect(img.split('/').pop()).toBe('300');
   });
 });
