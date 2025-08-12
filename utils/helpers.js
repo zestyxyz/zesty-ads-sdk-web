@@ -1,4 +1,6 @@
 import { Box3, Frustum, Matrix4, Vector3 } from 'three';
+import { sendOnClickMetric } from './networking';
+import { formats } from './formats';
 
 /**
  * For each of the following browser checking functions, we have a match with a
@@ -178,6 +180,64 @@ const visibilityCheck = (bbMin, bbMax, cameraProjMatrix, cameraWorldMatrix) => {
   const frustum = new Frustum().setFromProjectionMatrix(new Matrix4().fromArray(cameraProjMatrix));
   frustum.planes.forEach(plane => plane.applyMatrix4(new Matrix4().fromArray(cameraWorldMatrix)));
   return frustum.intersectsBox(boundingBox);
+}
+
+const constructAdModal = (adUnitId, campaignId, format, image, url, delay) => {
+  const modal = document.createElement('dialog');
+  modal.style.borderRadius = '8%';
+  modal.style.backgroundColor = '#444343';
+  modal.style.borderColor = '#F4801E';
+  modal.style.display = 'flex';
+  modal.style.flexDirection = 'column';
+
+  const img = document.createElement('img');
+  img.setAttribute('src', image);
+  let width, height;
+  switch (format) {
+    case 'medium-rectangle':
+      width = 300;
+      height = 250;
+      break;
+    case 'billboard':
+      width = 970;
+      height = 250;
+      break;
+    case 'mobile-phone-interstitial':
+      width = 750;
+      height = 1334;
+      break;
+  }
+  img.width = width;
+  img.height = height;
+
+  const cta = document.createElement('a');
+  cta.href = url;
+  cta.target = '_blank';
+  cta.style.cursor = 'pointer';
+  cta.addEventListener('click', () => {
+    sendOnClickMetric(adUnitId, campaignId);
+  });
+  cta.appendChild(img);
+
+  const close = document.createElement('input');
+  close.type = 'submit';
+  close.value = 'X';
+  close.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Arial, sans-serif';
+  close.style.cursor = 'pointer';
+  close.style.float = 'right';
+  close.style.marginBottom = '1em';
+  close.addEventListener('click', () => modal.removeChild(cta));
+
+  const form = document.createElement('form');
+  form.method = 'dialog';
+  setTimeout(() => {
+    form.append(close);
+  }, delay);
+
+  modal.appendChild(form);
+  modal.append(cta);
+
+  return modal;
 }
 
 export {
