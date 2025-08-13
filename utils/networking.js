@@ -12,7 +12,7 @@ const DB_ENDPOINT = 'https://api.zesty.market/api';
 const STAGING_DB_ENDPOINT = 'https://api-staging.zesty.market/api';
 
 // Prebid variables
-const AD_REFRESH_INTERVAL = 5000;
+const AD_REFRESH_INTERVAL = 30000;
 let prebidInit = false;
 let interval = null;
 const retryCount = 5;
