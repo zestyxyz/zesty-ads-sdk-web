@@ -1,6 +1,7 @@
 import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, AD_REFRESH_INTERVAL, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID } from '../../utils/networking';
 import { openURL, visibilityCheck } from '../../utils/helpers';
 import { formats } from '../../utils/formats';
+import { getDefaultBanner } from '../../utils/networking';
 
 /** @type {typeof import("playcanvas").ScriptType} */
 const ZestyBanner = pc.createScript('zesty-banner');
@@ -83,15 +84,26 @@ ZestyBanner.prototype.refreshIfVisible = function() {
     if (isVisible) {
         const self = this;
         self.loadBanner(self.adUnitId, FORMATS[self.format]).then(banner => {
-            self.app.assets.loadFromUrl(banner.image, "texture", function(err, asset) {
-                self.ctaUrl = banner.url;
-                self.campaignId = banner.campaignId;
-                const texture = asset._resources[0];
-                self.bannerMaterial.diffuseMap = texture;
-                self.bannerMaterial.opacityMap = texture;
-                self.bannerMaterial.blendType = pc.BLEND_NORMAL;
-                self.bannerMaterial.update();
-            });
+            const handleBanner = (err, asset) => {
+                if (err) {
+                    const defaultBanner = getDefaultBanner(self.format, 'standard');
+                    self.ctaUrl = defaultBanner.Ads[0].cta_url;
+                    self.campaignId = defaultBanner.CampaignId;
+                } else {
+                    self.ctaUrl = banner.url;
+                    self.campaignId = banner.campaignId;
+                }
+                const texture = asset?._resources[0];
+                if (texture) {
+                    const material = self.bannerMaterial.clone();
+                    material.diffuseMap = texture;
+                    material.opacityMap = texture;
+                    material.blendType = pc.BLEND_NORMAL;
+                    self.bannerEntity.render.meshInstances[0].material = material;
+                    self.bannerEntity.render.meshInstances[0].material.update();
+                }
+            };
+            self.app.assets.loadFromUrl(banner.image, "texture", handleBanner);
         });
     }
 }
