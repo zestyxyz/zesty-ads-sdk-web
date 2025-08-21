@@ -1,25 +1,25 @@
 export const EXAMPLE_URL = 'https://example.com';
 export const EXAMPLE_IMAGE = 'https://picsum.photos/300/250';
 export const EXAMPLE_IMAGE2 = 'https://picsum.photos/300/300';
-export const PREBID_LOAD_TEST_WAIT_INTERVAL = 5000;
-export const PREBID_REFRESH_TEST_WAIT_INTERVAL = 9000;
+export const PREBID_LOAD_TEST_WAIT_INTERVAL = 35000;
+export const PREBID_REFRESH_TEST_WAIT_INTERVAL = 16000;
 
-export async function injectIFrame(page, url, image) {
-  await page.waitForFunction(() => document.querySelector('#zesty-div-medium-rectangle') != null);
-  await page.evaluate(([url, image]) => {
+export async function injectIFrame(page, url, image, adUnitId) {
+  await page.waitForFunction((adUnitId) => document.querySelector(`#zesty-div-${adUnitId}`) != null, adUnitId);
+  await page.evaluate(([url, image, adUnitId]) => {
     const iframe = document.createElement('iframe');
     iframe.id = 'injected';
-    document.querySelector('#zesty-div-medium-rectangle').appendChild(iframe)
+    document.querySelector(`#zesty-div-${adUnitId}`).appendChild(iframe)
     iframe.contentDocument.write(`<html><body><a href="${url}"><img src="${image}"></a></body></html>`);
-  }, [url, image]);
+  }, [url, image, adUnitId]);
 }
 
 export async function checkZestyDiv(page, format) {
   let div;
   if (!format) {
-    div = await page.frameLocator('#unknown').locator('#zesty-div');
+    div = await page.frameLocator('#unknown').locator('#zesty-div-00000000-0000-0000-0000-000000000000');
   } else {
-    div = await page.frameLocator(`#${format}`).locator(`#zesty-div-${format}`);
+    div = await page.frameLocator(`#${format}`).locator(`#zesty-div-00000000-0000-0000-0000-000000000000`);
   }
 
   const { width, height } = await div.boundingBox();

@@ -59,25 +59,25 @@ test.describe('Navigation', () => {
 
 test.describe('Prebid', () => {
   test('Ad creative is loaded once bids is no longer null', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     const img = await page.evaluate(() => window.scene.children[1].children[0].material.map.source.data.currentSrc);
     expect(img.split('/').pop()).toBe('250');
   });
 
   test('Ad creative links out to correct URL', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     const link = await page.evaluate(() => window.scene.children[1].children[0].url);
     expect(link).toContain(EXAMPLE_URL);
   });
 
   test('A new ad creative is loaded after passing visibility check', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
-    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
+    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     await page.evaluate(() => document.querySelector('#injected').remove());
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2);
-    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2, '00000000-0000-0000-0000-000000000000');
+    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     const img = await page.evaluate(() => window.scene.children[1].children[0].material.map.source.data.currentSrc);
     expect(img.split('/').pop()).toBe('300');
   });
