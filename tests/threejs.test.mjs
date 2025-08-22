@@ -2,10 +2,15 @@ import { test, expect } from '@playwright/test';
 import {
   injectIFrame,
   EXAMPLE_URL,
-  EXAMPLE_IMAGE,
-  EXAMPLE_IMAGE2,
+  EXAMPLE_URL2,
+  EXAMPLE_URL3,
+  EXAMPLE_IMAGE_MEDIUM_RECTANGLE,
+  EXAMPLE_IMAGE_BILLBOARD,
+  EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL,
+  EXAMPLE_IMAGE2_MEDIUM_RECTANGLE,
+  EXAMPLE_IMAGE2_BILLBOARD,
+  EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
   PREBID_LOAD_TEST_WAIT_INTERVAL,
-  PREBID_REFRESH_TEST_WAIT_INTERVAL
 } from './test-constants.mjs';
 
 test.beforeEach(async ({ page }) => {
@@ -58,26 +63,54 @@ test.describe('Navigation', () => {
 
 test.describe('Prebid', () => {
   test('Ad creative is loaded once bids is no longer null', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
-    const img = await page.evaluate(() => window.scene.children[1].banner.src);
-    expect(img.split('/').pop()).toBe('250');
+    const img1 = await page.evaluate(() => window.scene.children[1].banner.src);
+    const img2 = await page.evaluate(() => window.scene.children[2].banner.src);
+    const img3 = await page.evaluate(() => window.scene.children[3].banner.src);
+    expect(img1).toBe(EXAMPLE_IMAGE_MEDIUM_RECTANGLE);
+    expect(img2).toBe(EXAMPLE_IMAGE_BILLBOARD);
+    expect(img3).toBe(EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL);
   });
 
   test('Ad creative links out to correct URL', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
-    const link = await page.evaluate(() => window.scene.children[1].banner.url);
-    expect(link).toContain(EXAMPLE_URL);
+    const link1 = await page.evaluate(() => window.scene.children[1].banner.url);
+    const link2 = await page.evaluate(() => window.scene.children[2].banner.url);
+    const link3 = await page.evaluate(() => window.scene.children[3].banner.url);
+    expect(link1).toContain(EXAMPLE_URL);
+    expect(link2).toContain(EXAMPLE_URL2);
+    expect(link3).toContain(EXAMPLE_URL3);
   });
 
   test('A new ad creative is loaded after passing visibility check', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
-    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
-    await page.evaluate(() => document.querySelector('#injected').remove());
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2, '00000000-0000-0000-0000-000000000000');
-    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
-    const img = await page.evaluate(() => window.scene.children[1].banner.src);
-    expect(img.split('/').pop()).toBe('300');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await page.waitForFunction(
+      ([expectedValue]) => window.scene.children[3].banner.src == expectedValue,
+      [EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL]
+    );
+    await page.evaluate(() => document.querySelector(`#injected-00000000-0000-0000-0000-000000000000`).remove());
+    await page.evaluate(() => document.querySelector(`#injected-10000000-0000-4000-8000-000000000000`).remove());
+    await page.evaluate(() => document.querySelector(`#injected-20000000-0000-4000-8000-000000000000`).remove());
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_BILLBOARD, '10000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await page.waitForFunction(
+      ([expectedValue]) => window.scene.children[3].banner.src == expectedValue,
+      [EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL]
+    );
+    const img1 = await page.evaluate(() => window.scene.children[1].banner.src);
+    const img2 = await page.evaluate(() => window.scene.children[2].banner.src);
+    const img3 = await page.evaluate(() => window.scene.children[3].banner.src);
+    expect(img1).toBe(EXAMPLE_IMAGE2_MEDIUM_RECTANGLE);
+    expect(img2).toBe(EXAMPLE_IMAGE2_BILLBOARD);
+    expect(img3).toBe(EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL);
   });
 });

@@ -2,10 +2,15 @@ import { test, expect } from '@playwright/test';
 import {
   injectIFrame,
   EXAMPLE_URL,
-  EXAMPLE_IMAGE,
-  EXAMPLE_IMAGE2,
+  EXAMPLE_URL2,
+  EXAMPLE_URL3,
+  EXAMPLE_IMAGE_MEDIUM_RECTANGLE,
+  EXAMPLE_IMAGE_BILLBOARD,
+  EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL,
+  EXAMPLE_IMAGE2_MEDIUM_RECTANGLE,
+  EXAMPLE_IMAGE2_BILLBOARD,
+  EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
   PREBID_LOAD_TEST_WAIT_INTERVAL,
-  PREBID_REFRESH_TEST_WAIT_INTERVAL
 } from './test-constants.mjs';
 
 test.beforeEach(async ({ page }) => {
@@ -61,30 +66,57 @@ test.describe('Navigation', () => {
 
 test.describe('Prebid', () => {
   test('Ad creative is loaded once bids is no longer null', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     await page.waitForFunction(() => window.banner1?.findComponent('render')?.meshInstances[0]?._material?._diffuseMap?.name != null);
-    const img = await page.evaluate(() => window.banner1.findComponent('render').meshInstances[0]._material._diffuseMap.name);
-    expect(img.split('/').pop()).toBe('250');
+    const img1 = await page.evaluate(() => window.banner1.findComponent('render').meshInstances[0]._material._diffuseMap.name);
+    const img2 = await page.evaluate(() => window.banner2.findComponent('render').meshInstances[0]._material._diffuseMap.name);
+    const img3 = await page.evaluate(() => window.banner3.findComponent('render').meshInstances[0]._material._diffuseMap.name);
+    expect(EXAMPLE_IMAGE_MEDIUM_RECTANGLE).toContain(img1);
+    expect(EXAMPLE_IMAGE_BILLBOARD).toContain(img2);
+    expect(EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL).toContain(img3);
   });
 
   test('Ad creative links out to correct URL', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     await page.waitForFunction(() => window.banner1?.findComponent('render')?.meshInstances[0]?._material?._diffuseMap?.name != null);
-    const link = await page.evaluate(() => window.banner1.script['zesty-banner'].ctaUrl);
-    expect(link).toContain(EXAMPLE_URL);
+    const link1 = await page.evaluate(() => window.banner1.script['zesty-banner'].ctaUrl);
+    const link2 = await page.evaluate(() => window.banner2.script['zesty-banner'].ctaUrl);
+    const link3 = await page.evaluate(() => window.banner3.script['zesty-banner'].ctaUrl);
+    expect(link1).toContain(EXAMPLE_URL);
+    expect(link2).toContain(EXAMPLE_URL2);
+    expect(link3).toContain(EXAMPLE_URL3);
   });
 
   test('A new ad creative is loaded after passing visibility check', async ({ page }) => {
     await page.waitForFunction(() => window.banner1?.findComponent('render').meshInstances[0]._material._diffuseMap?.name != null);
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, '00000000-0000-0000-0000-000000000000');
-    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
-    await page.evaluate(() => document.querySelector('#injected').remove());
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2, '00000000-0000-0000-0000-000000000000');
-    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
-    await page.waitForFunction(() => window.banner1?.findComponent('render').meshInstances[0]._material._diffuseMap?.name != null);
-    const img = await page.evaluate(() => window.banner1.findComponent('render').meshInstances[0]._material._diffuseMap.name);
-    expect(img.split('/').pop()).toBe('300');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await page.waitForFunction(
+      ([expectedValue]) => expectedValue.includes(window.banner3.findComponent('render').meshInstances[0]._material._diffuseMap?.name),
+      [EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL]
+    );
+    await page.evaluate(() => document.querySelector(`#injected-00000000-0000-0000-0000-000000000000`).remove());
+    await page.evaluate(() => document.querySelector(`#injected-10000000-0000-4000-8000-000000000000`).remove());
+    await page.evaluate(() => document.querySelector(`#injected-20000000-0000-4000-8000-000000000000`).remove());
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_BILLBOARD, '10000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await page.waitForFunction(
+      ([expectedValue]) => expectedValue.includes(window.banner3.findComponent('render').meshInstances[0]._material._diffuseMap?.name),
+      [EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL]
+    );
+    const img1 = await page.evaluate(() => window.banner1.findComponent('render').meshInstances[0]._material._diffuseMap.name);
+    const img2 = await page.evaluate(() => window.banner2.findComponent('render').meshInstances[0]._material._diffuseMap.name);
+    const img3 = await page.evaluate(() => window.banner3.findComponent('render').meshInstances[0]._material._diffuseMap.name);
+    expect(EXAMPLE_IMAGE2_MEDIUM_RECTANGLE).toContain(img1);
+    expect(EXAMPLE_IMAGE2_BILLBOARD).toContain(img2);
+    expect(EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL).toContain(img3);
   });
 });
