@@ -57,6 +57,7 @@ ZestyBanner.prototype.initialize = function() {
     });
 
     this.entity.addChild(this.bannerEntity);
+    this.refreshIfVisible.bind(this)();
 };
 
 ZestyBanner.prototype.loadBanner = async function() {
