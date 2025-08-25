@@ -1,12 +1,6 @@
 import { test, expect } from '@playwright/test';
 import {
-  checkZestyDiv,
-  injectIFrame,
-  EXAMPLE_URL,
-  EXAMPLE_IMAGE,
-  EXAMPLE_IMAGE2,
-  PREBID_LOAD_TEST_WAIT_INTERVAL,
-  PREBID_REFRESH_TEST_WAIT_INTERVAL
+  checkZestyDiv
 } from './test-constants.mjs';
 
 test.beforeEach(async ({ page }) => {

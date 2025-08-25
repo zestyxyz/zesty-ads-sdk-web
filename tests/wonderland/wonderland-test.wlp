@@ -1049,7 +1049,7 @@
                 {
                     "type": "zesty-banner",
                     "zesty-banner": {
-                        "adUnit": "10000000-0000-0000-0000-000000000000",
+                        "adUnit": "10000000-0000-4000-8000-000000000000",
                         "beacon": false,
                         "format": "billboard",
                         "style": "standard",
@@ -1106,7 +1106,7 @@
                 {
                     "type": "zesty-banner",
                     "zesty-banner": {
-                        "adUnit": "20000000-0000-0000-0000-000000000000",
+                        "adUnit": "20000000-0000-4000-8000-000000000000",
                         "beacon": false,
                         "style": "standard",
                         "dynamicNetworking": false,
