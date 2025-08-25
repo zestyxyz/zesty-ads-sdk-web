@@ -8,6 +8,9 @@ export const EXAMPLE_IMAGE2_BILLBOARD = 'http://localhost:8080/tests/res/970x250
 export const EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL = 'http://localhost:8080/tests/res/1080x1920.jpg';
 export const EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL = 'http://localhost:8080/tests/res/1080x1920_2.jpg';
 export const PREBID_LOAD_TEST_WAIT_INTERVAL = 35000;
+export const MEDIUM_RECTANGLE_ID = '00000000-0000-0000-0000-000000000000';
+export const BILLBOARD_ID = '10000000-0000-4000-8000-000000000000';
+export const MOBILE_PHONE_INTERSTITIAL_ID = '20000000-0000-4000-8000-000000000000';
 
 export async function injectIFrame(page, url, image, adUnitId) {
   await page.waitForFunction((adUnitId) => document.querySelector(`#zesty-div-${adUnitId}`) != null, adUnitId);

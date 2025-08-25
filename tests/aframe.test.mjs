@@ -11,6 +11,9 @@ import {
   EXAMPLE_IMAGE2_BILLBOARD,
   EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
   PREBID_LOAD_TEST_WAIT_INTERVAL,
+  MEDIUM_RECTANGLE_ID,
+  BILLBOARD_ID,
+  MOBILE_PHONE_INTERSTITIAL_ID,
 } from './test-constants.mjs';
 
 function srcEvaluate(node) {
@@ -106,9 +109,9 @@ test.describe('Prebid', () => {
     const banner1 = page.locator('#banner1 > a-plane');
     const banner2 = page.locator('#banner2 > a-plane');
     const banner3 = page.locator('#banner3 > a-plane');
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     const img1 = await banner1.evaluate(srcEvaluate);
     const img2 = await banner2.evaluate(srcEvaluate);
@@ -122,9 +125,9 @@ test.describe('Prebid', () => {
     const banner1 = page.locator('#banner1');
     const banner2 = page.locator('#banner2');
     const banner3 = page.locator('#banner3');
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await page.waitForFunction(
       ([expectedValue]) => document.querySelector('#banner1 > a-plane').components.material.data.src.currentSrc == expectedValue,
       [EXAMPLE_IMAGE_MEDIUM_RECTANGLE]
@@ -141,19 +144,19 @@ test.describe('Prebid', () => {
     const banner1 = page.locator('#banner1 > a-plane');
     const banner2 = page.locator('#banner2 > a-plane');
     const banner3 = page.locator('#banner3 > a-plane');
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await page.waitForFunction(
       ([expectedValue]) => document.querySelector('#banner1 > a-plane').components.material.data.src.currentSrc == expectedValue,
       [EXAMPLE_IMAGE_MEDIUM_RECTANGLE]
     );
-    await page.evaluate(() => document.querySelector(`#injected-00000000-0000-0000-0000-000000000000`).remove());
-    await page.evaluate(() => document.querySelector(`#injected-10000000-0000-4000-8000-000000000000`).remove());
-    await page.evaluate(() => document.querySelector(`#injected-20000000-0000-4000-8000-000000000000`).remove());
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE2_BILLBOARD, '10000000-0000-4000-8000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await page.evaluate(([MEDIUM_RECTANGLE_ID]) => document.querySelector(`#injected-${MEDIUM_RECTANGLE_ID}`).remove(), [MEDIUM_RECTANGLE_ID]);
+    await page.evaluate(([BILLBOARD_ID]) => document.querySelector(`#injected-${BILLBOARD_ID}`).remove(), [BILLBOARD_ID]);
+    await page.evaluate(([MOBILE_PHONE_INTERSTITIAL_ID]) => document.querySelector(`#injected-${MOBILE_PHONE_INTERSTITIAL_ID}`).remove(), [MOBILE_PHONE_INTERSTITIAL_ID]);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE2_BILLBOARD, BILLBOARD_ID);
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await page.waitForFunction(
       ([expectedValue]) => document.querySelector('#banner1 > a-plane').components.material.data.src.currentSrc == expectedValue,
       [EXAMPLE_IMAGE2_MEDIUM_RECTANGLE]

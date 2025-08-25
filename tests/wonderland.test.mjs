@@ -11,6 +11,9 @@ import {
   EXAMPLE_IMAGE2_BILLBOARD,
   EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
   PREBID_LOAD_TEST_WAIT_INTERVAL,
+  MEDIUM_RECTANGLE_ID,
+  BILLBOARD_ID,
+  MOBILE_PHONE_INTERSTITIAL_ID,
 } from './test-constants.mjs';
 
 test.beforeEach(async ({ page }) => {
@@ -64,9 +67,9 @@ test.describe('Navigation', () => {
 
 test.describe('Prebid', () => {
   test('Ad creative is loaded once bids is no longer null', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     const img1 = await page.evaluate(() => window.testBanners[0].banner.imageSrc);
     const img2 = await page.evaluate(() => window.testBanners[1].banner.imageSrc);
@@ -77,9 +80,9 @@ test.describe('Prebid', () => {
   });
 
   test('Ad creative links out to correct URL', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
+    await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     const link1 = await page.evaluate(() => window.testBanners[0].banner.url);
     const link2 = await page.evaluate(() => window.testBanners[1].banner.url);
@@ -90,19 +93,19 @@ test.describe('Prebid', () => {
   });
 
   test('A new ad creative is loaded after passing visibility check', async ({ page }) => {
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_BILLBOARD, '10000000-0000-4000-8000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await page.waitForFunction(
       ([expectedValue]) => window.testBanners[2].banner?.imageSrc == expectedValue,
       [EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL]
     );
-    await page.evaluate(() => document.querySelector(`#injected-00000000-0000-0000-0000-000000000000`).remove());
-    await page.evaluate(() => document.querySelector(`#injected-10000000-0000-4000-8000-000000000000`).remove());
-    await page.evaluate(() => document.querySelector(`#injected-20000000-0000-4000-8000-000000000000`).remove());
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MEDIUM_RECTANGLE, '00000000-0000-0000-0000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_BILLBOARD, '10000000-0000-4000-8000-000000000000');
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL, '20000000-0000-4000-8000-000000000000');
+    await page.evaluate(([MEDIUM_RECTANGLE_ID]) => document.querySelector(`#injected-${MEDIUM_RECTANGLE_ID}`).remove(), [MEDIUM_RECTANGLE_ID]);
+    await page.evaluate(([BILLBOARD_ID]) => document.querySelector(`#injected-${BILLBOARD_ID}`).remove(), [BILLBOARD_ID]);
+    await page.evaluate(([MOBILE_PHONE_INTERSTITIAL_ID]) => document.querySelector(`#injected-${MOBILE_PHONE_INTERSTITIAL_ID}`).remove(), [MOBILE_PHONE_INTERSTITIAL_ID]);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_BILLBOARD, BILLBOARD_ID);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await page.waitForFunction(
       ([expectedValue]) => window.testBanners[2].banner?.imageSrc == expectedValue,
       [EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL]
