@@ -16,11 +16,13 @@ const AD_REFRESH_INTERVAL = 30000;
 let prebidInit = false;
 let interval = null;
 const retryCount = 5;
-let bids = {};
 const currentTries = {} // Maps retries to specific ad unit id
 const previousUrls = {} // Maps prior fetched URLs to specific ad unit id
 const adUnitDivIds = {} // Maps ad units to their div ids
-let baseDivId = 'pb-slot-right-1';
+const baseDivIds = {} // Maps ad units to their base div ids
+const bids = {};
+const intervals = {};
+
 let divCount = 0;
 
 // Instantiate the beacon prototype as an import side-effect for now
@@ -34,6 +36,59 @@ const urlParams = new Params(globalThis.location?.search);
 const isDebug = urlParams.get('debug') === 'true';
 const isStaging = urlParams.get('staging') === 'true';
 
+function getUrlsFromIframe(iframe) {
+  if (!iframe.contentDocument) return;
+
+  const images = iframe.contentDocument.querySelectorAll('img');
+  const adImage = Array.prototype.filter.call(images, image => image.height > 1);
+  if (adImage.length == 0) return;
+  const asset_url = adImage[0].src;
+  const cta_url = adImage[0].parentElement.href;
+  return { asset_url, cta_url };
+}
+
+function createPrebidDiv(adUnitId, format) {
+  const div = document.createElement('div');
+  div.id = `zesty-div-${adUnitId}`;
+  div.style.height = '250px';
+  div.style.width = '300px';
+  div.style.position = 'fixed';
+  div.style.top = '0';
+  div.style.zIndex = '-2';
+
+  // Select baseDivId based on format, defaulting to the one for medium rectangle
+  if (format == 'medium-rectangle') {
+    baseDivIds[adUnitId] = 'pb-slot-right-1';
+  } else if (format == 'billboard') {
+    baseDivIds[adUnitId] = 'pb-slot-billboard';
+    div.style.width = '728px';
+    div.style.height = '90px';
+  } else if (format == 'mobile-phone-interstitial') {
+    baseDivIds[adUnitId] = 'pb-slot-interstitial';
+    div.style.width = '1080px';
+    div.style.height = '1920px';
+  }
+
+  adUnitDivIds[adUnitId] = div.id;
+
+  document.body.appendChild(div);
+
+  intervals[adUnitId] = setInterval(() => {
+    let div = document.getElementById(`zesty-div-${adUnitId}`);
+    const iframe = div?.querySelector('iframe:not([title*="prpb"])'); // Don't grab the iframe if professor prebid is installed
+    if (iframe) {
+      let urls = getUrlsFromIframe(iframe);
+      if (urls) {
+        const { asset_url, cta_url } = urls;
+        if (asset_url !== previousUrls[adUnitId].asset_url || cta_url !== previousUrls[adUnitId].cta_url) {
+          previousUrls[adUnitId] = { asset_url, cta_url };
+          bids[adUnitId] = { asset_url, cta_url };
+        }
+      }
+    }
+  }, 1000);
+}
+
 const initPrebid = (adUnitId, format) => {
   if (isDebug) {
     console.log("Debug mode enabled, skipping Prebid initialization.");
@@ -42,14 +97,7 @@ const initPrebid = (adUnitId, format) => {
   }
 
   // Create div for prebid to target
-  const div = document.createElement('div');
-  div.id = 'zesty-div';
-  div.style.height = '250px';
-  div.style.width = '300px';
-  div.style.position = 'fixed';
-  div.style.top = '0';
-  div.style.zIndex = '-2';
-  document.body.appendChild(div);
+  createPrebidDiv(adUnitId, format);
 
   // Append google gpt tag
   const script = document.createElement('link');
@@ -69,23 +117,6 @@ const initPrebid = (adUnitId, format) => {
   gifscript.src = 'https://cdn.jsdelivr.net/npm/gifler@0.1.0/gifler.min.js';
   document.head.appendChild(gifscript);
 
-  // Select baseDivId based on format, defaulting to the one for medium rectangle
-  if (format == 'medium-rectangle') {
-    div.id = 'zesty-div-medium-rectangle';
-  } else if (format == 'billboard') {
-    baseDivId = 'pb-slot-billboard';
-    div.id = 'zesty-div-billboard';
-    div.style.width = '728px';
-    div.style.height = '90px';
-  } else if (format == 'mobile-phone-interstitial') {
-    baseDivId = 'pb-slot-interstitial';
-    div.id = 'zesty-div-mobile-phone-interstitial';
-    div.style.width = '1080px';
-    div.style.height = '1920px';
-  }
-
-  adUnitDivIds[adUnitId] = div.id;
-
   // Pass ad unit id as a custom param for prebid metrics
   window.Raven = window.Raven || { cmd: [] };
   window.Raven.cmd.push(({ config }) => {
@@ -98,43 +129,11 @@ const initPrebid = (adUnitId, format) => {
   tude.cmd.push(function() {
     tude.refreshAdsViaDivMappings([
       {
-        divId: `zesty-div-${format}`,
-        baseDivId,
+        divId: `zesty-div-${adUnitId}`,
+        baseDivId: baseDivIds[adUnitId],
       }
     ]);
   });
-
-  function getUrlsFromIframe(iframe) {
-    if (!iframe.contentDocument) return;
-
-    const images = iframe.contentDocument.querySelectorAll('img');
-    const adImage = Array.prototype.filter.call(images, image => image.height > 1);
-    if (adImage.length == 0) return;
-    const asset_url = adImage[0].src;
-    const cta_url = adImage[0].parentElement.href;
-    return { asset_url, cta_url };
-  }
-
-  interval = setInterval(() => {
-    let div = document.getElementById(`zesty-div-${format}`);
-    if (!div) {
-      // If for some reason we can't find the proper div (e.g. the given format is invalid),
-      // fallback to the plain name
-      div = document.getElementById('zesty-div');
-      adUnitDivIds[adUnitId] = div.id;
-    }
-    const iframe = div?.querySelector('iframe:not([title*="prpb"])'); // Don't grab the iframe if professor prebid is installed
-    if (iframe) {
-      let urls = getUrlsFromIframe(iframe);
-      if (urls) {
-        const { asset_url, cta_url } = urls;
-        if (asset_url !== previousUrls[adUnitId].asset_url || cta_url !== previousUrls[adUnitId].cta_url) {
-          previousUrls[adUnitId] = { asset_url, cta_url };
-          bids = { asset_url, cta_url };
-        }
-      }
-    }
-  }, 1000);
 
   prebidInit = true;
 }
@@ -187,14 +186,18 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
     previousUrls[adUnitId] = { asset_url: null, cta_url: null };
     initPrebid(adUnitId, finalFormat, style);
   } else {
-    bids = null;
+    bids[adUnitId] = null;
     currentTries[adUnitId] = 0;
     previousUrls[adUnitId] = { asset_url: null, cta_url: null };
+    if (!adUnitDivIds[adUnitId]) {
+      createPrebidDiv(adUnitId, format);
+    }
+
     tude.cmd.push(function() {
       tude.refreshAdsViaDivMappings([
         {
           divId: adUnitDivIds[adUnitId],
-          baseDivId,
+          baseDivId: baseDivIds[adUnitId],
         }
       ]);
     });
@@ -202,9 +205,9 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
 
   return new Promise((resolve, reject) => {
     async function getBanner() {
-      if (bids?.asset_url && bids?.cta_url) {
+      if (bids[adUnitId]?.asset_url && bids[adUnitId]?.cta_url) {
         // Clear the interval and grab the image+url from the prebid ad
-        const { asset_url, cta_url } = bids;
+        const { asset_url, cta_url } = bids[adUnitId];
         if (asset_url.startsWith('canvas://')) {
           const canvasIframe = document.createElement('iframe');
           canvasIframe.id = "zesty-canvas-iframe";
@@ -292,4 +295,4 @@ const analyticsSession = async (adUnitId, campaignId) => {
   }
 }
 
-export { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, analyticsSession, getOverrideUnitInfo, AD_REFRESH_INTERVAL, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID };
+export { fetchCampaignAd, getDefaultBanner, sendOnLoadMetric, sendOnClickMetric, analyticsSession, getOverrideUnitInfo, AD_REFRESH_INTERVAL, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID };
