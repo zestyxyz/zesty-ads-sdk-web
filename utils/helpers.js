@@ -1,6 +1,5 @@
 import { Box3, Frustum, Matrix4, Vector3 } from 'three';
-import { sendOnClickMetric } from './networking';
-import { formats } from './formats';
+import { sendOnClickMetric } from './networking.js';
 
 /**
  * For each of the following browser checking functions, we have a match with a
