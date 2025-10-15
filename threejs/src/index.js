@@ -37,7 +37,7 @@ export default class ZestyBanner extends Mesh {
     this.customDefaultCtaUrl = config.customDefaultCtaUrl ?? null;
     this.banner = {};
 
-    this.bannerPromise = loadBanner(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl).then(banner => {
+    loadBanner(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl).then(banner => {
       this.material = new MeshBasicMaterial({
         map: banner.texture
       });

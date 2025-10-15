@@ -35,6 +35,7 @@ const Params = URLSearchParams ? URLSearchParams : Map; // Shadowing with Map in
 const urlParams = new Params(globalThis.location?.search);
 const isDebug = urlParams.get('debug') === 'true';
 const isStaging = urlParams.get('staging') === 'true';
+const isLocalhost = globalThis.location?.hostname === 'localhost' || globalThis.location?.hostname === '127.0.0.1';
 
 function getUrlsFromIframe(iframe) {
   if (!iframe.contentDocument) return;
@@ -99,41 +100,45 @@ const initPrebid = (adUnitId, format) => {
   // Create div for prebid to target
   createPrebidDiv(adUnitId, format);
 
-  // Append google gpt tag
-  const script = document.createElement('link');
-  script.href = 'https://www.googletagservices.com/tag/js/gpt.js';
-  script.rel = 'preload';
-  script.as = 'script';
-  document.head.appendChild(script);
+  if (!isLocalhost) {
+    // Append google gpt tag
+    const script = document.createElement('link');
+    script.href = 'https://www.googletagservices.com/tag/js/gpt.js';
+    script.rel = 'preload';
+    script.as = 'script';
+    document.head.appendChild(script);
 
-  // Append aditude wrapper tag
-  const aditudeScript = document.createElement('script');
-  aditudeScript.src = 'https://dn0qt3r0xannq.cloudfront.net/zesty-ig89tpzq8N/zesty-longform/prebid-load.js';
-  aditudeScript.async = true;
-  document.head.appendChild(aditudeScript);
+    // Append aditude wrapper tag
+    const aditudeScript = document.createElement('script');
+    aditudeScript.src = 'https://dn0qt3r0xannq.cloudfront.net/zesty-ig89tpzq8N/zesty-longform/prebid-load.js';
+    aditudeScript.async = true;
+    document.head.appendChild(aditudeScript);
 
-  // Load gifler script in case gif creative is served
-  const gifscript = document.createElement('script');
-  gifscript.src = 'https://cdn.jsdelivr.net/npm/gifler@0.1.0/gifler.min.js';
-  document.head.appendChild(gifscript);
+    // Load gifler script in case gif creative is served
+    const gifscript = document.createElement('script');
+    gifscript.src = 'https://cdn.jsdelivr.net/npm/gifler@0.1.0/gifler.min.js';
+    document.head.appendChild(gifscript);
 
-  // Pass ad unit id as a custom param for prebid metrics
-  window.Raven = window.Raven || { cmd: [] };
-  window.Raven.cmd.push(({ config }) => {
-    config.setCustom({
-      param1: adUnitId,
+    // Pass ad unit id as a custom param for prebid metrics
+    window.Raven = window.Raven || { cmd: [] };
+    window.Raven.cmd.push(({ config }) => {
+      config.setCustom({
+        param1: adUnitId,
+      });
     });
-  });
+  }
 
   window.tude = window.tude || { cmd: [] };
-  tude.cmd.push(function() {
-    tude.refreshAdsViaDivMappings([
-      {
-        divId: `zesty-div-${adUnitId}`,
-        baseDivId: baseDivIds[adUnitId],
-      }
-    ]);
-  });
+  if (!isLocalhost) {
+    tude.cmd.push(function() {
+      tude.refreshAdsViaDivMappings([
+        {
+          divId: `zesty-div-${adUnitId}`,
+          baseDivId: baseDivIds[adUnitId],
+        }
+      ]);
+    });
+  }
 
   prebidInit = true;
 }
@@ -195,14 +200,16 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
       createPrebidDiv(adUnitId, format);
     }
 
-    tude.cmd.push(function() {
-      tude.refreshAdsViaDivMappings([
-        {
-          divId: adUnitDivIds[adUnitId],
-          baseDivId: baseDivIds[adUnitId],
-        }
-      ]);
-    });
+    if (!isLocalhost) {
+      tude.cmd.push(function() {
+        tude.refreshAdsViaDivMappings([
+          {
+            divId: adUnitDivIds[adUnitId],
+            baseDivId: baseDivIds[adUnitId],
+          }
+        ]);
+      });
+    }
   }
 
   return new Promise((resolve, reject) => {
