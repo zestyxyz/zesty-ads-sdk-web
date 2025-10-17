@@ -23,7 +23,7 @@ export default class ZestyBanner extends Mesh {
    * @param {Number} height Height of the banner
    * @param {WebGLRenderer} renderer Optional field to pass in the WebGLRenderer in a WebXR project
    */
-  constructor(adUnit, format, style, height, renderer = null, beacon = true) {
+  constructor(adUnit, format, style, height, renderer = null, beacon = true, config = {}) {
     super();
     this.geometry = new PlaneGeometry(formats[format].width * height, height, 1, 1);
 
@@ -33,9 +33,11 @@ export default class ZestyBanner extends Mesh {
     this.style = style;
     this.renderer = renderer;
     this.beacon = beacon;
+    this.customDefaultImage = config.customDefaultImage ?? null;
+    this.customDefaultCtaUrl = config.customDefaultCtaUrl ?? null;
     this.banner = {};
 
-    this.bannerPromise = loadBanner(adUnit, format, style).then(banner => {
+    loadBanner(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl).then(banner => {
       this.material = new MeshBasicMaterial({
         map: banner.texture
       });
@@ -94,7 +96,7 @@ export default class ZestyBanner extends Mesh {
       camera.matrixWorld.toArray(),
     );
     if (isVisible) {
-      loadBanner(this.adUnit, this.format, this.style).then(banner => {
+      loadBanner(this.adUnit, this.format, this.style, this.customDefaultImage, this.customDefaultCtaUrl).then(banner => {
         this.material.map = banner.texture;
         this.material.needsUpdate = true;
         this.banner = banner;
@@ -103,8 +105,8 @@ export default class ZestyBanner extends Mesh {
   }
 }
 
-async function loadBanner(adUnit, format, style) {
-  const activeBanner = await fetchCampaignAd(adUnit, format, style);
+async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl) {
+  const activeBanner = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 

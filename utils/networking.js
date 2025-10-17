@@ -35,6 +35,7 @@ const Params = URLSearchParams ? URLSearchParams : Map; // Shadowing with Map in
 const urlParams = new Params(globalThis.location?.search);
 const isDebug = urlParams.get('debug') === 'true';
 const isStaging = urlParams.get('staging') === 'true';
+const isLocalhost = globalThis.location?.hostname === 'localhost' || globalThis.location?.hostname === '127.0.0.1';
 
 function getUrlsFromIframe(iframe) {
   if (!iframe.contentDocument) return;
@@ -99,41 +100,45 @@ const initPrebid = (adUnitId, format) => {
   // Create div for prebid to target
   createPrebidDiv(adUnitId, format);
 
-  // Append google gpt tag
-  const script = document.createElement('link');
-  script.href = 'https://www.googletagservices.com/tag/js/gpt.js';
-  script.rel = 'preload';
-  script.as = 'script';
-  document.head.appendChild(script);
+  if (!isLocalhost) {
+    // Append google gpt tag
+    const script = document.createElement('link');
+    script.href = 'https://www.googletagservices.com/tag/js/gpt.js';
+    script.rel = 'preload';
+    script.as = 'script';
+    document.head.appendChild(script);
 
-  // Append aditude wrapper tag
-  const aditudeScript = document.createElement('script');
-  aditudeScript.src = 'https://dn0qt3r0xannq.cloudfront.net/zesty-ig89tpzq8N/zesty-longform/prebid-load.js';
-  aditudeScript.async = true;
-  document.head.appendChild(aditudeScript);
+    // Append aditude wrapper tag
+    const aditudeScript = document.createElement('script');
+    aditudeScript.src = 'https://dn0qt3r0xannq.cloudfront.net/zesty-ig89tpzq8N/zesty-longform/prebid-load.js';
+    aditudeScript.async = true;
+    document.head.appendChild(aditudeScript);
 
-  // Load gifler script in case gif creative is served
-  const gifscript = document.createElement('script');
-  gifscript.src = 'https://cdn.jsdelivr.net/npm/gifler@0.1.0/gifler.min.js';
-  document.head.appendChild(gifscript);
+    // Load gifler script in case gif creative is served
+    const gifscript = document.createElement('script');
+    gifscript.src = 'https://cdn.jsdelivr.net/npm/gifler@0.1.0/gifler.min.js';
+    document.head.appendChild(gifscript);
 
-  // Pass ad unit id as a custom param for prebid metrics
-  window.Raven = window.Raven || { cmd: [] };
-  window.Raven.cmd.push(({ config }) => {
-    config.setCustom({
-      param1: adUnitId,
+    // Pass ad unit id as a custom param for prebid metrics
+    window.Raven = window.Raven || { cmd: [] };
+    window.Raven.cmd.push(({ config }) => {
+      config.setCustom({
+        param1: adUnitId,
+      });
     });
-  });
+  }
 
   window.tude = window.tude || { cmd: [] };
-  tude.cmd.push(function() {
-    tude.refreshAdsViaDivMappings([
-      {
-        divId: `zesty-div-${adUnitId}`,
-        baseDivId: baseDivIds[adUnitId],
-      }
-    ]);
-  });
+  if (!isLocalhost) {
+    tude.cmd.push(function() {
+      tude.refreshAdsViaDivMappings([
+        {
+          divId: `zesty-div-${adUnitId}`,
+          baseDivId: baseDivIds[adUnitId],
+        }
+      ]);
+    });
+  }
 
   prebidInit = true;
 }
@@ -146,8 +151,10 @@ const getOverrideUnitInfo = (adUnitId) => {
   return unitOverrides.find(unit => unit.id === adUnitId) || {};
 }
 
-const getDefaultBanner = (format, style, shouldOverride = false, overrideFormat = null) => {
-  return { Ads: [{ asset_url: formats[shouldOverride ? overrideFormat : format].style[style], cta_url: DEFAULT_CTA_URL }], CampaignId: DEFAULT_CAMPAIGN_ID }
+const getDefaultBanner = (format, style = 'standard', shouldOverride = false, overrideFormat = null, customDefaultImage = null, customDefaultCtaUrl = null) => {
+  let asset_url = customDefaultImage?.length > 0 ? customDefaultImage : formats[shouldOverride ? overrideFormat : format].style[style];
+  let cta_url = customDefaultCtaUrl?.length > 0 ? customDefaultCtaUrl : DEFAULT_CTA_URL;
+  return { Ads: [{ asset_url, cta_url }], CampaignId: DEFAULT_CAMPAIGN_ID }
 }
 
 const getSampleBanner = (format) => {
@@ -155,7 +162,7 @@ const getSampleBanner = (format) => {
   return { Ads: [{ asset_url: `${ENDPOINT}/ad/sample?format=${format}&timestamp=${Date.now()}`, cta_url: DEFAULT_CTA_URL }], CampaignId: DEFAULT_CAMPAIGN_ID }
 }
 
-const fetchCampaignAd = async (adUnitId, format = 'tall', style = 'standard') => {
+const fetchCampaignAd = async (adUnitId, format = 'tall', style = 'standard', customDefaultImage = null, customDefaultCtaUrl = null) => {
   if (['tall', 'wide', 'square'].includes(format)) {
     console.warn(`The old Zesty banner formats (tall, wide, and square) are being deprecated and will be removed in a future version. Please update to one of the new IAB formats (mobile-phone-interstitial, billboard, and medium-rectangle).
 Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
@@ -170,14 +177,14 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
     parseUUID(adUnitId);
   } catch (e) {
     console.warn(`Ad unit ID ${adUnitId} is not a valid UUID.`);
-    return new Promise(res => res(getDefaultBanner(format, style)));
+    return new Promise(res => res(getDefaultBanner(format, style, false, null, customDefaultImage, customDefaultCtaUrl)));
   }
 
   let overrideEntry = getOverrideUnitInfo(adUnitId);
-  let shouldOverride = overrideEntry?.oldFormat && format == overrideEntry.oldFormat;
+  let shouldOverride = (overrideEntry?.oldFormat && format == overrideEntry?.oldFormat) ?? false;
 
   if (!adUnitId) {
-    return new Promise(res => res(getDefaultBanner(format, style, shouldOverride, overrideEntry.format)));
+    return new Promise(res => res(getDefaultBanner(format, style, shouldOverride, overrideEntry.format, customDefaultImage, customDefaultCtaUrl)));
   }
 
   if (!prebidInit) {
@@ -193,14 +200,16 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
       createPrebidDiv(adUnitId, format);
     }
 
-    tude.cmd.push(function() {
-      tude.refreshAdsViaDivMappings([
-        {
-          divId: adUnitDivIds[adUnitId],
-          baseDivId: baseDivIds[adUnitId],
-        }
-      ]);
-    });
+    if (!isLocalhost) {
+      tude.cmd.push(function() {
+        tude.refreshAdsViaDivMappings([
+          {
+            divId: adUnitDivIds[adUnitId],
+            baseDivId: baseDivIds[adUnitId],
+          }
+        ]);
+      });
+    }
   }
 
   return new Promise((resolve, reject) => {
@@ -229,13 +238,13 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
               resolve(data);
             } else {
               // No active campaign, just display default banner
-              resolve(getDefaultBanner(format, style, shouldOverride, overrideEntry.format));
+              resolve(getDefaultBanner(format, style, shouldOverride, overrideEntry.format, customDefaultImage, customDefaultCtaUrl));
             }
             currentTries[adUnitId] = 0;
           } catch(e) {
             console.error(e);
             console.warn('Error retrieving an active campaign banner. Retrieving default banner.')
-            resolve(getDefaultBanner(format, style, shouldOverride, overrideEntry.format));
+            resolve(getDefaultBanner(format, style, shouldOverride, overrideEntry.format, customDefaultImage, customDefaultCtaUrl));
             currentTries[adUnitId] = 0;
           }
         } else {

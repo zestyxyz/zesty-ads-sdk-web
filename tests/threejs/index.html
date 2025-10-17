@@ -5,8 +5,8 @@
     <script type="importmap">
       {
         "imports": {
-          "three": "https://unpkg.com/three@0.148.0/build/three.module.js",
-          "three/examples/jsm/webxr/VRButton": "https://unpkg.com/three@0.148.0/examples/jsm/webxr/VRButton"
+          "three": "./three.module.js",
+          "three/examples/jsm/webxr/VRButton": "./VRButton.js"
         }
       }
     </script>
@@ -41,7 +41,10 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      const banner = new ZestyBanner("00000000-0000-0000-0000-000000000000", 'medium-rectangle', 'standard', 1, renderer);
+      const banner = new ZestyBanner("00000000-0000-0000-0000-000000000000", 'medium-rectangle', 'standard', 1, renderer, false, {
+        customDefaultImage: 'http://localhost:8080/assets/zesty-ad-square.png',
+        customDefaultCtaUrl: 'https://www.example.com'
+      });
       banner.position.set(0, 1, -2);
       scene.add(banner);
 
@@ -64,7 +67,7 @@
           var intersects = raycaster.intersectObjects(scene.children);
           intersects.forEach(obj => {
               if (obj.object.type == "ZestyBanner") {
-                  banner.onClick();
+                  obj.object.onClick();
               }
           })
       }

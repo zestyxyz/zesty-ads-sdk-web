@@ -18,6 +18,8 @@ ZestyBanner.attributes.add("format", {
 });
 ZestyBanner.attributes.add("cameraEntity", { type: "entity" });
 ZestyBanner.attributes.add("useActiveCamera", { type: "boolean", default: false });
+ZestyBanner.attributes.add("customDefaultImage", { type: "string" });
+ZestyBanner.attributes.add("customDefaultCtaUrl", { type: "string" });
 
 const FORMATS = {
     1: "medium-rectangle",
@@ -61,7 +63,7 @@ ZestyBanner.prototype.initialize = function() {
 };
 
 ZestyBanner.prototype.loadBanner = async function() {
-    const activeBanner = await fetchCampaignAd(this.adUnitId, FORMATS[this.format]);
+    const activeBanner = await fetchCampaignAd(this.adUnitId, FORMATS[this.format], null, this.customDefaultImage, this.customDefaultCtaUrl);
 
     const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 
@@ -84,7 +86,7 @@ ZestyBanner.prototype.refreshIfVisible = function() {
     );
     if (isVisible) {
         const self = this;
-        self.loadBanner(self.adUnitId, FORMATS[self.format]).then(banner => {
+        self.loadBanner(self.adUnitId, FORMATS[self.format], self.customDefaultImage, self.customDefaultCtaUrl).then(banner => {
             const handleBanner = (err, asset) => {
                 if (err) {
                     const defaultBanner = getDefaultBanner(self.format, 'standard');

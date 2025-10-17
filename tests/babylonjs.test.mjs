@@ -26,6 +26,7 @@ test.describe('Initial load', () => {
   });
 
   test('All 3 banners are currently loaded', async ({ page }) => {
+    await page.waitForFunction(() => window.scene.meshes.length == 7);
     const meshesLength = await page.evaluate(() => window.scene.meshes.length);
     expect(meshesLength).toBe(7); // 4 XR setup-related meshes, 3 banners
   });
@@ -33,15 +34,15 @@ test.describe('Initial load', () => {
 
 test.describe('Default banners', () => {
   test('The medium-rectangle banner is present', async ({ page }) => {
-    await page.waitForFunction(() => window.scene.meshes[4].material != null);
+    await page.waitForFunction(() => window.scene.meshes[4]?.material != null);
     const banner1 = await page.evaluate(
       () => window.scene.meshes[4].material.diffuseTexture.name
     );
-    expect(banner1.split('/').pop()).toBe('zesty-default-medium-rectangle.png');
+    expect(banner1.split('/').pop()).toBe('250');
   });
 
   test('The billboard banner is present', async ({ page }) => {
-    await page.waitForFunction(() => window.scene.meshes[5].material != null);
+    await page.waitForFunction(() => window.scene.meshes[5]?.material != null);
     const banner2 = await page.evaluate(
       () => window.scene.meshes[5].material.diffuseTexture.name
     );
@@ -49,7 +50,7 @@ test.describe('Default banners', () => {
   });
 
   test('The mobile-phone-interstitial banner is present', async ({ page }) => {
-    await page.waitForFunction(() => window.scene.meshes[6].material != null);
+    await page.waitForFunction(() => window.scene.meshes[6]?.material != null);
     const banner3 = await page.evaluate(
       () => window.scene.meshes[6].material.diffuseTexture.name
     );
@@ -59,7 +60,7 @@ test.describe('Default banners', () => {
 
 test.describe('Navigation', () => {
   test('Clicking the banner navigates to a new page', async ({ page, context }) => {
-    await page.waitForFunction(() => window.scene.meshes[6].actionManager != null);
+    await page.waitForFunction(() => window.scene?.meshes[6]?.actionManager != null);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
       page.evaluate(() => window.scene.meshes[6].actionManager.actions[0].func())

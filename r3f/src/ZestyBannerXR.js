@@ -29,8 +29,11 @@ export default function ZestyBanner(props) {
   const newStyle = props.style ?? defaultStyle;
   const beacon = props.beacon ?? true;
 
+  const customDefaultImage = props.customDefaultImage ?? null;
+  const customDefaultCtaUrl = props.customDefaultCtaUrl ?? null;
+
   const loadBanner = async (adUnit, format, style) => {
-    const activeCampaign = await fetchCampaignAd(adUnit, format, style);
+    const activeCampaign = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
     const { asset_url, cta_url } = activeCampaign.Ads[0];
     return { asset_url, cta_url, campaignId: activeCampaign.CampaignId }
   };

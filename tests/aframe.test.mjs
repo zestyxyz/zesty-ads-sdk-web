@@ -61,7 +61,7 @@ test.describe('Default banners', () => {
       img = await banner.evaluate(srcEvaluate);
       if (!img) await page.waitForTimeout(100);
     }
-    expect(img.split('/').pop()).toBe('zesty-default-medium-rectangle.png');
+    expect(img.split('/').pop()).toBe('250'); // Custom default image
   });
 
   test('The billboard banner is displaying the correct default image', async ({ page }) => {
