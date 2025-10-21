@@ -2,7 +2,7 @@
 
 import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, analyticsSession, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats, defaultFormat, defaultStyle } from '../../utils/formats';
-import { openURL, visibilityCheck } from '../../utils/helpers';
+import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import { version } from '../package.json';
 import { getOverrideUnitInfo } from '../../utils/networking';
 
@@ -44,6 +44,8 @@ AFRAME.registerComponent('zesty-banner', {
     beacon: { type: 'boolean', default: true },
     customDefaultImage: { type: 'string' },
     customDefaultCtaUrl: { type: 'string' },
+    modal: { type: 'boolean', default: false },
+    modalTrigger: { type: 'string' },
   },
 
   init: function() {
@@ -71,7 +73,7 @@ AFRAME.registerComponent('zesty-banner', {
   registerEntity: function() {
     const adUnit = this.data.adUnit;
     const format = this.data.format || defaultFormat;
-    createBanner(this.el, adUnit, format, this.data.style, this.data.height, this.data.beacon, this.data.customDefaultImage, this.data.customDefaultCtaUrl);
+    createBanner(this.el, adUnit, format, this.data.style, this.data.height, this.data.beacon, this.data.customDefaultImage, this.data.customDefaultCtaUrl, this.data.modalTrigger);
   },
 
   // Every 30sec check for `visible` component
@@ -97,7 +99,7 @@ AFRAME.registerComponent('zesty-banner', {
   }
 });
 
-async function createBanner(el, adUnit, format, style, height, beacon, customDefaultImage, customDefaultCtaUrl) {
+async function createBanner(el, adUnit, format, style, height, beacon, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay) {
   let overrideEntry = getOverrideUnitInfo(adUnit);
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.format;
   const adjustedFormat = shouldOverride ? overrideEntry.format : format;
@@ -143,8 +145,8 @@ async function createBanner(el, adUnit, format, style, height, beacon, customDef
       }
       return banner;
     });
-  
-    bannerPromise.then(banner => updateBanner(banner, plane, el, adUnit, adjustedFormat, style, adjustedHeight, beacon, customDefaultImage, customDefaultCtaUrl));
+
+    bannerPromise.then(banner => updateBanner(banner, plane, el, adUnit, adjustedFormat, style, adjustedHeight, beacon, modalTrigger, modalDelay));
   }
 
   getBanner();
@@ -177,7 +179,7 @@ async function loadBanner(adUnit, format, style, customDefaultImage, customDefau
   }
 }
 
-async function updateBanner(banner, plane, el, adUnit, format, style, height, beacon, customDefaultImage, customDefaultCtaUrl) {
+async function updateBanner(banner, plane, el, adUnit, format, style, height, beacon, modalTrigger, modalDelay) {
   let overrideEntry = getOverrideUnitInfo(adUnit);
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.oldFormat;
 
@@ -268,6 +270,14 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
     el.bannerURI = banner.uri;
     el.imgSrc = banner.img.src;
     el.url = banner.url;
+
+    // Hook up modal trigger
+    const onModalTrigger = () => {
+      let modal = constructAdModal(adUnit, banner.campaignId, format, banner.img.src, banner.url, modalDelay);
+      document.body.appendChild(modal);
+    };
+    document.removeEventListener(modalTrigger, onModalTrigger);
+    document.addEventListener(modalTrigger, onModalTrigger);
   }
 }
 
