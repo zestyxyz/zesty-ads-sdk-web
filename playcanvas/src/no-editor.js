@@ -1,5 +1,5 @@
 import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, AD_REFRESH_INTERVAL, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID } from '../../utils/networking';
-import { openURL, visibilityCheck } from '../../utils/helpers';
+import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import * as pc from 'playcanvas';
 import { formats } from '../../utils/formats';
 
@@ -20,6 +20,8 @@ ZestyBanner.attributes.add("cameraEntity", { type: "entity" });
 ZestyBanner.attributes.add("useActiveCamera", { type: "boolean", default: false });
 ZestyBanner.attributes.add("customDefaultImage", { type: "string" });
 ZestyBanner.attributes.add("customDefaultCtaUrl", { type: "string" });
+ZestyBanner.attributes.add("modalTrigger", { type: "string" });
+ZestyBanner.attributes.add("modalDelay", { type: "number", default: 0 });
 
 const FORMATS = {
     1: "medium-rectangle",
@@ -66,6 +68,14 @@ ZestyBanner.prototype.loadBanner = async function() {
     const activeBanner = await fetchCampaignAd(this.adUnitId, FORMATS[this.format], undefined, this.customDefaultImage, this.customDefaultCtaUrl);
 
     const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
+
+    // Hook up modal trigger
+    const onModalTrigger = () => {
+      let modal = constructAdModal(this.adUnitId, activeBanner.CampaignId, FORMATS[this.format], image, url, this.modalDelay);
+      document.body.appendChild(modal);
+    };
+    document.removeEventListener(this.modalTrigger, onModalTrigger);
+    document.addEventListener(this.modalTrigger, onModalTrigger);
 
     return { image, url, campaignId: activeBanner.CampaignId };
 }
