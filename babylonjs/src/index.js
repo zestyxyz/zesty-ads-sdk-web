@@ -2,7 +2,7 @@
 
 import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats } from '../../utils/formats';
-import { openURL, visibilityCheck } from '../../utils/helpers';
+import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import { version } from '../package.json';
 
 console.log('Zesty SDK Version: ', version);
@@ -18,7 +18,7 @@ export default class ZestyBanner {
     this.scene = scene;
     this.xr = webXRExperienceHelper;
 
-    loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl).then(data => {
+    loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalDelay).then(data => {
       this.zestyBanner.material = data.mat;
       this.zestyBanner.actionManager = new BABYLON.ActionManager(scene);
       this.zestyBanner.url = data.url;
@@ -76,7 +76,7 @@ export default class ZestyBanner {
   }
 }
 
-async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl) {
+async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay) {
   const activeBanner = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
@@ -84,6 +84,14 @@ async function loadBanner(adUnit, format, style, customDefaultImage, customDefau
   const mat = new BABYLON.StandardMaterial('');
   mat.diffuseTexture = new BABYLON.Texture(image);
   mat.diffuseTexture.hasAlpha = true;
+
+  // Hook up modal trigger
+  const onModalTrigger = () => {
+    let modal = constructAdModal(adUnit, activeBanner.CampaignId, format, image, url, modalDelay);
+    document.body.appendChild(modal);
+  };
+  document.removeEventListener(modalTrigger, onModalTrigger);
+  document.addEventListener(modalTrigger, onModalTrigger);
 
   return { mat: mat, src: image, uri: activeBanner.uri, url: url, campaignId: activeBanner.CampaignId };
 }
