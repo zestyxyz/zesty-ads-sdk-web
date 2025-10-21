@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
 import { sendOnLoadMetric, sendOnClickMetric, fetchCampaignAd, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats, defaultFormat, defaultStyle } from '../../utils/formats';
-import { openURL, visibilityCheck } from '../../utils/helpers';
+import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 
 export * from '../../utils/formats';
 import { version } from '../package.json';
@@ -29,9 +29,21 @@ export default function ZestyBanner(props) {
   const customDefaultImage = props.customDefaultImage ?? null;
   const customDefaultCtaUrl = props.customDefaultCtaUrl ?? null;
 
+  const modalTrigger = props.modalTrigger ?? null;
+  const modalDelay = props.modalDelay ?? 0;
+
   const loadBanner = async (adUnit, format, style) => {
     const activeCampaign = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
     const { asset_url, cta_url } = activeCampaign.Ads[0];
+
+    // Hook up modal trigger
+    const onModalTrigger = () => {
+      let modal = constructAdModal(adUnit, activeCampaign.CampaignId, format, asset_url, cta_url, modalDelay);
+      document.body.appendChild(modal);
+    };
+    document.removeEventListener(modalTrigger, onModalTrigger);
+    document.addEventListener(modalTrigger, onModalTrigger);
+
     return { asset_url, cta_url, campaignId: activeCampaign.CampaignId }
   };
 
