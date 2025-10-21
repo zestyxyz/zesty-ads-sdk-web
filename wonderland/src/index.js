@@ -2,7 +2,7 @@
 
 import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats, defaultFormat } from '../../utils/formats';
-import { openURL, visibilityCheck } from '../../utils/helpers';
+import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import { version } from '../package.json';
 import {
   Component,
@@ -55,6 +55,10 @@ export class ZestyBanner extends Component {
     customDefaultImage: Property.string(''),
     /** Custom default CTA URL for use when no ad campaign is running */
     customDefaultCtaUrl: Property.string(''),
+    /** Custom modal trigger event */
+    modalTrigger: Property.string(''),
+    /** Delay before showing modal close button */
+    modalDelay: Property.float(0),
   };
   static onRegister(engine) {
     engine.registerComponent(CursorTarget);
@@ -160,7 +164,9 @@ export class ZestyBanner extends Component {
       this.formatKeys[this.format],
       this.styleKeys[this.style],
       this.customDefaultImage,
-      this.customDefaultCtaUrl
+      this.customDefaultCtaUrl,
+      this.modalTrigger,
+      this.modalDelay
     ).then(banner => {
       this.banner = banner;
       if (this.scaleToRatio) {
@@ -256,7 +262,7 @@ export class ZestyBanner extends Component {
     }
   }
 
-  async loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl) {
+  async loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay) {
     const activeCampaign = this.dynamicNetworking && this.dynamicNetworkFunctions?.fetchCampaignAd ?
       await this.dynamicNetworkFunctions.fetchCampaignAd(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl) :
       await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
@@ -271,6 +277,14 @@ export class ZestyBanner extends Component {
     } else if (this.mesh.material?.diffuseTexture != null) {
       this.mesh.material.diffuseTexture.destroy();
     }
+
+    // Hook up modal trigger
+    const onModalTrigger = () => {
+      let modal = constructAdModal(adUnit, this.CampaignId, format, image, url, modalDelay);
+      document.body.appendChild(modal);
+    };
+    document.removeEventListener(modalTrigger, onModalTrigger);
+    document.addEventListener(modalTrigger, onModalTrigger);
 
     if (image.includes('canvas://')) {
       const canvasIframe = document.querySelector('#zesty-canvas-iframe');
