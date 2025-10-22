@@ -52,6 +52,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -73,6 +78,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -128,3 +134,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 0b12f9d3422d61144b198099cc186076, type: 2}
   - {fileID: 2100000, guid: 40a0e2abe3bd53a42ae811f4d8a574d4, type: 2}
   runtimeBanner: {fileID: 2100000, guid: 1dc84019e27c7f249af7e533dba73315, type: 2}
+  customDefaultImage: 
+  customDefaultCTA: 
+  modalTrigger: 
+  modalDelay: 0
