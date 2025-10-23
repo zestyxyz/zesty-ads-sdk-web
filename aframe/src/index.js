@@ -44,8 +44,8 @@ AFRAME.registerComponent('zesty-banner', {
     beacon: { type: 'boolean', default: true },
     customDefaultImage: { type: 'string' },
     customDefaultCtaUrl: { type: 'string' },
-    modal: { type: 'boolean', default: false },
     modalTrigger: { type: 'string' },
+    modalDelay: { type: 'number', default: 0 },
   },
 
   init: function() {
@@ -73,7 +73,7 @@ AFRAME.registerComponent('zesty-banner', {
   registerEntity: function() {
     const adUnit = this.data.adUnit;
     const format = this.data.format || defaultFormat;
-    createBanner(this.el, adUnit, format, this.data.style, this.data.height, this.data.beacon, this.data.customDefaultImage, this.data.customDefaultCtaUrl, this.data.modalTrigger);
+    createBanner(this.el, adUnit, format, this.data.style, this.data.height, this.data.beacon, this.data.customDefaultImage, this.data.customDefaultCtaUrl, this.data.modalTrigger, this.data.modalDelay);
   },
 
   // Every 30sec check for `visible` component
