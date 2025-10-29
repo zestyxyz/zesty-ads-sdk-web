@@ -201,6 +201,13 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, delay = 0) =
     pointerEvents: 'auto'
   });
 
+  const title = document.createElement('h1');
+  title.innerText = 'Ad';
+  title.style.textAlign = 'center';
+  title.style.font = 'normal 32px sans-serif';
+  title.style.color = '#F4801E';
+  title.style.marginTop = '0';
+
   // Image setup
   const img = document.createElement('img');
   img.src = image;
@@ -235,7 +242,8 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, delay = 0) =
     display: 'flex',
     justifyContent: 'flex-end',
     marginBottom: '0.5em',
-    pointerEvents: 'auto'
+    pointerEvents: 'auto',
+    zIndex: '2'
   });
 
   // Close button
@@ -246,6 +254,7 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, delay = 0) =
   close.style.display = 'none';
   setTimeout(() => {
     close.style.display = 'block';
+    title.style.marginTop = '-1.4em';
   }, delay);
   Object.assign(close.style, {
     fontFamily: 'system-ui, -apple-system, "Segoe UI", Arial, sans-serif',
@@ -288,6 +297,7 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, delay = 0) =
   // Assemble the popover BEFORE showing
   closeContainer.appendChild(close);
   popover.appendChild(closeContainer);
+  popover.appendChild(title);
   popover.appendChild(cta);
   document.body.appendChild(popover);
 
