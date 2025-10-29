@@ -32,7 +32,7 @@ async function getCamera() {
 const cameraFuture = getCamera();
 
 let sdkLoaded = false;
-
+let modalTriggers = {};
 
 AFRAME.registerComponent('zesty-banner', {
   data: {},
@@ -272,12 +272,20 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
     el.url = banner.url;
 
     // Hook up modal trigger
-    const onModalTrigger = () => {
-      let modal = constructAdModal(adUnit, banner.campaignId, format, banner.img.src, banner.url, modalDelay);
-      document.body.appendChild(modal);
-    };
-    document.removeEventListener(modalTrigger, onModalTrigger);
-    document.addEventListener(modalTrigger, onModalTrigger);
+    if (modalTrigger) {
+      // Remove old listener if it exists
+      if (modalTriggers[adUnit]) {
+        document.removeEventListener(modalTrigger, modalTriggers[adUnit]);
+      }
+
+      // Create and store new handler
+      modalTriggers[adUnit] = () => {
+        let modal = constructAdModal(adUnit, banner.campaignId, format, banner.img.src, banner.url, modalDelay);
+        document.body.appendChild(modal);
+      };
+
+      document.addEventListener(modalTrigger, modalTriggers[adUnit]);
+    }
   }
 }
 
