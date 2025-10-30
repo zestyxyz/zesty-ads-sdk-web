@@ -123,3 +123,20 @@ test.describe('Prebid', () => {
     expect(EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL).toContain(img3);
   });
 });
+
+test.describe('Modal', () => {
+  test('An ad modal is created when the modal trigger event is fired', async ({ page }) => {
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
+    await page.waitForFunction(() => window.banner1?.findComponent('render').meshInstances[0]._material._diffuseMap?.name != null);
+    await page.evaluate(() => {
+      let event = new CustomEvent('lose');
+      document.dispatchEvent(event);
+    });
+    const modal = await page.waitForSelector('[popover="manual"]');
+    const modalLink = await modal.evaluate(() => document.querySelector('[popover="manual"] > a').href);
+    const modalImage = await modal.evaluate(() => document.querySelector('[popover="manual"] > a > img').src);
+    expect(modal).toBeTruthy();
+    expect(modalImage).toBe(EXAMPLE_IMAGE_MEDIUM_RECTANGLE);
+    expect(modalLink).toContain(EXAMPLE_URL);
+  });
+});
