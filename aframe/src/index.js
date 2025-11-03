@@ -46,6 +46,7 @@ AFRAME.registerComponent('zesty-banner', {
     customDefaultCtaUrl: { type: 'string' },
     modalTrigger: { type: 'string' },
     modalDelay: { type: 'number', default: 0 },
+    modalBackground: { type: 'boolean', default: false },
   },
 
   init: function() {
@@ -73,7 +74,19 @@ AFRAME.registerComponent('zesty-banner', {
   registerEntity: function() {
     const adUnit = this.data.adUnit;
     const format = this.data.format || defaultFormat;
-    createBanner(this.el, adUnit, format, this.data.style, this.data.height, this.data.beacon, this.data.customDefaultImage, this.data.customDefaultCtaUrl, this.data.modalTrigger, this.data.modalDelay);
+    createBanner(
+      this.el,
+      adUnit,
+      format,
+      this.data.style,
+      this.data.height,
+      this.data.beacon,
+      this.data.customDefaultImage,
+      this.data.customDefaultCtaUrl,
+      this.data.modalTrigger,
+      this.data.modalBackground,
+      this.data.modalDelay
+    );
   },
 
   // Every 30sec check for `visible` component
@@ -99,7 +112,7 @@ AFRAME.registerComponent('zesty-banner', {
   }
 });
 
-async function createBanner(el, adUnit, format, style, height, beacon, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay) {
+async function createBanner(el, adUnit, format, style, height, beacon, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalBackground, modalDelay) {
   let overrideEntry = getOverrideUnitInfo(adUnit);
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.format;
   const adjustedFormat = shouldOverride ? overrideEntry.format : format;
@@ -146,7 +159,7 @@ async function createBanner(el, adUnit, format, style, height, beacon, customDef
       return banner;
     });
 
-    bannerPromise.then(banner => updateBanner(banner, plane, el, adUnit, adjustedFormat, style, adjustedHeight, beacon, modalTrigger, modalDelay));
+    bannerPromise.then(banner => updateBanner(banner, plane, el, adUnit, adjustedFormat, style, adjustedHeight, beacon, modalTrigger, modalBackground, modalDelay));
   }
 
   getBanner();
@@ -179,7 +192,7 @@ async function loadBanner(adUnit, format, style, customDefaultImage, customDefau
   }
 }
 
-async function updateBanner(banner, plane, el, adUnit, format, style, height, beacon, modalTrigger, modalDelay) {
+async function updateBanner(banner, plane, el, adUnit, format, style, height, beacon, modalTrigger, modalBackground, modalDelay) {
   let overrideEntry = getOverrideUnitInfo(adUnit);
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.oldFormat;
 
@@ -280,7 +293,7 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
 
       // Create and store new handler
       modalTriggers[adUnit] = () => {
-        let modal = constructAdModal(adUnit, banner.campaignId, format, banner.img.src, banner.url, modalDelay);
+        let modal = constructAdModal(adUnit, banner.campaignId, format, banner.img.src, banner.url, modalBackground, modalDelay);
         document.body.appendChild(modal);
       };
 

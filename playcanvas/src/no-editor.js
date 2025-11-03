@@ -22,6 +22,7 @@ ZestyBanner.attributes.add("customDefaultImage", { type: "string" });
 ZestyBanner.attributes.add("customDefaultCtaUrl", { type: "string" });
 ZestyBanner.attributes.add("modalTrigger", { type: "string" });
 ZestyBanner.attributes.add("modalDelay", { type: "number", default: 0 });
+ZestyBanner.attributes.add("modalBackground", { type: "boolean", default: false });
 
 const FORMATS = {
     1: "medium-rectangle",
@@ -71,7 +72,7 @@ ZestyBanner.prototype.loadBanner = async function() {
 
     // Hook up modal trigger
     const onModalTrigger = () => {
-      let modal = constructAdModal(this.adUnitId, activeBanner.CampaignId, FORMATS[this.format], image, url, this.modalDelay);
+      let modal = constructAdModal(this.adUnitId, activeBanner.CampaignId, FORMATS[this.format], image, url, this.modalBackground, this.modalDelay);
       document.body.appendChild(modal);
     };
     document.removeEventListener(this.modalTrigger, onModalTrigger);

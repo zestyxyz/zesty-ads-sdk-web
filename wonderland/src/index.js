@@ -57,6 +57,8 @@ export class ZestyBanner extends Component {
     customDefaultCtaUrl: Property.string(''),
     /** Custom modal trigger event */
     modalTrigger: Property.string(''),
+    /** Whether to use a background behind the modal */
+    modalBackground: Property.bool(false),
     /** Delay before showing modal close button */
     modalDelay: Property.float(0),
   };
@@ -166,6 +168,7 @@ export class ZestyBanner extends Component {
       this.customDefaultImage,
       this.customDefaultCtaUrl,
       this.modalTrigger,
+      this.modalBackground,
       this.modalDelay
     ).then(banner => {
       this.banner = banner;
@@ -262,7 +265,7 @@ export class ZestyBanner extends Component {
     }
   }
 
-  async loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay) {
+  async loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalBackground, modalDelay) {
     const activeCampaign = this.dynamicNetworking && this.dynamicNetworkFunctions?.fetchCampaignAd ?
       await this.dynamicNetworkFunctions.fetchCampaignAd(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl) :
       await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
@@ -280,7 +283,7 @@ export class ZestyBanner extends Component {
 
     // Hook up modal trigger
     const onModalTrigger = () => {
-      let modal = constructAdModal(adUnit, this.CampaignId, format, image, url, modalDelay);
+      let modal = constructAdModal(adUnit, this.CampaignId, format, image, url, modalBackground, modalDelay);
       document.body.appendChild(modal);
     };
     document.removeEventListener(modalTrigger, onModalTrigger);

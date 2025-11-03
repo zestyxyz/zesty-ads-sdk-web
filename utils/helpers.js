@@ -181,10 +181,22 @@ const visibilityCheck = (bbMin, bbMax, cameraProjMatrix, cameraWorldMatrix) => {
   return frustum.intersectsBox(boundingBox);
 }
 
-const constructAdModal = (adUnitId, campaignId, format, image, url, delay = 0) => {
+const constructAdModal = (adUnitId, campaignId, format, image, url, useBackground, delay = 0) => {
   const popover = document.createElement('div');
   popover.setAttribute('popover', 'manual');
   popover.id = 'ad-popover-' + Date.now();
+
+  let background;
+  if (useBackground) {
+    background = document.createElement('div');
+    background.style.position = 'fixed';
+    background.style.top = '0';
+    background.style.left = '0';
+    background.style.width = '100%';
+    background.style.height = '100%';
+    background.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
+    background.style.zIndex = '2147483646';
+  }
 
   // basic styles (keeps it on top and clickable)
   Object.assign(popover.style, {
@@ -268,7 +280,6 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, delay = 0) =
 
   // Helper that attempts to use the Popover API and falls back to removing the element
   const removePopover = () => {
-    // try hidePopover if available (some browsers expose it)
     try {
       if (typeof popover.hidePopover === 'function') {
         popover.hidePopover();
@@ -276,10 +287,14 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, delay = 0) =
     } catch (err) {
       // ignore errors from hidePopover
     }
-    // ensure element is removed from DOM so it definitely disappears
+
+    // Ensure element is removed from DOM so it definitely disappears
     if (popover.parentElement) popover.parentElement.removeChild(popover);
-    // cleanup global listeners
-    document.removeEventListener('keydown', onKeyDown);
+
+    // Clean up background if present
+    if (background) {
+      document.body.removeChild(background);
+    }
   };
 
   // Close click handler: stop propagation and remove
@@ -288,13 +303,10 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, delay = 0) =
     removePopover();
   });
 
-  // Close on Escape
-  const onKeyDown = (e) => {
-    if (e.key === 'Escape') removePopover();
-  };
-  document.addEventListener('keydown', onKeyDown);
-
   // Assemble the popover BEFORE showing
+  if (background) {
+    document.body.appendChild(background);
+  }
   closeContainer.appendChild(close);
   popover.appendChild(closeContainer);
   popover.appendChild(title);

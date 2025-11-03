@@ -18,7 +18,7 @@ export default class ZestyBanner {
     this.scene = scene;
     this.xr = webXRExperienceHelper;
 
-    loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalDelay).then(data => {
+    loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(data => {
       this.zestyBanner.material = data.mat;
       this.zestyBanner.actionManager = new BABYLON.ActionManager(scene);
       this.zestyBanner.url = data.url;
@@ -53,7 +53,7 @@ export default class ZestyBanner {
         camera.getWorldMatrix().asArray()
       );
       if (isVisible) {
-        loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl).then(banner => {
+        loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(banner => {
           this.zestyBanner.material.diffuseTexture.updateURL(banner.src);
         });
       }
@@ -76,7 +76,7 @@ export default class ZestyBanner {
   }
 }
 
-async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay) {
+async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay, modalBackground) {
   const activeBanner = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
@@ -87,7 +87,7 @@ async function loadBanner(adUnit, format, style, customDefaultImage, customDefau
 
   // Hook up modal trigger
   const onModalTrigger = () => {
-    let modal = constructAdModal(adUnit, activeBanner.CampaignId, format, image, url, modalDelay);
+    let modal = constructAdModal(adUnit, activeBanner.CampaignId, format, image, url, modalBackground, modalDelay);
     document.body.appendChild(modal);
   };
   document.removeEventListener(modalTrigger, onModalTrigger);

@@ -30,6 +30,7 @@ namespace Zesty
         public string customDefaultImage = "";
         public string customDefaultCTA = "";
         public string modalTrigger = "";
+        public bool modalBackground = false;
         public int modalDelay = 0;
 
         // Object-related variables
@@ -44,7 +45,7 @@ namespace Zesty
         [DllImport("__Internal")] private static extern void _open(string url);
         [DllImport("__Internal")] private static extern void _initPrebid(string adUnitId, int format);
         [DllImport("__Internal")] private static extern string _tryGetWinningBidInfo();
-        [DllImport("__Internal")] private static extern void _updateAdModal(string adUnitId, string campaignId, int format, string defaultImage, string defaultCTA, string modalTrigger, int modalDelay);
+        [DllImport("__Internal")] private static extern void _updateAdModal(string adUnitId, string campaignId, int format, string defaultImage, string defaultCTA, string modalTrigger, bool modalBackground, int modalDelay);
 
         string bannerTextureURL;
         string campaignId = "";
@@ -130,7 +131,7 @@ namespace Zesty
 
             if (modalTrigger != "")
             {
-                _updateAdModal(adUnit, campaignId, (int)format, customDefaultImage, customDefaultCTA, modalTrigger, modalDelay);
+                _updateAdModal(adUnit, campaignId, (int)format, customDefaultImage, customDefaultCTA, modalTrigger, modalBackground, modalDelay);
             }
 
             if (beaconEnabled)

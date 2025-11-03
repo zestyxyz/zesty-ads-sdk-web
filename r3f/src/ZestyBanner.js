@@ -30,6 +30,7 @@ export default function ZestyBanner(props) {
   const customDefaultCtaUrl = props.customDefaultCtaUrl ?? null;
 
   const modalTrigger = props.modalTrigger ?? null;
+  const modalBackground = props.modalBackground ?? false;
   const modalDelay = props.modalDelay ?? 0;
 
   const loadBanner = async (adUnit, format, style) => {
@@ -38,7 +39,7 @@ export default function ZestyBanner(props) {
 
     // Hook up modal trigger
     const onModalTrigger = () => {
-      let modal = constructAdModal(adUnit, activeCampaign.CampaignId, format, asset_url, cta_url, modalDelay);
+      let modal = constructAdModal(adUnit, activeCampaign.CampaignId, format, asset_url, cta_url, modalBackground, modalDelay);
       document.body.appendChild(modal);
     };
     document.removeEventListener(modalTrigger, onModalTrigger);

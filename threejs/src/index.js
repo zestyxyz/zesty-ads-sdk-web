@@ -36,10 +36,11 @@ export default class ZestyBanner extends Mesh {
     this.customDefaultImage = config.customDefaultImage ?? null;
     this.customDefaultCtaUrl = config.customDefaultCtaUrl ?? null;
     this.modalTrigger = config.modalTrigger ?? null;
+    this.modalBackground = config.modalBackground ?? false;
     this.modalDelay = config.modalDelay ?? 0;
     this.banner = {};
 
-    loadBanner(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl, this.modalTrigger, this.modalDelay).then(banner => {
+    loadBanner(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl, this.modalTrigger, this.modalBackground, this.modalDelay).then(banner => {
       this.material = new MeshBasicMaterial({
         map: banner.texture
       });
@@ -107,14 +108,14 @@ export default class ZestyBanner extends Mesh {
   }
 }
 
-async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay) {
+async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalBackground, modalDelay) {
   const activeBanner = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 
   // Hook up modal trigger
   const onModalTrigger = () => {
-    let modal = constructAdModal(adUnit, activeBanner.CampaignId, format, image, url, modalDelay);
+    let modal = constructAdModal(adUnit, activeBanner.CampaignId, format, image, url, modalBackground, modalDelay);
     document.body.appendChild(modal);
   };
   document.removeEventListener(modalTrigger, onModalTrigger);

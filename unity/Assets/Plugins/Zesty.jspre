@@ -64,10 +64,22 @@ Module['Zesty'].checkUserPlatform = async function() {
     return currentMatch;
 }
 
-Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, delay) => {
+Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, useBackground, delay = 0) => {
   const popover = document.createElement('div');
   popover.setAttribute('popover', 'manual');
   popover.id = 'ad-popover-' + Date.now();
+
+  let background;
+  if (useBackground) {
+    background = document.createElement('div');
+    background.style.position = 'fixed';
+    background.style.top = '0';
+    background.style.left = '0';
+    background.style.width = '100%';
+    background.style.height = '100%';
+    background.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
+    background.style.zIndex = '2147483646';
+  }
 
   // basic styles (keeps it on top and clickable)
   Object.assign(popover.style, {
@@ -83,6 +95,13 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, d
     zIndex: '2147483647', // ensure it's above other layers
     pointerEvents: 'auto'
   });
+
+  const title = document.createElement('h1');
+  title.innerText = 'Ad';
+  title.style.textAlign = 'center';
+  title.style.font = 'normal 32px sans-serif';
+  title.style.color = '#F4801E';
+  title.style.marginTop = '0';
 
   // Image setup
   const img = document.createElement('img');
@@ -118,7 +137,8 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, d
     display: 'flex',
     justifyContent: 'flex-end',
     marginBottom: '0.5em',
-    pointerEvents: 'auto'
+    pointerEvents: 'auto',
+    zIndex: '2'
   });
 
   // Close button
@@ -129,6 +149,7 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, d
   close.style.display = 'none';
   setTimeout(() => {
     close.style.display = 'block';
+    title.style.marginTop = '-1.4em';
   }, delay);
   Object.assign(close.style, {
     fontFamily: 'system-ui, -apple-system, "Segoe UI", Arial, sans-serif',
@@ -142,7 +163,6 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, d
 
   // Helper that attempts to use the Popover API and falls back to removing the element
   const removePopover = () => {
-    // try hidePopover if available (some browsers expose it)
     try {
       if (typeof popover.hidePopover === 'function') {
         popover.hidePopover();
@@ -150,10 +170,14 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, d
     } catch (err) {
       // ignore errors from hidePopover
     }
-    // ensure element is removed from DOM so it definitely disappears
+
+    // Ensure element is removed from DOM so it definitely disappears
     if (popover.parentElement) popover.parentElement.removeChild(popover);
-    // cleanup global listeners
-    document.removeEventListener('keydown', onKeyDown);
+
+    // Clean up background if present
+    if (background) {
+      document.body.removeChild(background);
+    }
   };
 
   // Close click handler: stop propagation and remove
@@ -162,15 +186,13 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, d
     removePopover();
   });
 
-  // Close on Escape
-  const onKeyDown = (e) => {
-    if (e.key === 'Escape') removePopover();
-  };
-  document.addEventListener('keydown', onKeyDown);
-
   // Assemble the popover BEFORE showing
+  if (background) {
+    document.body.appendChild(background);
+  }
   closeContainer.appendChild(close);
   popover.appendChild(closeContainer);
+  popover.appendChild(title);
   popover.appendChild(cta);
   document.body.appendChild(popover);
 

@@ -238,7 +238,7 @@ mergeInto(LibraryManager.library, {
       return buffer;
     }
   },
-  _updateAdModal: function (adUnitIdRaw, campaignIdRaw, format, imageRaw, urlRaw, modalTriggerRaw, modalDelay) {
+  _updateAdModal: function (adUnitIdRaw, campaignIdRaw, format, imageRaw, urlRaw, modalTriggerRaw, modalBackground, modalDelay) {
     const adUnitId = UTF8ToString(adUnitIdRaw);
     const campaignId = UTF8ToString(campaignIdRaw);
     const image = UTF8ToString(imageRaw);
@@ -247,7 +247,7 @@ mergeInto(LibraryManager.library, {
 
     // Hook up modal trigger
     const onModalTrigger = () => {
-      let modal = Module['Zesty']._constructAdModal(adUnitId, campaignId, format, image, url, modalDelay);
+      let modal = Module['Zesty']._constructAdModal(adUnitId, campaignId, format, image, url, modalBackground, modalDelay);
       document.body.appendChild(modal);
     };
     document.removeEventListener(modalTrigger, onModalTrigger);
