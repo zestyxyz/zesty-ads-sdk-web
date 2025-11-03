@@ -58,7 +58,7 @@
       app.root.addChild(light);
 
       // create a banner
-      const createBanner = (adUnitId, format, customDefaultImage = null, customDefaultCtaUrl = null, modalTrigger = null, modalDelay = 0) => {
+      const createBanner = (adUnitId, format, customDefaultImage = null, customDefaultCtaUrl = null, modalTrigger = null, modalBackground = false, modalDelay = 0) => {
         const banner = new pc.Entity();
         banner.addComponent('script');
         banner.script.create('zesty-banner');
@@ -68,11 +68,12 @@
         banner.script['zesty-banner'].customDefaultImage = customDefaultImage;
         banner.script['zesty-banner'].customDefaultCtaUrl = customDefaultCtaUrl;
         banner.script['zesty-banner'].modalTrigger = modalTrigger;
+        banner.script['zesty-banner'].modalBackground = modalBackground;
         banner.script['zesty-banner'].modalDelay = modalDelay;
         banner.setEulerAngles(90, 0, 0);
         return banner;
       }
-      const banner1 = createBanner('00000000-0000-0000-0000-000000000000', 1, 'https://picsum.photos/300/250', 'https://www.example.com', 'lose', 5000);
+      const banner1 = createBanner('00000000-0000-0000-0000-000000000000', 1, 'https://picsum.photos/300/250', 'https://www.example.com', 'lose', true, 5000);
       banner1.setPosition(0, 1, -2);
       const banner2 = createBanner('10000000-0000-4000-8000-000000000000', 2);
       banner2.setPosition(0, 0, -2);
