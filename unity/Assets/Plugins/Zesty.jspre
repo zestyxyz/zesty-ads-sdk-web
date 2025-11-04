@@ -64,10 +64,18 @@ Module['Zesty'].checkUserPlatform = async function() {
     return currentMatch;
 }
 
-Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, useBackground, delay = 0) => {
+Module['Zesty']._constructAdModal = (adUnitId, campaignId, formatRaw, image, url, useBackground, delay = 0) => {
   const popover = document.createElement('div');
   popover.setAttribute('popover', 'manual');
   popover.id = 'ad-popover-' + Date.now();
+
+  let format;
+  switch (formatRaw) {
+    case 0: format = 'medium-rectangle'; break;
+    case 1: format = 'billboard'; break;
+    case 2: format = 'mobile-phone-interstitial'; break;
+    default: format = 'medium-rectangle';
+  }
 
   let background;
   if (useBackground) {
@@ -83,7 +91,7 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, u
 
   // basic styles (keeps it on top and clickable)
   Object.assign(popover.style, {
-    borderRadius: '8%',
+    borderRadius: '16px',
     backgroundColor: '#444343',
     border: '2px solid #F4801E',
     display: 'flex',
@@ -113,7 +121,7 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, u
     case 'billboard':
       width = 970; height = 250; break;
     case 'mobile-phone-interstitial':
-      width = 750; height = 1334; break;
+      width = 320; height = 480; break;
     default:
       width = 300; height = 250; break;
   }
@@ -157,7 +165,7 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, format, image, url, u
     background: 'transparent',
     backgroundColor: '#575656',
     border: '2px solid #F4801E',
-    borderRadius: '8%',
+    borderRadius: '16px',
     fontSize: '1.2em',
     color: '#F4801E',
     padding: '0.5em',

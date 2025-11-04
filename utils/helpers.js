@@ -200,7 +200,7 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, useBackgroun
 
   // basic styles (keeps it on top and clickable)
   Object.assign(popover.style, {
-    borderRadius: '8%',
+    borderRadius: '16px',
     backgroundColor: '#444343',
     border: '2px solid #F4801E',
     display: 'flex',
@@ -230,7 +230,7 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, useBackgroun
     case 'billboard':
       width = 970; height = 250; break;
     case 'mobile-phone-interstitial':
-      width = 750; height = 1334; break;
+      width = 320; height = 480; break;
     default:
       width = 300; height = 250; break;
   }
@@ -274,7 +274,7 @@ const constructAdModal = (adUnitId, campaignId, format, image, url, useBackgroun
     background: 'transparent',
     backgroundColor: '#575656',
     border: '2px solid #F4801E',
-    borderRadius: '8%',
+    borderRadius: '16px',
     fontSize: '1.2em',
     color: '#F4801E',
     padding: '0.5em',
