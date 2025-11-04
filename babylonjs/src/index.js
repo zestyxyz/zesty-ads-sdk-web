@@ -7,6 +7,8 @@ import { version } from '../package.json';
 
 console.log('Zesty SDK Version: ', version);
 
+let modalTriggers = {};
+
 export default class ZestyBanner {
   constructor(adUnit, format, style, height, scene, webXRExperienceHelper = null, beacon = true, config = {}) {
     const options = {
@@ -76,7 +78,7 @@ export default class ZestyBanner {
   }
 }
 
-async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalDelay, modalBackground) {
+async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalBackground, modalDelay) {
   const activeBanner = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
@@ -86,12 +88,20 @@ async function loadBanner(adUnit, format, style, customDefaultImage, customDefau
   mat.diffuseTexture.hasAlpha = true;
 
   // Hook up modal trigger
-  const onModalTrigger = () => {
-    let modal = constructAdModal(adUnit, activeBanner.CampaignId, format, image, url, modalBackground, modalDelay);
-    document.body.appendChild(modal);
-  };
-  document.removeEventListener(modalTrigger, onModalTrigger);
-  document.addEventListener(modalTrigger, onModalTrigger);
+  if (modalTrigger) {
+    // Remove old listener if it exists
+    if (modalTriggers[adUnit]) {
+      document.removeEventListener(modalTrigger, modalTriggers[adUnit]);
+    }
+
+    // Create and store new handler
+    modalTriggers[adUnit] = () => {
+      let modal = constructAdModal(adUnit, activeBanner.CampaignId, format, image, url, modalBackground, modalDelay);
+      document.body.appendChild(modal);
+    };
+
+    document.addEventListener(modalTrigger, modalTriggers[adUnit]);
+  }
 
   return { mat: mat, src: image, uri: activeBanner.uri, url: url, campaignId: activeBanner.CampaignId };
 }

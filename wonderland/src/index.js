@@ -21,6 +21,7 @@ const formatsLink = 'https://cdn.zesty.xyz/sdk/zesty-formats.js';
 const networkingLink = 'https://cdn.zesty.xyz/sdk/zesty-networking.js';
 
 let sdkLoaded = false;
+let modalTriggers = {};
 
 /**
  * [Zesty Market](https://zesty.xyz) banner ad unit
@@ -282,12 +283,20 @@ export class ZestyBanner extends Component {
     }
 
     // Hook up modal trigger
-    const onModalTrigger = () => {
-      let modal = constructAdModal(adUnit, this.CampaignId, format, image, url, modalBackground, modalDelay);
-      document.body.appendChild(modal);
-    };
-    document.removeEventListener(modalTrigger, onModalTrigger);
-    document.addEventListener(modalTrigger, onModalTrigger);
+    if (modalTrigger) {
+      // Remove old listener if it exists
+      if (modalTriggers[adUnit]) {
+        document.removeEventListener(modalTrigger, modalTriggers[adUnit]);
+      }
+
+      // Create and store new handler
+      modalTriggers[adUnit] = () => {
+        let modal = constructAdModal(adUnit, this.CampaignId, format, image, url, modalBackground, modalDelay);
+        document.body.appendChild(modal);
+      };
+
+      document.addEventListener(modalTrigger, modalTriggers[adUnit]);
+    }
 
     if (image.includes('canvas://')) {
       const canvasIframe = document.querySelector('#zesty-canvas-iframe');

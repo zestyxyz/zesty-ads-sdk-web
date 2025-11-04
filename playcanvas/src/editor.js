@@ -30,6 +30,8 @@ const FORMATS = {
     3: "mobile-phone-interstitial",
 }
 
+let modalTriggers = {};
+
 // initialize code called once per entity
 ZestyBanner.prototype.initialize = function() {
     this.ctaUrl = DEFAULT_CTA_URL;
@@ -71,12 +73,20 @@ ZestyBanner.prototype.loadBanner = async function() {
     const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 
     // Hook up modal trigger
-    const onModalTrigger = () => {
-      let modal = constructAdModal(this.adUnitId, activeBanner.CampaignId, FORMATS[this.format], image, url, this.modalBackground, this.modalDelay);
-      document.body.appendChild(modal);
-    };
-    document.removeEventListener(this.modalTrigger, onModalTrigger);
-    document.addEventListener(this.modalTrigger, onModalTrigger);
+    if (this.modalTrigger) {
+      // Remove old listener if it exists
+      if (modalTriggers[this.adUnitId]) {
+        document.removeEventListener(this.modalTrigger, modalTriggers[this.adUnitId]);
+      }
+
+      // Create and store new handler
+      modalTriggers[this.adUnitId] = () => {
+        let modal = constructAdModal(this.adUnitId, activeBanner.CampaignId, FORMATS[this.format], image, url, this.modalBackground, this.modalDelay);
+        document.body.appendChild(modal);
+      };
+
+      document.addEventListener(this.modalTrigger, modalTriggers[adUnit]);
+    }
 
     return { image, url, campaignId: activeBanner.CampaignId };
 }

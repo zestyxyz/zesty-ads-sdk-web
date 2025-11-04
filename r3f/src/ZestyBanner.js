@@ -10,6 +10,8 @@ import { version } from '../package.json';
 
 console.log('Zesty SDK Version: ', version);
 
+let modalTriggers = {};
+
 export default function ZestyBanner(props) {
   const [bannerData, setBannerData] = useState(false);
   const [material, setMaterial] = useState(new THREE.MeshBasicMaterial());
@@ -38,12 +40,20 @@ export default function ZestyBanner(props) {
     const { asset_url, cta_url } = activeCampaign.Ads[0];
 
     // Hook up modal trigger
-    const onModalTrigger = () => {
-      let modal = constructAdModal(adUnit, activeCampaign.CampaignId, format, asset_url, cta_url, modalBackground, modalDelay);
-      document.body.appendChild(modal);
-    };
-    document.removeEventListener(modalTrigger, onModalTrigger);
-    document.addEventListener(modalTrigger, onModalTrigger);
+    if (modalTrigger) {
+      // Remove old listener if it exists
+      if (modalTriggers[adUnit]) {
+        document.removeEventListener(modalTrigger, modalTriggers[adUnit]);
+      }
+
+      // Create and store new handler
+      modalTriggers[adUnit] = () => {
+        let modal = constructAdModal(adUnit, activeCampaign.CampaignId, format, asset_url, cta_url, modalBackground, modalDelay);
+        document.body.appendChild(modal);
+      };
+
+      document.addEventListener(modalTrigger, modalTriggers[adUnit]);
+    }
 
     return { asset_url, cta_url, campaignId: activeCampaign.CampaignId }
   };
