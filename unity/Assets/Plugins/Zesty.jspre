@@ -162,13 +162,13 @@ Module['Zesty']._constructAdModal = (adUnitId, campaignId, formatRaw, image, url
   Object.assign(close.style, {
     fontFamily: 'system-ui, -apple-system, "Segoe UI", Arial, sans-serif',
     cursor: 'pointer',
-    background: 'transparent',
     backgroundColor: '#575656',
-    border: '2px solid #F4801E',
     borderRadius: '16px',
     fontSize: '1.2em',
     color: '#F4801E',
     padding: '0.5em',
+    border: '2px solid #575656',
+    outline: 'none'
   });
 
   // Helper that attempts to use the Popover API and falls back to removing the element
