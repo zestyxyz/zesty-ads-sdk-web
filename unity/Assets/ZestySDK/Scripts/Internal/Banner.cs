@@ -31,12 +31,15 @@ namespace Zesty
 
         public string customDefaultImage = "";
         public string customDefaultCTA = "";
+
+        [Header("Modal Configuration")]
         public string modalTrigger = "";
         public bool modalBackground = false;
         public int modalDelay = 0;
 
-        // DSIG variables
-        [Header("DSIG Beacon Configuration")]
+        // SIG variables
+        [Header("SIG Beacon Configuration")]
+        public string targetRelay;
         public string specifiedName;
         [TextArea]
         public string specifiedDescription;
@@ -64,8 +67,8 @@ namespace Zesty
         // Banner loading variables
         bool bannerLoadedSuccessfully = false;
 
-        // DSIG
-        [DllImport("__Internal")] private static extern void _beaconSignal(string specifiedName, string specifiedDescription, string specifiedUrl, string specifiedImage, string specifiedTags);
+        // SIG
+        [DllImport("__Internal")] private static extern void _beaconSignal(string targetRelay, string specifiedName, string specifiedDescription, string specifiedUrl, string specifiedImage, string specifiedTags);
 
         void Start() {
             m_Renderer = GetComponent<MeshRenderer>();
@@ -80,7 +83,7 @@ namespace Zesty
             }
 
             string tags = string.Join(",", this.specifiedTags.ToArray());
-            _beaconSignal(specifiedName, specifiedDescription, specifiedUrl, specifiedImage, tags);
+            _beaconSignal(targetRelay, specifiedName, specifiedDescription, specifiedUrl, specifiedImage, tags);
         }
 
         /// <summary>

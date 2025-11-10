@@ -443,10 +443,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
         type: 3}
+      propertyPath: targetRelay
+      value: http://localhost:9001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
+        type: 3}
       propertyPath: modalTrigger
       value: lose
-      propertyPath: urlOverride
-      value: https://www.example.com
       objectReference: {fileID: 0}
     - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
         type: 3}
@@ -465,6 +468,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
         type: 3}
+      propertyPath: specifiedName
+      value: Zesty Unity Test
+      objectReference: {fileID: 0}
+    - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
+        type: 3}
+      propertyPath: specifiedImage
+      value: https://dummyimage.com/800x600/000/fff
+      objectReference: {fileID: 0}
+    - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
+        type: 3}
       propertyPath: modalBackground
       value: 1
       objectReference: {fileID: 0}
@@ -477,23 +490,11 @@ PrefabInstance:
         type: 3}
       propertyPath: customDefaultImage
       value: https://picsum.photos/300/250
-      propertyPath: specifiedName
-      value: DSIG Beacon Unity Test 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
-        type: 3}
-      propertyPath: specifiedImage
-      value: https://dummyimage.com/800x600/000/fff
-      objectReference: {fileID: 0}
-    - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
-        type: 3}
-      propertyPath: descriptionOverride
-      value: This is a test of integrating the DSIG Beacon into a Unity WebGL project.
       objectReference: {fileID: 0}
     - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
         type: 3}
       propertyPath: specifiedDescription
-      value: This is a test of Unity integration with DSIG Beacon w/ tags and image!
+      value: This is a test of Unity integration with SIG Beacon w/ tags and image!
       objectReference: {fileID: 0}
     - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
         type: 3}
@@ -502,12 +503,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
         type: 3}
-      propertyPath: specifiedTags.Array.data[0]
+      propertyPath: 'specifiedTags.Array.data[0]'
       value: action
       objectReference: {fileID: 0}
     - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,
         type: 3}
-      propertyPath: specifiedTags.Array.data[1]
+      propertyPath: 'specifiedTags.Array.data[1]'
       value: puzzle
       objectReference: {fileID: 0}
     - target: {fileID: 4962564884104095091, guid: e82d35c8f4175134cac7dbbb1433e5e5,

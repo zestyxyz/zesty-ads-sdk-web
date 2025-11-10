@@ -1,5 +1,6 @@
 mergeInto(LibraryManager.library, {
-  _beaconSignal: async function (specifiedName, specifiedDescription, specifiedUrl, specifiedImage, specifiedTags) {
+  _beaconSignal: async function (targetRelay, specifiedName, specifiedDescription, specifiedUrl, specifiedImage, specifiedTags) {
+    let targetRelayString = UTF8ToString(targetRelay);
     let nameString = UTF8ToString(specifiedName);
     let descriptionString = UTF8ToString(specifiedDescription);
     let urlString = UTF8ToString(specifiedUrl);
@@ -22,7 +23,7 @@ mergeInto(LibraryManager.library, {
       override["tags"] = tagsString;
     }
 
-    const beacon = new Module['DSIG'].Beacon("http://localhost:8000", override);
+    const beacon = new Module['SIG'].Beacon(targetRelayString, override);
     await beacon.signal();
   },
 })

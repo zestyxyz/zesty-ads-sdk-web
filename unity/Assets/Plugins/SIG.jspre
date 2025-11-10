@@ -1,9 +1,37 @@
-Module['DSIG'] = Module['DSIG'] || {};
+Module['SIG'] = Module['SIG'] || {};
 
 /**
- * sig-beacon v0.11
+ * sig-beacon v0.14
  */
-Module['DSIG'].Beacon = class Beacon {
+/**
+ * @typedef {Object} BeaconOverride
+ * @property {string} [name] - The name of the app
+ * @property {string} [description] - The description of the app
+ * @property {string} [url] - The canonical URL of the app
+ * @property {string} [image] - The preview image of the app
+ * @property {string} [tags] - The tags of the app
+ * @property {boolean} [stripQueryParams] - Whether to strip query parameters
+ */
+
+/**
+ * Generates a random v4 UUID. In scenarios where window.crypto is not available,
+ * falls back to a manual generation method using Math.random(). We don't necessarily need
+ * to ensure it's cryptographically random, so the use of Math.random() is acceptable.
+ * @returns {string} A v4 UUID string
+ */
+function generateRandomUUID() {
+  if (crypto && 'randomUUID' in crypto) {
+    return crypto.randomUUID();
+  }
+
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const rand = Math.floor(Math.random() * 16); // Generate random value from 0-15
+    const digit = c == 'x' ? rand : (rand & 0x3 | 0x8); // y must be 8, 9, A, or B
+    return digit.toString(16);
+  });
+}
+
+Module['SIG'].Beacon = class Beacon {
   /** @type {string} The relay URL that this beacon will connect to */
   relay;
   /** @type {string} The name of the app, if specified. Overrides page checks. */
@@ -20,11 +48,13 @@ Module['DSIG'].Beacon = class Beacon {
   browserContext = 'document' in globalThis;
   /** @type {Document} The top-level HTML document, if we detect we are running in an iframe. */
   topLevelDocument = null;
+  /** @type {boolean} Controls whether query params are stripped from a URL by default if grabbing from document. Defaults to true. */
+  stripQueryParams = true;
 
   /**
    *
    * @param {string} relay The relay URL that this beacon will connect to
-   * @param {{ name?: string, description?: string }} override Manual overrides for name and description. Will be passed directly to the relay when signalling.
+   * @param {BeaconOverride} override Manual overrides for name and description. Will be passed directly to the relay when signalling.
    * @returns {Beacon}
    */
   constructor(relay, override = null) {
@@ -43,7 +73,10 @@ Module['DSIG'].Beacon = class Beacon {
       this.specifiedUrl = override.url ?? null;
       this.specifiedImage = override.image ?? null;
       this.specifiedTags = override.tags ?? null;
+      this.stripQueryParams = override.stripQueryParams ?? true;
     }
+
+    this.sessionId = generateRandomUUID();
   }
 
   /**
@@ -61,7 +94,13 @@ Module['DSIG'].Beacon = class Beacon {
     } else if (meta) {
       return meta.getAttribute('data-canonical-url');
     } else {
-      return this.topLevelDocument ? window.top.location.href : window.document.location.href;
+      const location =  this.topLevelDocument ? window.top.location : window.document.location;
+      if (this.stripQueryParams) {
+        const strippedUrl = location.protocol + '//' + location.host + location.pathname;
+        return strippedUrl
+      } else {
+        return location.href;
+      }
     }
   }
 
@@ -240,5 +279,23 @@ Module['DSIG'].Beacon = class Beacon {
         'Content-Type': 'application/json'
       }
     });
+    const heartbeat = setInterval(async () => {
+      try {
+        await fetch(`${this.relay}/session`, {
+          method: 'POST',
+          body: JSON.stringify({
+            session_id: this.sessionId,
+            url,
+            timestamp: Date.now(),
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      } catch {
+        console.error("Failed to send heartbeat signal! Relay server is not reachable.")
+        clearInterval(heartbeat);
+      }
+    }, 5000);
   }
 }
