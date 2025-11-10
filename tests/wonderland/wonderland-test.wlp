@@ -1000,7 +1000,10 @@
                         "dynamicFormats": false,
                         "assignAlphaMaskTexture": true,
                         "customDefaultCtaUrl": "https://www.example.com",
-                        "customDefaultImage": "https://picsum.photos/300/250"
+                        "customDefaultImage": "https://picsum.photos/300/250",
+                        "modalTrigger": "lose",
+                        "modalDelay": 5000.0,
+                        "modalBackground": true
                     },
                     "active": true
                 }

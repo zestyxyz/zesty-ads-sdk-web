@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -26,6 +27,12 @@ namespace Zesty
         public Material[] placeholderMaterials = new Material[3];
         public Material runtimeBanner;
 
+        public string customDefaultImage = "";
+        public string customDefaultCTA = "";
+        public string modalTrigger = "";
+        public bool modalBackground = false;
+        public int modalDelay = 0;
+
         // Object-related variables
         MeshRenderer m_Renderer;
         Texture m_Texture;
@@ -38,6 +45,8 @@ namespace Zesty
         [DllImport("__Internal")] private static extern void _open(string url);
         [DllImport("__Internal")] private static extern void _initPrebid(string adUnitId, int format);
         [DllImport("__Internal")] private static extern string _tryGetWinningBidInfo();
+        [DllImport("__Internal")] private static extern void _updateAdModal(string adUnitId, string campaignId, int format, string defaultImage, string defaultCTA, string modalTrigger, bool modalBackground, int modalDelay);
+
         string bannerTextureURL;
         string campaignId = "";
 
@@ -47,16 +56,13 @@ namespace Zesty
         void Start() {
             m_Renderer = GetComponent<MeshRenderer>();
             m_Collider = GetComponent<MeshCollider>();
+            FetchCampaignAd();
             if (Constants.PREBID)
             {
 #if !UNITY_EDITOR
                 _initPrebid(adUnit, (int)format);
                 StartCoroutine(TryGetWinningBidInfo());
 #endif
-            }
-            else
-            {
-                FetchCampaignAd();
             }
         }
 
@@ -66,7 +72,7 @@ namespace Zesty
         void FetchCampaignAd() {
             string url = $"{Constants.AD_SERVER_URL}/ad?ad_unit_id={adUnit}&url={hostURL}";
             string[] elmsKey = { "Ads", "CampaignId" };
-            StartCoroutine(API.GetRequest(url, elmsKey, SetBannerInfo));
+            StartCoroutine(API.GetRequest(url, SetBannerInfo));
         }
 
         void Update () {
@@ -120,7 +126,12 @@ namespace Zesty
             }
             else
             {
-                Debug.Log("Couldn't set banner info");
+                UnityEngine.Debug.Log("Couldn't set banner info");
+            }
+
+            if (modalTrigger != "")
+            {
+                _updateAdModal(adUnit, campaignId, (int)format, customDefaultImage, customDefaultCTA, modalTrigger, modalBackground, modalDelay);
             }
 
             if (beaconEnabled)
@@ -146,7 +157,7 @@ namespace Zesty
             }
             else
             {
-                Debug.Log("Failed to set texture");
+                UnityEngine.Debug.Log("Failed to set texture");
             }
         }
 

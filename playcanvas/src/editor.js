@@ -1,5 +1,5 @@
 import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, AD_REFRESH_INTERVAL, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID } from '../../utils/networking';
-import { openURL, visibilityCheck } from '../../utils/helpers';
+import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import { formats } from '../../utils/formats';
 import { getDefaultBanner } from '../../utils/networking';
 
@@ -20,12 +20,17 @@ ZestyBanner.attributes.add("cameraEntity", { type: "entity" });
 ZestyBanner.attributes.add("useActiveCamera", { type: "boolean", default: false });
 ZestyBanner.attributes.add("customDefaultImage", { type: "string" });
 ZestyBanner.attributes.add("customDefaultCtaUrl", { type: "string" });
+ZestyBanner.attributes.add("modalTrigger", { type: "string" });
+ZestyBanner.attributes.add("modalDelay", { type: "number", default: 0 });
+ZestyBanner.attributes.add("modalBackground", { type: "boolean", default: false });
 
 const FORMATS = {
     1: "medium-rectangle",
     2: "billboard",
     3: "mobile-phone-interstitial",
 }
+
+let modalTriggers = {};
 
 // initialize code called once per entity
 ZestyBanner.prototype.initialize = function() {
@@ -66,6 +71,22 @@ ZestyBanner.prototype.loadBanner = async function() {
     const activeBanner = await fetchCampaignAd(this.adUnitId, FORMATS[this.format], null, this.customDefaultImage, this.customDefaultCtaUrl);
 
     const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
+
+    // Hook up modal trigger
+    if (this.modalTrigger) {
+      // Remove old listener if it exists
+      if (modalTriggers[this.adUnitId]) {
+        document.removeEventListener(this.modalTrigger, modalTriggers[this.adUnitId]);
+      }
+
+      // Create and store new handler
+      modalTriggers[this.adUnitId] = () => {
+        let modal = constructAdModal(this.adUnitId, activeBanner.CampaignId, FORMATS[this.format], image, url, this.modalBackground, this.modalDelay);
+        document.body.appendChild(modal);
+      };
+
+      document.addEventListener(this.modalTrigger, modalTriggers[adUnit]);
+    }
 
     return { image, url, campaignId: activeBanner.CampaignId };
 }

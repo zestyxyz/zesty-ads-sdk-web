@@ -43,7 +43,10 @@
 
       const banner = new ZestyBanner("00000000-0000-0000-0000-000000000000", 'medium-rectangle', 'standard', 1, renderer, false, {
         customDefaultImage: 'http://localhost:8080/assets/zesty-ad-square.png',
-        customDefaultCtaUrl: 'https://www.example.com'
+        customDefaultCtaUrl: 'https://www.example.com',
+        modalTrigger: 'lose',
+        modalBackground: true,
+        modalDelay: 5000
       });
       banner.position.set(0, 1, -2);
       scene.add(banner);

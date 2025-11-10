@@ -237,5 +237,20 @@ mergeInto(LibraryManager.library, {
       stringToUTF8(returnStr, buffer, bufferSize);
       return buffer;
     }
+  },
+  _updateAdModal: function (adUnitIdRaw, campaignIdRaw, format, imageRaw, urlRaw, modalTriggerRaw, modalBackground, modalDelay) {
+    const adUnitId = UTF8ToString(adUnitIdRaw);
+    const campaignId = UTF8ToString(campaignIdRaw);
+    const image = UTF8ToString(imageRaw);
+    const url = UTF8ToString(urlRaw);
+    const modalTrigger = UTF8ToString(modalTriggerRaw);
+
+    // Hook up modal trigger
+    const onModalTrigger = () => {
+      let modal = Module['Zesty']._constructAdModal(adUnitId, campaignId, format, image, url, modalBackground, modalDelay);
+      document.body.appendChild(modal);
+    };
+    document.removeEventListener(modalTrigger, onModalTrigger);
+    document.addEventListener(modalTrigger, onModalTrigger);
   }
 })
