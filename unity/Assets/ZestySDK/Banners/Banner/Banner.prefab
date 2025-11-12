@@ -137,4 +137,11 @@ MonoBehaviour:
   customDefaultImage: 
   customDefaultCTA: 
   modalTrigger: 
+  modalBackground: 0
   modalDelay: 0
+  targetRelay: 
+  specifiedName: 
+  specifiedDescription: 
+  specifiedUrl: 
+  specifiedImage: 
+  specifiedTags: []

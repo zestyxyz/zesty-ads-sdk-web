@@ -19,6 +19,8 @@ namespace Zesty
 
     [ExecuteInEditMode]
     public class Banner : MonoBehaviour {
+        // Zesty Banner variables
+        [Header("Banner Configuration")]
         public string adUnit;
         public string hostURL;
         public Formats.Types format;
@@ -29,9 +31,21 @@ namespace Zesty
 
         public string customDefaultImage = "";
         public string customDefaultCTA = "";
+
+        [Header("Modal Configuration")]
         public string modalTrigger = "";
         public bool modalBackground = false;
         public int modalDelay = 0;
+
+        // SIG variables
+        [Header("SIG Beacon Configuration")]
+        public string targetRelay;
+        public string specifiedName;
+        [TextArea]
+        public string specifiedDescription;
+        public string specifiedUrl;
+        public string specifiedImage;
+        public List<string> specifiedTags;
 
         // Object-related variables
         MeshRenderer m_Renderer;
@@ -53,6 +67,9 @@ namespace Zesty
         // Banner loading variables
         bool bannerLoadedSuccessfully = false;
 
+        // SIG
+        [DllImport("__Internal")] private static extern void _beaconSignal(string targetRelay, string specifiedName, string specifiedDescription, string specifiedUrl, string specifiedImage, string specifiedTags);
+
         void Start() {
             m_Renderer = GetComponent<MeshRenderer>();
             m_Collider = GetComponent<MeshCollider>();
@@ -64,6 +81,9 @@ namespace Zesty
                 StartCoroutine(TryGetWinningBidInfo());
 #endif
             }
+
+            string tags = string.Join(",", this.specifiedTags.ToArray());
+            _beaconSignal(targetRelay, specifiedName, specifiedDescription, specifiedUrl, specifiedImage, tags);
         }
 
         /// <summary>
