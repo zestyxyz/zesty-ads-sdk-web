@@ -21,6 +21,8 @@ namespace Zesty
     public class Banner : MonoBehaviour {
         // Zesty Banner variables
         [Header("Banner Configuration")]
+        public bool debugMode = false;
+        public bool stagingMode = false;
         public string adUnit;
         public string hostURL;
         public Formats.Types format;
@@ -91,6 +93,10 @@ namespace Zesty
         /// </summary>
         void FetchCampaignAd() {
             string url = $"{Constants.AD_SERVER_URL}/ad?ad_unit_id={adUnit}&url={hostURL}";
+            if (debugMode)
+            {
+                url += "&debug=true";
+            }
             string[] elmsKey = { "Ads", "CampaignId" };
             StartCoroutine(API.GetRequest(url, SetBannerInfo));
         }
