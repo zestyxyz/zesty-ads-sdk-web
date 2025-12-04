@@ -17,12 +17,17 @@ namespace Zesty
         public string CampaignId;
     }
 
+    public enum BannerLoadError
+    {
+        RequestFailed = 0,
+        TextureInvalid = 1,
+    }
+
     [ExecuteInEditMode]
     public class Banner : MonoBehaviour {
         // Zesty Banner variables
         [Header("Banner Configuration")]
-        public bool debugMode = false;
-        public bool stagingMode = false;
+        public bool useTestTraffic = false;
         public string adUnit;
         public string hostURL;
         public Formats.Types format;
@@ -66,8 +71,9 @@ namespace Zesty
         string bannerTextureURL;
         string campaignId = "";
 
-        // Banner loading variables
-        bool bannerLoadedSuccessfully = false;
+        // Banner load events
+        public Action onBannerLoadSuccess;
+        public Action<BannerLoadError> onBannerLoadFailure;
 
         // SIG
         [DllImport("__Internal")] private static extern void _beaconSignal(string targetRelay, string specifiedName, string specifiedDescription, string specifiedUrl, string specifiedImage, string specifiedTags);
@@ -85,18 +91,21 @@ namespace Zesty
             }
 
             string tags = string.Join(",", this.specifiedTags.ToArray());
+#if !UNITY_EDITOR
             _beaconSignal(targetRelay, specifiedName, specifiedDescription, specifiedUrl, specifiedImage, tags);
+#endif
         }
 
         /// <summary>
         /// Fetches the active campaign ad, if one exists, from the ad server
         /// </summary>
         void FetchCampaignAd() {
-            string url = $"{Constants.AD_SERVER_URL}/ad?ad_unit_id={adUnit}&url={hostURL}";
-            if (debugMode)
+            if (useTestTraffic)
             {
-                url += "&debug=true";
+                SetBannerInfo(ConstructSampleAd());
+                return;
             }
+            string url = $"{Constants.AD_SERVER_URL}/ad?ad_unit_id={adUnit}&url={hostURL}";
             string[] elmsKey = { "Ads", "CampaignId" };
             StartCoroutine(API.GetRequest(url, SetBannerInfo));
         }
@@ -152,18 +161,20 @@ namespace Zesty
             }
             else
             {
-                UnityEngine.Debug.Log("Couldn't set banner info");
+                UnityEngine.Debug.Log("Couldn't set banner info, no ads found.");
+                onBannerLoadFailure?.Invoke(BannerLoadError.RequestFailed);
             }
 
             if (modalTrigger != "")
             {
+#if !UNITY_EDITOR
                 _updateAdModal(adUnit, campaignId, (int)format, customDefaultImage, customDefaultCTA, modalTrigger, modalBackground, modalDelay);
+#endif
             }
 
             if (beaconEnabled)
             {
-#if UNITY_EDITOR
-#else
+#if !UNITY_EDITOR
                 // Fire increment mutation to v2 beacon
                 _sendOnLoadMetric(adUnit, campaignId);
 #endif
@@ -179,11 +190,12 @@ namespace Zesty
                 Material bannerMaterial = new Material(runtimeBanner);
                 m_Renderer.sharedMaterial = bannerMaterial;
                 bannerMaterial.mainTexture = texture;
-                bannerLoadedSuccessfully = true;
+                onBannerLoadSuccess?.Invoke();
             }
             else
             {
                 UnityEngine.Debug.Log("Failed to set texture");
+                onBannerLoadFailure?.Invoke(BannerLoadError.TextureInvalid);
             }
         }
 
@@ -208,8 +220,10 @@ namespace Zesty
 
             if (beaconEnabled)
             {
+#if !UNITY_EDITOR
                 // Fire increment mutation to v2 beacon
                 _sendOnClickMetric(adUnit, campaignId);
+#endif
             }
         }
 
@@ -240,35 +254,68 @@ namespace Zesty
             }
         }
 
+        private BannerInfo ConstructSampleAd()
+        {
+            string formatName;
+            switch (format)
+            {
+                case Formats.Types.MediumRectangle:
+                    formatName = "medium-rectangle";
+                    break;
+                case Formats.Types.Billboard:
+                    formatName = "billboard";
+                    break;
+                case Formats.Types.MobilePhoneInterstitial:
+                    formatName = "mobile-phone-interstitial";
+                    break;
+                default:
+                    formatName = "medium-rectangle";
+                    break;
+            }
+            BannerInfo bannerInfo = new BannerInfo();
+            bannerInfo.Ads = new List<Ad>();
+            bannerInfo.Ads.Add(new Ad());
+            bannerInfo.Ads[0].asset_url = $"{Constants.AD_SERVER_URL}/ad/sample?format={formatName}";
+            bannerInfo.Ads[0].cta_url = customDefaultCTA ?? "relay.zesty.xyz";
+            return bannerInfo;
+        }
+
         private IEnumerator TryGetWinningBidInfo()
         {
             if (m_Renderer.isVisible)
             {
-                for (int i = 0; i < Constants.MAX_PREBID_RETRIES; i++)
+                if (useTestTraffic)
                 {
-                    string adInfo = _tryGetWinningBidInfo();
-                    if (adInfo == "")
+                    SetBannerInfo(ConstructSampleAd());
+                }
+                else
+                {
+                    for (int i = 0; i < Constants.MAX_PREBID_RETRIES; i++)
                     {
-                        yield return new WaitForSeconds(1);
-                    }
-                    else
-                    {
-                        string[] els = adInfo.Split('|');
-                        BannerInfo bannerData = new()
+                        string adInfo = _tryGetWinningBidInfo();
+                        if (adInfo == "")
                         {
-                            Ads = new List<Ad>()
-                        };
-                        Ad ad = new()
+                            yield return new WaitForSeconds(1);
+                        }
+                        else
                         {
-                            asset_url = els[0],
-                            cta_url = els[1]
-                        };
-                        bannerData.Ads.Add(ad);
-                        bannerData.CampaignId = els[2];
+                            string[] els = adInfo.Split('|');
+                            BannerInfo bannerData = new()
+                            {
+                                Ads = new List<Ad>()
+                            };
+                            Ad ad = new()
+                            {
+                                asset_url = els[0],
+                                cta_url = els[1]
+                            };
+                            bannerData.Ads.Add(ad);
+                            bannerData.CampaignId = els[2];
 
-                        SetBannerInfo(bannerData);
+                            SetBannerInfo(bannerData);
 
-                        break;
+                            break;
+                        }
                     }
                 }
             }

@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e29744ac8c9a05448f6b96ec014fead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useTestTraffic: 0
   adUnit: 
   hostURL: 
   format: 2
