@@ -32,6 +32,7 @@ namespace Zesty
         public string hostURL;
         public Formats.Types format;
         public bool beaconEnabled = true;
+        public bool prebidEnabled = true;
 
         public Material[] placeholderMaterials = new Material[3];
         public Material runtimeBanner;
@@ -82,7 +83,7 @@ namespace Zesty
             m_Renderer = GetComponent<MeshRenderer>();
             m_Collider = GetComponent<MeshCollider>();
             FetchCampaignAd();
-            if (Constants.PREBID)
+            if (prebidEnabled)
             {
 #if !UNITY_EDITOR
                 _initPrebid(adUnit, (int)format);
