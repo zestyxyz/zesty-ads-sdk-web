@@ -27,6 +27,7 @@ export default function ZestyBanner(props) {
 
   const newStyle = props.style ?? defaultStyle;
   const beacon = props.beacon ?? true;
+  const prebid = props.prebid ?? true;
 
   const customDefaultImage = props.customDefaultImage ?? null;
   const customDefaultCtaUrl = props.customDefaultCtaUrl ?? null;
@@ -36,7 +37,7 @@ export default function ZestyBanner(props) {
   const modalDelay = props.modalDelay ?? 0;
 
   const loadBanner = async (adUnit, format, style) => {
-    const activeCampaign = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
+    const activeCampaign = await fetchCampaignAd(adUnit, format, style, prebid, customDefaultImage, customDefaultCtaUrl);
     const { asset_url, cta_url } = activeCampaign.Ads[0];
 
     // Hook up modal trigger

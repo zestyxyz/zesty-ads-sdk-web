@@ -18,6 +18,7 @@ ZestyBanner.attributes.add("format", {
 });
 ZestyBanner.attributes.add("cameraEntity", { type: "entity" });
 ZestyBanner.attributes.add("useActiveCamera", { type: "boolean", default: false });
+ZestyBanner.attributes.add("prebid", { type: "boolean", default: true });
 ZestyBanner.attributes.add("customDefaultImage", { type: "string" });
 ZestyBanner.attributes.add("customDefaultCtaUrl", { type: "string" });
 ZestyBanner.attributes.add("modalTrigger", { type: "string" });
@@ -68,7 +69,7 @@ ZestyBanner.prototype.initialize = function() {
 };
 
 ZestyBanner.prototype.loadBanner = async function() {
-    const activeBanner = await fetchCampaignAd(this.adUnitId, FORMATS[this.format], undefined, this.customDefaultImage, this.customDefaultCtaUrl);
+    const activeBanner = await fetchCampaignAd(this.adUnitId, FORMATS[this.format], 'standard', this.prebid, this.customDefaultImage, this.customDefaultCtaUrl);
 
     const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 

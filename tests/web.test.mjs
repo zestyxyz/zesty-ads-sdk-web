@@ -5,7 +5,8 @@ import {
   EXAMPLE_IMAGE,
   EXAMPLE_IMAGE2,
   PREBID_LOAD_TEST_WAIT_INTERVAL,
-  PREBID_REFRESH_TEST_WAIT_INTERVAL
+  PREBID_REFRESH_TEST_WAIT_INTERVAL,
+  MEDIUM_RECTANGLE_ID
 } from './test-constants.mjs';
 
 test.beforeEach(async ({ page }) => {
@@ -67,17 +68,17 @@ test.describe('Navigation', () => {
 test.describe('Prebid', () => {
   test('Ad creative is loaded once bids is no longer null', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, MEDIUM_RECTANGLE_ID);
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     const img = await page.evaluate(
       () => document.getElementById('banner1').shadowRoot.children[0].src
     );
-    expect(img.split('/').pop()).toBe('250');
+    expect(img.split('/').pop()).toBe('300x250.jpg');
   });
 
   test('Ad creative links out to correct URL', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, MEDIUM_RECTANGLE_ID);
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
     const link = await page.evaluate(() => document.getElementById('banner1').shadowRoot.children[0].getAttribute('data-url'));
     expect(link).toContain(EXAMPLE_URL);
@@ -85,14 +86,14 @@ test.describe('Prebid', () => {
 
   test('A new ad creative is loaded after passing visibility check', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, MEDIUM_RECTANGLE_ID);
     await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
-    await page.evaluate(() => document.querySelector('#injected').remove());
-    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2);
+    await page.evaluate((id) => document.querySelector(`#injected-${id}`).remove(), MEDIUM_RECTANGLE_ID);
+    await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2, MEDIUM_RECTANGLE_ID);
     await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
     const img = await page.evaluate(
       () => document.getElementById('banner1').shadowRoot.children[0].src
     );
-    expect(img.split('/').pop()).toBe('300');
+    expect(img.split('/').pop()).toBe('300x250_2.jpg');
   });
 });

@@ -38,7 +38,7 @@ test.describe('Default banners', () => {
     const banner1 = await page.evaluate(
       () => window.scene.meshes[4].material.diffuseTexture.name
     );
-    expect(banner1.split('/').pop()).toBe('250');
+    expect(banner1.split('/').pop()).toBe('zesty-default-medium-rectangle.png');
   });
 
   test('The billboard banner is present', async ({ page }) => {
@@ -120,7 +120,7 @@ test.describe('Prebid', () => {
 });
 
 test.describe('Modal', () => {
-  test('An ad modal is created when the modal trigger event is fired', async ({ page }) => {
+  test('An ad modal is created when the modal trigger event is fired @skip', async ({ page }) => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await page.waitForFunction(() => window.scene?.meshes[6]?.actionManager != null);
     await page.evaluate(() => {

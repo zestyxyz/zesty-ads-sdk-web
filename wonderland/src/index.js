@@ -48,6 +48,8 @@ export class ZestyBanner extends Component {
     /* Whether to assign the banner to the alphaMaskTexture property of the material */
     assignAlphaMaskTexture: Property.bool(true),
     beacon: Property.bool(true),
+    /* Whether to use Prebid for programmatic ads */
+    prebid: Property.bool(true),
     /* Load default image uris at runtime, if false at build time */
     dynamicFormats: Property.bool(true),
     /* Load networking logic at runtime, if false at build time */
@@ -268,8 +270,8 @@ export class ZestyBanner extends Component {
 
   async loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalBackground, modalDelay) {
     const activeCampaign = this.dynamicNetworking && this.dynamicNetworkFunctions?.fetchCampaignAd ?
-      await this.dynamicNetworkFunctions.fetchCampaignAd(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl) :
-      await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
+      await this.dynamicNetworkFunctions.fetchCampaignAd(adUnit, format, style, this.prebid, this.customDefaultImage, this.customDefaultCtaUrl) :
+      await fetchCampaignAd(adUnit, format, style, this.prebid, customDefaultImage, customDefaultCtaUrl);
 
     const { asset_url: image, cta_url: url } = activeCampaign.Ads[0];
     this.campaignId = activeCampaign.CampaignId;

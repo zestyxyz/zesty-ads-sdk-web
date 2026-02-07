@@ -14,6 +14,7 @@ class Zesty extends HTMLElement {
     this.height = '100%';
     this.shadow = this.attachShadow({ mode: 'open' });
     this.beacon = true;
+    this.prebid = true;
 
     this.adjustHeightandWidth = this.adjustHeightandWidth.bind(this);
   }
@@ -25,12 +26,13 @@ class Zesty extends HTMLElement {
     this.format = this.hasAttribute('format') ? this.getAttribute('format') : this.format;
     this.height = this.hasAttribute('height') ? this.getAttribute('height') : this.height;
     this.width = this.hasAttribute('width') ? this.getAttribute('width') : this.width;
-    this.beacon = this.hasAttribute('beacon') ? this.getAttribute('beacon') : this.beacon;
+    this.beacon = this.hasAttribute('beacon') ? this.getAttribute('beacon') !== 'false' : this.beacon;
+    this.prebid = this.hasAttribute('prebid') ? this.getAttribute('prebid') !== 'false' : this.prebid;
 
     this.adjustHeightandWidth();
 
-    async function loadBanner(adUnit, format, shadow, width, height, beacon) {
-      const activeCampaign = await fetchCampaignAd(adUnit, format);
+    async function loadBanner(adUnit, format, shadow, width, height, beacon, prebid) {
+      const activeCampaign = await fetchCampaignAd(adUnit, format, 'standard', prebid);
 
       const { id, asset_url: image, cta_url: url } = activeCampaign.Ads[0];
 
@@ -71,7 +73,8 @@ class Zesty extends HTMLElement {
       this.shadow,
       this.width,
       this.height,
-      this.beacon
+      this.beacon,
+      this.prebid
     );
     setInterval(() => {
       loadBanner(
@@ -80,7 +83,8 @@ class Zesty extends HTMLElement {
         this.shadow,
         this.width,
         this.height,
-        this.beacon
+        this.beacon,
+        this.prebid
       )
     }, AD_REFRESH_INTERVAL);
   }

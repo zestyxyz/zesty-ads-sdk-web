@@ -162,7 +162,21 @@ const getSampleBanner = (format) => {
   return { Ads: [{ asset_url: `${ENDPOINT}/ad/sample?format=${format}&timestamp=${Date.now()}`, cta_url: DEFAULT_CTA_URL }], CampaignId: DEFAULT_CAMPAIGN_ID }
 }
 
-const fetchCampaignAd = async (adUnitId, format = 'tall', style = 'standard', customDefaultImage = null, customDefaultCtaUrl = null) => {
+const fetchFromZestyAPI = async (adUnitId, format, style, shouldOverride, overrideEntry, customDefaultImage = null, customDefaultCtaUrl = null) => {
+  try {
+    const url = encodeURI(window.location.href).replace(/\/$/, ''); // If URL ends with a slash, remove it
+    const res = await fetch(`${DB_ENDPOINT}/ad?ad_unit_id=${adUnitId}&url=${url}`);
+    if (res.status == 200) {
+      return await res.json();
+    }
+    return getDefaultBanner(format, style, shouldOverride, overrideEntry?.format, customDefaultImage, customDefaultCtaUrl);
+  } catch(e) {
+    console.warn('Error retrieving campaign banner. Using default.');
+    return getDefaultBanner(format, style, shouldOverride, overrideEntry?.format, customDefaultImage, customDefaultCtaUrl);
+  }
+}
+
+const fetchCampaignAd = async (adUnitId, format = 'tall', style = 'standard', prebid = true, customDefaultImage = null, customDefaultCtaUrl = null) => {
   if (['tall', 'wide', 'square'].includes(format)) {
     console.warn(`The old Zesty banner formats (tall, wide, and square) are being deprecated and will be removed in a future version. Please update to one of the new IAB formats (mobile-phone-interstitial, billboard, and medium-rectangle).
 Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
@@ -185,6 +199,11 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
 
   if (!adUnitId) {
     return new Promise(res => res(getDefaultBanner(format, style, shouldOverride, overrideEntry.format, customDefaultImage, customDefaultCtaUrl)));
+  }
+
+  // Skip Prebid entirely if disabled - go directly to Zesty API
+  if (!prebid) {
+    return fetchFromZestyAPI(adUnitId, format, style, shouldOverride, overrideEntry, customDefaultImage, customDefaultCtaUrl);
   }
 
   if (!prebidInit) {
@@ -230,23 +249,9 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
         // Wait to see if we get any winning bids. If we hit max retry count, fallback to Zesty ad server
         currentTries[adUnitId]++;
         if (currentTries[adUnitId] == retryCount) {
-          try {
-            const url = encodeURI(window.location.href).replace(/\/$/, ''); // If URL ends with a slash, remove it
-            const res = await fetch(`${DB_ENDPOINT}/ad?ad_unit_id=${adUnitId}&url=${url}`);
-            if (res.status == 200) {
-              const data = await res.json();
-              resolve(data);
-            } else {
-              // No active campaign, just display default banner
-              resolve(getDefaultBanner(format, style, shouldOverride, overrideEntry.format, customDefaultImage, customDefaultCtaUrl));
-            }
-            currentTries[adUnitId] = 0;
-          } catch(e) {
-            console.error(e);
-            console.warn('Error retrieving an active campaign banner. Retrieving default banner.')
-            resolve(getDefaultBanner(format, style, shouldOverride, overrideEntry.format, customDefaultImage, customDefaultCtaUrl));
-            currentTries[adUnitId] = 0;
-          }
+          const result = await fetchFromZestyAPI(adUnitId, format, style, shouldOverride, overrideEntry, customDefaultImage, customDefaultCtaUrl);
+          currentTries[adUnitId] = 0;
+          resolve(result);
         } else {
           setTimeout(getBanner, 1000);
         }

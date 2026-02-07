@@ -10,7 +10,7 @@ console.log('Zesty SDK Version: ', version);
 let modalTriggers = {};
 
 export default class ZestyBanner {
-  constructor(adUnit, format, style, height, scene, webXRExperienceHelper = null, beacon = true, config = {}) {
+  constructor(adUnit, format, style, height, scene, webXRExperienceHelper = null, beacon = true, prebid = true, config = {}) {
     const options = {
       height: height,
       width: formats[format].width * height
@@ -19,8 +19,9 @@ export default class ZestyBanner {
     this.zestyBanner = BABYLON.MeshBuilder.CreatePlane('zestybanner', options);
     this.scene = scene;
     this.xr = webXRExperienceHelper;
+    this.prebid = prebid;
 
-    loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(data => {
+    loadBanner(adUnit, format, style, prebid, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(data => {
       this.zestyBanner.material = data.mat;
       this.zestyBanner.actionManager = new BABYLON.ActionManager(scene);
       this.zestyBanner.url = data.url;
@@ -55,7 +56,7 @@ export default class ZestyBanner {
         camera.getWorldMatrix().asArray()
       );
       if (isVisible) {
-        loadBanner(adUnit, format, style, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(banner => {
+        loadBanner(adUnit, format, style, this.prebid, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(banner => {
           this.zestyBanner.material.diffuseTexture.updateURL(banner.src);
         });
       }
@@ -78,8 +79,8 @@ export default class ZestyBanner {
   }
 }
 
-async function loadBanner(adUnit, format, style, customDefaultImage, customDefaultCtaUrl, modalTrigger, modalBackground, modalDelay) {
-  const activeBanner = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
+async function loadBanner(adUnit, format, style, prebid = true, customDefaultImage = null, customDefaultCtaUrl = null, modalTrigger = null, modalBackground = false, modalDelay = 0) {
+  const activeBanner = await fetchCampaignAd(adUnit, format, style, prebid, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 
