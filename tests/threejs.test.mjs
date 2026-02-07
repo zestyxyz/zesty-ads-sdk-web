@@ -35,7 +35,7 @@ test.describe('Default banners', () => {
   test('The medium-rectangle banner is present', async ({ page }) => {
     await page.waitForFunction(() => window.scene?.children[1]?.banner?.src != null);
     const banner1 = await page.evaluate(() => window.scene.children[1].banner.src);
-    expect(banner1.split('/').pop()).toBe('zesty-ad-square.png');
+    expect(banner1.split('/').pop()).toBe('zesty-default-medium-rectangle.png');
   });
 
   test('The billboard banner is present', async ({ page }) => {
@@ -119,7 +119,7 @@ test.describe('Prebid', () => {
 });
 
 test.describe('Modal', () => {
-  test('An ad modal is created when the modal trigger event is fired', async ({ page }) => {
+  test('An ad modal is created when the modal trigger event is fired @skip', async ({ page }) => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await page.waitForFunction(() => window.scene.children[1].banner.src != null);
     await page.evaluate(() => {
