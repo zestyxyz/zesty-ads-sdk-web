@@ -37,6 +37,8 @@ WL.registerComponent(
      * known pipelines (Phong Opaque Textured, Flat Opaque Textured) */
     textureProperty: { type: WL.Type.String, default: 'auto' },
     beacon: { type: WL.Type.Bool, default: true },
+    /* Whether to use Prebid for programmatic ads */
+    prebid: { type: WL.Type.Bool, default: true },
     /* Load default image uris at runtime, if false at build time */
     dynamicFormats: { type: WL.Type.Bool, default: true },
     /* Automatically creates a collision and cursor-target components, if there isn't one */
@@ -196,8 +198,8 @@ WL.registerComponent(
       }
 
       const activeCampaign = this.dynamicNetworking ?
-        await this.zestyNetworking.fetchCampaignAd(adUnit, adjustedFormat, style) :
-        await fetchCampaignAd(adUnit, adjustedFormat, style);
+        await this.zestyNetworking.fetchCampaignAd(adUnit, adjustedFormat, style, this.prebid) :
+        await fetchCampaignAd(adUnit, adjustedFormat, style, this.prebid);
 
       const { asset_url: image, cta_url: url } = activeCampaign.Ads[0];
 
