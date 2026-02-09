@@ -1,6 +1,6 @@
 {
   "name": "@zestymarket/beacon",
-  "version": "1.0.0",
+  "version": "3.2.0",
   "description": "Enables a Zesty Beacon on a virtual space, allowing users to collect analytics on visitor numbers.",
   "main": "dist/zesty-beacon.js",
   "scripts": {
