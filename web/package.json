@@ -1,5 +1,5 @@
 {
-  "name": "@zestymarket/web-sdk",
+  "name": "@zestyxyz/web-sdk",
   "version": "3.2.0",
   "description": "Web SDK for Zesty Banner integration into an HTML page via WebComponents.",
   "main": "dist/zesty-web-sdk.js",

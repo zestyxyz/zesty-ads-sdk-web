@@ -32,56 +32,56 @@ jobs:
           chmod +x scripts/build.sh
           scripts/build.sh
 
-      - name: Publish @zestymarket/aframe-sdk
+      - name: Publish @zestyxyz/aframe-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: aframe
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestymarket/babylonjs-sdk
+      - name: Publish @zestyxyz/babylonjs-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: babylonjs
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestymarket/beacon
+      - name: Publish @zestyxyz/beacon
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: beacon
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestymarket/playcanvas-sdk
+      - name: Publish @zestyxyz/playcanvas-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: playcanvas
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestymarket/r3f-sdk
+      - name: Publish @zestyxyz/r3f-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: r3f
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestymarket/threejs-sdk
+      - name: Publish @zestyxyz/threejs-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: threejs
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestymarket/web-sdk
+      - name: Publish @zestyxyz/web-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: web
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestymarket/wonderland-sdk
+      - name: Publish @zestyxyz/wonderland-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: wonderland
         run: npm publish --access public
