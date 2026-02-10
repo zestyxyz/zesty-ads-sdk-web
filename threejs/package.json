@@ -3,14 +3,24 @@
   "version": "3.2.0",
   "description": "This is the three.js SDK for Zesty Banner integration.",
   "main": "dist/zesty-threejs-sdk.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "webpack --mode=development",
     "build": "webpack --mode=production",
     "serve": "webpack-dev-server --open",
     "prettier": "prettier --write src/**.js gruntfile.js"
   },
-  "author": "",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "directory": "threejs"
+  },
+  "author": "Zesty",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "prettier": "1.18.2",
     "webpack": "^5.73.0",

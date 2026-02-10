@@ -1,0 +1,89 @@
+name: npm-publish
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (do not actually publish)'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build all packages
+        run: |
+          chmod +x scripts/build.sh
+          scripts/build.sh
+
+      - name: Publish @zestymarket/aframe-sdk
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: aframe
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @zestymarket/babylonjs-sdk
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: babylonjs
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @zestymarket/beacon
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: beacon
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @zestymarket/playcanvas-sdk
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: playcanvas
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @zestymarket/r3f-sdk
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: r3f
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @zestymarket/threejs-sdk
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: threejs
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @zestymarket/web-sdk
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: web
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @zestymarket/wonderland-sdk
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: wonderland
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

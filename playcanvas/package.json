@@ -1,17 +1,31 @@
 {
   "name": "@zestymarket/playcanvas-sdk",
   "version": "3.2.0",
+  "description": "PlayCanvas SDK for Zesty Banner integration.",
   "main": "dist/zesty-playcanvas-sdk.js",
+  "exports": {
+    ".": "./dist/zesty-playcanvas-sdk.js",
+    "./editor": "./dist/zesty-playcanvas-sdk-editor.js"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build:editor": "esbuild src/editor.js --minify --sourcemap --format=esm --bundle --outfile=dist/zesty-playcanvas-sdk-editor.js --external:playcanvas",
     "build:no-editor": "esbuild src/no-editor.js --minify --sourcemap --format=esm --bundle --outfile=dist/zesty-playcanvas-sdk.js --external:playcanvas",
     "build:editor-dev": "esbuild src/editor.js --sourcemap --format=esm --bundle --outfile=dist/zesty-playcanvas-sdk-editor.js --external:playcanvas",
     "build:no-editor-dev": "esbuild src/no-editor.js --sourcemap --format=esm --bundle --outfile=dist/zesty-playcanvas-sdk.js --external:playcanvas"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "directory": "playcanvas"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Zesty",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "esbuild": "^0.25.5",
     "playcanvas": "^2.8.0"

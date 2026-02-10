@@ -7,15 +7,25 @@
     ".": "./dist/zesty-wonderland-sdk.js",
     "./compat": "./dist/zesty-wonderland-sdk-compat.js"
   },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "scripts": {
     "build": "esbuild src/index.js --minify --sourcemap --format=esm --bundle --outfile=dist/zesty-wonderland-sdk.js --external:@wonderlandengine/*",
     "build-compat": "esbuild src/oldWLE.js --minify --sourcemap --bundle --outfile=dist/zesty-wonderland-sdk-compat.js",
     "build-dev": "esbuild src/index.js --sourcemap --format=esm --bundle --outfile=dist/zesty-wonderland-sdk.js --external:@wonderlandengine/*"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "directory": "wonderland"
+  },
   "wonderlandengine": {},
-  "author": "",
-  "license": "MIT",
+  "author": "Zesty",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@wonderlandengine/api": "^1.0.0",
     "@wonderlandengine/components": "^1.0.0",

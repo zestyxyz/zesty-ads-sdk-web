@@ -7,15 +7,25 @@
     ".": "./dist/zesty-r3f-sdk.js",
     "./xr": "./dist/zesty-reactxr-sdk.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "webpack --mode=development",
     "build": "webpack --mode=production",
     "serve": "webpack-dev-server --open",
     "prettier": "prettier --write src/**.js gruntfile.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "directory": "r3f"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Zesty",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.14.6",
