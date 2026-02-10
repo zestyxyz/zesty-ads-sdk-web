@@ -25,6 +25,6 @@ Currently, we support the following platforms:
 
 If you've developed a new framework SDK and want to publish it to NPM, the steps are as follows:
 
-- Ensure you are a member of the zestymarket org on NPM.
-- Ensure that the name in the package.json for the SDK follows the `@zestymarket/<framework>-sdk` format.
-- In the directory for that SDK, run `npm publish --access public` and the SDK will be published to the zestymarket NPM org.
+- Ensure you are a member of the zestyxyz org on NPM.
+- Ensure that the name in the package.json for the SDK follows the `@zestyxyz/<framework>-sdk` format.
+- In the directory for that SDK, run `npm publish --access public` and the SDK will be published to the zestyxyz NPM org.

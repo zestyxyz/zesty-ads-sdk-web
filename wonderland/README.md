@@ -27,13 +27,13 @@ Make sure that you set up a cursor to enable clicking.
 Install the SDK in your project using npm:
 
 ```sh
-npm i --save @zestymarket/wonderland-sdk
+npm i --save @zestyxyz/wonderland-sdk
 ```
 
 Then import it in your main bundle file:
 
 ```js
-require('@zestymarket/wonderland-sdk');
+require('@zestyxyz/wonderland-sdk');
 ```
 
 If your bundle built successfully, you will find the `zesty-banner` component in

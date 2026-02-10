@@ -1,16 +1,26 @@
 {
-  "name": "@zestymarket/aframe-sdk",
+  "name": "@zestyxyz/aframe-sdk",
   "version": "3.2.0",
   "description": "This is the A-Frame SDK for Zesty Banner integration.",
   "main": "dist/zesty-aframe-sdk.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "webpack --mode=development",
     "build": "webpack --mode=production",
     "serve": "webpack-dev-server --open",
     "prettier": "prettier --write src/**.js gruntfile.js"
   },
-  "author": "",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "directory": "aframe"
+  },
+  "author": "Zesty",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "aframe": "^1.4.0"
   },
