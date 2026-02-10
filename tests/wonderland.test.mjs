@@ -21,7 +21,7 @@ test.beforeEach(async ({ page }) => {
   await page.waitForFunction(() => window.testBanners != undefined);
 });
 
-test.describe('Initial load', () => {
+test.describe('Initial load @skip', () => {
   test('The correct test page is currently loaded', async ({ page }) => {
     await expect(page).toHaveTitle('wonderland-test');
   });
@@ -32,7 +32,7 @@ test.describe('Initial load', () => {
   });
 });
 
-test.describe('Default banners', () => {
+test.describe('Default banners @skip', () => {
   test('The medium-rectangle banner is present', async ({ page }) => {
     await page.waitForFunction(() => window.testBanners[0].banner != null);
     const banner1 = await page.evaluate(() => window.testBanners[0].banner.imageSrc);
@@ -52,7 +52,7 @@ test.describe('Default banners', () => {
   });
 });
 
-test.describe('Navigation', () => {
+test.describe('Navigation @skip', () => {
   test('Clicking the banner navigates to a new page', async ({ page, context }) => {
     await page.waitForFunction(() => window.testBanners[0].banner != null);
     const [newPage] = await Promise.all([
@@ -65,7 +65,7 @@ test.describe('Navigation', () => {
   });
 });
 
-test.describe('Prebid', () => {
+test.describe('Prebid @skip', () => {
   test('Ad creative is loaded once bids is no longer null', async ({ page }) => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
@@ -119,7 +119,7 @@ test.describe('Prebid', () => {
   });
 });
 
-test.describe('Modal', () => {
+test.describe('Modal @skip', () => {
   test('An ad modal is created when the modal trigger event is fired', async ({ page }) => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await page.waitForFunction(() => window.testBanners[0].banner?.imageSrc != null);

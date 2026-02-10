@@ -7,8 +7,8 @@ export const EXAMPLE_IMAGE_BILLBOARD = 'http://localhost:8080/tests/res/970x250.
 export const EXAMPLE_IMAGE2_BILLBOARD = 'http://localhost:8080/tests/res/970x250_2.jpg';
 export const EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL = 'http://localhost:8080/tests/res/1080x1920.jpg';
 export const EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL = 'http://localhost:8080/tests/res/1080x1920_2.jpg';
-export const PREBID_LOAD_TEST_WAIT_INTERVAL = 35000;
-export const PREBID_REFRESH_TEST_WAIT_INTERVAL = 35000;
+export const PREBID_LOAD_TEST_WAIT_INTERVAL = 20000;
+export const PREBID_REFRESH_TEST_WAIT_INTERVAL = 20000;
 
 // Legacy aliases for backward compatibility
 export const EXAMPLE_IMAGE = EXAMPLE_IMAGE_MEDIUM_RECTANGLE;

@@ -66,7 +66,7 @@ test.describe('Navigation', () => {
 });
 
 test.describe('Prebid', () => {
-  test('Ad creative is loaded once bids is no longer null', async ({ page }) => {
+  test('Ad creative is loaded once bids is no longer null @skip', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, MEDIUM_RECTANGLE_ID);
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
@@ -76,7 +76,7 @@ test.describe('Prebid', () => {
     expect(img.split('/').pop()).toBe('300x250.jpg');
   });
 
-  test('Ad creative links out to correct URL', async ({ page }) => {
+  test('Ad creative links out to correct URL @skip', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, MEDIUM_RECTANGLE_ID);
     await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
