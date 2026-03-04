@@ -1,6 +1,6 @@
 {
   "name": "@zestyxyz/beacon",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Enables a Zesty Beacon on a virtual space, allowing users to collect analytics on visitor numbers.",
   "main": "dist/zesty-beacon.js",
   "files": [
