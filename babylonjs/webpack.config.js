@@ -6,7 +6,13 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'dist'),
+        library: {
+            name: 'ZestyBanner',
+            type: 'umd',
+            export: 'default',
+        },
+        globalObject: 'this',
     },
     devServer: {
         contentBase: __dirname,
