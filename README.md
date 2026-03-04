@@ -1,30 +1,77 @@
-# zesty-ads-sdk-web
+# Zesty Ads SDK
 
-The Zesty Ads SDK allows developers to integrate their app into the Zesty Network. More [docs](https://docs.zesty.xyz)
+Monetize your 3D and WebXR experiences with the Zesty Ads SDK. Display banner ads in virtual environments across multiple frameworks.
 
-Currently, we support the following platforms:
+[![Documentation](https://img.shields.io/badge/docs-zesty.xyz-blue)](https://docs.zesty.xyz)
 
-- [aframe](https://github.com/zestyxyz/ads-sdk/tree/main/aframe)
-- [babylon.js](https://github.com/zestyxyz/ads-sdk/tree/main/babylonjs)
-- [playcanvas](https://github.com/zestyxyz/ads-sdk/tree/main/playcanvas)
-- [react-three-fiber](https://github.com/zestyxyz/ads-sdk/tree/main/r3f)
-- [three.js](https://github.com/zestyxyz/ads-sdk/tree/main/threejs)
-- [unity](https://github.com/zestyxyz/ads-sdk/tree/main/unity)
-- [web](https://github.com/zestyxyz/ads-sdk/tree/main/web)
-- [wonderland](https://github.com/zestyxyz/ads-sdk/tree/main/wonderland)
+## Supported Platforms
 
-## Getting Started
+| Platform | Package | Install |
+|----------|---------|---------|
+| [A-Frame](./aframe) | `@zestyxyz/aframe-sdk` | `npm i @zestyxyz/aframe-sdk` |
+| [Babylon.js](./babylonjs) | `@zestyxyz/babylonjs-sdk` | `npm i @zestyxyz/babylonjs-sdk` |
+| [PlayCanvas](./playcanvas) | `@zestyxyz/playcanvas-sdk` | `npm i @zestyxyz/playcanvas-sdk` |
+| [React Three Fiber](./r3f) | `@zestyxyz/r3f-sdk` | `npm i @zestyxyz/r3f-sdk` |
+| [Three.js](./threejs) | `@zestyxyz/threejs-sdk` | `npm i @zestyxyz/threejs-sdk` |
+| [Web Components](./web) | `@zestyxyz/web-sdk` | `npm i @zestyxyz/web-sdk` |
+| [Wonderland Engine](./wonderland) | `@zestyxyz/wonderland-sdk` | `npm i @zestyxyz/wonderland-sdk` |
 
-- Clone the repo and run `yarn` at the top level. This repo is set up with yarn workspaces, so doing this will install modules for all of the different SDKs.
-- Work on whichever SDKs are relevant to you.
-- Run `yarn build` at the top level to build all the SDKs at once.
-- Run `yarn test` to run unit tests.
-  - (Optional) Run `yarn prepare` to set up a pre-commit hook to run tests.
+## Quick Start
 
-## Publishing to NPM
+1. **Create an ad unit** at [zesty.xyz](https://www.zesty.xyz) to get your Ad Unit ID
+2. **Install the SDK** for your framework (see table above)
+3. **Add a banner** to your scene:
 
-If you've developed a new framework SDK and want to publish it to NPM, the steps are as follows:
+```jsx
+// React Three Fiber example
+import { ZestyBanner } from '@zestyxyz/r3f-sdk';
 
-- Ensure you are a member of the zestyxyz org on NPM.
-- Ensure that the name in the package.json for the SDK follows the `@zestyxyz/<framework>-sdk` format.
-- In the directory for that SDK, run `npm publish --access public` and the SDK will be published to the zestyxyz NPM org.
+<ZestyBanner
+  adUnit="your-ad-unit-id"
+  format="medium-rectangle"
+  position={[0, 2, -3]}
+/>
+```
+
+```javascript
+// Three.js example
+import { ZestyBanner } from '@zestyxyz/threejs-sdk';
+
+const banner = new ZestyBanner({
+  adUnit: 'your-ad-unit-id',
+  format: 'medium-rectangle',
+});
+scene.add(banner);
+```
+
+## Banner Formats
+
+| Format | Dimensions | Use Case |
+|--------|-----------|----------|
+| `medium-rectangle` | 300 x 250 | General purpose |
+| `billboard` | 970 x 250 | Wide displays |
+| `mobile-phone-interstitial` | 750 x 1334 | Tall/portrait displays |
+
+## Testing Locally
+
+Add `?debug=true` to your URL to load sample ads during development:
+```
+http://localhost:3000/?debug=true
+```
+
+## Documentation
+
+Full integration guides for each platform: [docs.zesty.xyz](https://docs.zesty.xyz/guides/developers/integrate)
+
+## Development
+
+```bash
+# Install dependencies (uses yarn workspaces)
+yarn
+
+# Build all SDKs
+yarn build
+
+# Run tests
+yarn test
+```

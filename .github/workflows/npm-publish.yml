@@ -46,13 +46,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestyxyz/beacon
-        if: ${{ github.event.inputs.dry_run != 'true' }}
-        working-directory: beacon
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Publish @zestyxyz/playcanvas-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: playcanvas
