@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "sig-beacon": "^0.0.14",
+    "@zestyxyz/beacon": "latest",
     "three": "^0.166.1",
     "uuid": "^8.3.2"
   },

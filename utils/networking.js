@@ -1,7 +1,7 @@
 import { formats } from '../utils/formats.js';
 import { checkUserPlatform } from '../utils/helpers.js';
 import { parse as parseUUID } from 'uuid'
-import Beacon from 'sig-beacon';
+import Beacon from '@zestyxyz/beacon';
 
 const BEACON_API_BASE = 'https://beacon.zesty.market'
 const BEACON_GRAPHQL_URI = 'https://beacon2.zesty.market/zgraphql'
