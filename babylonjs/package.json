@@ -3,8 +3,10 @@
   "version": "3.2.3",
   "description": "This is the babylon.js SDK for Zesty Banner integration.",
   "main": "dist/zesty-babylonjs-sdk.js",
+  "types": "src/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src/index.d.ts"
   ],
   "scripts": {
     "test": "webpack --mode=development",

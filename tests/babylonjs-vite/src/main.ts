@@ -21,7 +21,7 @@ const createScene = async () => {
   const ground = MeshBuilder.CreateGround('ground', { width: 10, height: 10 });
   ground.material = groundMaterial;
 
-  const zestyBanner1 = new (ZestyBanner as any)(
+  const zestyBanner1 = new ZestyBanner(
     '00000000-0000-0000-0000-000000000000',
     'medium-rectangle',
     'standard',
@@ -38,7 +38,7 @@ const createScene = async () => {
   );
   zestyBanner1.position = new Vector3(0, 2, 2);
 
-  const zestyBanner2 = new (ZestyBanner as any)(
+  const zestyBanner2 = new ZestyBanner(
     '10000000-0000-4000-8000-000000000000',
     'billboard',
     'standard',
@@ -48,7 +48,7 @@ const createScene = async () => {
   );
   zestyBanner2.position = new Vector3(0, 1, 2);
 
-  const zestyBanner3 = new (ZestyBanner as any)(
+  const zestyBanner3 = new ZestyBanner(
     '20000000-0000-4000-8000-000000000000',
     'mobile-phone-interstitial',
     'standard',
