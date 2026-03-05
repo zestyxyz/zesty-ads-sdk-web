@@ -9,3 +9,4 @@ console.log('Building r3f:\n' + execSync('cd r3f && yarn build').toString());
 console.log('Building Web:\n' + execSync('cd web && yarn build').toString());
 console.log('Building Wonderland:\n' + execSync('cd wonderland && yarn build').toString());
 console.log('Building zestyFormats and zestyNetworking:\n' + execSync('cd utils && yarn build && yarn build-networking').toString());
+console.log('Building babylon.js Vite test:\n' + execSync('cd tests/babylonjs-vite && yarn build').toString());
