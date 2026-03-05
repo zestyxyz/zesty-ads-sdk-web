@@ -1,9 +1,9 @@
-/* global BABYLON */
-
+import { MeshBuilder, ActionManager, ExecuteCodeAction, StandardMaterial, Texture, WebXRState } from '@babylonjs/core';
 import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats } from '../../utils/formats';
 import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import { version } from '../package.json';
+
 
 console.log('Zesty SDK Version: ', version);
 
@@ -16,14 +16,14 @@ export default class ZestyBanner {
       width: formats[format].width * height
     };
 
-    this.zestyBanner = BABYLON.MeshBuilder.CreatePlane('zestybanner', options);
+    this.zestyBanner = MeshBuilder.CreatePlane('zestybanner', options);
     this.scene = scene;
     this.xr = webXRExperienceHelper;
     this.prebid = prebid;
 
     loadBanner(adUnit, format, style, prebid, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(data => {
       this.zestyBanner.material = data.mat;
-      this.zestyBanner.actionManager = new BABYLON.ActionManager(scene);
+      this.zestyBanner.actionManager = new ActionManager(scene);
       this.zestyBanner.url = data.url;
 
       if (beacon) {
@@ -31,7 +31,7 @@ export default class ZestyBanner {
       }
 
       this.zestyBanner.actionManager.registerAction(
-        new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, () => {
+        new ExecuteCodeAction(ActionManager.OnPickTrigger, () => {
           if (webXRExperienceHelper?.baseExperience) {
             webXRExperienceHelper.baseExperience.sessionManager.exitXRAsync().then(() => {
               openURL(data.url);
@@ -69,7 +69,7 @@ export default class ZestyBanner {
     let camera = null;
 
     // Get the origin of the camera
-    if (this.xr?.baseExperience && this.xr.baseExperience.state == BABYLON.WebXRState.IN_XR) {
+    if (this.xr?.baseExperience && this.xr.baseExperience.state == WebXRState.IN_XR) {
       camera = this.xr.baseExperience.camera;
     } else {
       camera = this.scene.cameras[0];
@@ -84,8 +84,8 @@ async function loadBanner(adUnit, format, style, prebid = true, customDefaultIma
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 
-  const mat = new BABYLON.StandardMaterial('');
-  mat.diffuseTexture = new BABYLON.Texture(image);
+  const mat = new StandardMaterial('');
+  mat.diffuseTexture = new Texture(image);
   mat.diffuseTexture.hasAlpha = true;
 
   // Hook up modal trigger
