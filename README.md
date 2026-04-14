@@ -14,7 +14,6 @@ Monetize your 3D and WebXR experiences with the Zesty Ads SDK. Display banner ad
 | [React Three Fiber](./r3f) | `@zestyxyz/r3f-sdk` | `npm i @zestyxyz/r3f-sdk` |
 | [Three.js](./threejs) | `@zestyxyz/threejs-sdk` | `npm i @zestyxyz/threejs-sdk` |
 | [Web Components](./web) | `@zestyxyz/web-sdk` | `npm i @zestyxyz/web-sdk` |
-| [Wonderland Engine](./wonderland) | `@zestyxyz/wonderland-sdk` | `npm i @zestyxyz/wonderland-sdk` |
 
 ## Quick Start
 
