@@ -4,6 +4,14 @@ module.exports = {
     entry: {
         'zesty-babylonjs-sdk': './src/index.js',
     },
+    externals: {
+        '@babylonjs/core': {
+            commonjs: '@babylonjs/core',
+            commonjs2: '@babylonjs/core',
+            amd: '@babylonjs/core',
+            root: 'BABYLON',
+        },
+    },
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),

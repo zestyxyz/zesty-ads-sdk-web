@@ -1,0 +1,19 @@
+{
+  "name": "babylonjs-vite-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^7.0.0",
+    "@zestyxyz/babylonjs-sdk": "file:../../babylonjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^5.4.0"
+  }
+}
