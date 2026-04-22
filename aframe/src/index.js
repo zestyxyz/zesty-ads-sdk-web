@@ -42,7 +42,6 @@ AFRAME.registerComponent('zesty-banner', {
     style: { type: 'string', default: defaultStyle, oneOf: ['standard', 'minimal'] },
     height: { type: 'float', default: 1 },
     beacon: { type: 'boolean', default: true },
-    prebid: { type: 'boolean', default: true },
     customDefaultImage: { type: 'string' },
     customDefaultCtaUrl: { type: 'string' },
     modalTrigger: { type: 'string' },
@@ -82,7 +81,6 @@ AFRAME.registerComponent('zesty-banner', {
       this.data.style,
       this.data.height,
       this.data.beacon,
-      this.data.prebid,
       this.data.customDefaultImage,
       this.data.customDefaultCtaUrl,
       this.data.modalTrigger,
@@ -114,7 +112,7 @@ AFRAME.registerComponent('zesty-banner', {
   }
 });
 
-async function createBanner(el, adUnit, format, style, height, beacon, prebid = true, customDefaultImage = '', customDefaultCtaUrl = '', modalTrigger = '', modalBackground = false, modalDelay = 0) {
+async function createBanner(el, adUnit, format, style, height, beacon, customDefaultImage = '', customDefaultCtaUrl = '', modalTrigger = '', modalBackground = false, modalDelay = 0) {
   let overrideEntry = getOverrideUnitInfo(adUnit);
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.format;
   const adjustedFormat = shouldOverride ? overrideEntry.format : format;
@@ -154,7 +152,7 @@ async function createBanner(el, adUnit, format, style, height, beacon, prebid = 
       if (!visibilityCheck([min.x, min.y, min.z], [max.x, max.y, max.z], camera.projectionMatrix.toArray(), camera.matrixWorld.toArray())) return;
     }
 
-    const bannerPromise = loadBanner(adUnit, format, style, beacon, prebid, customDefaultImage, customDefaultCtaUrl).then(banner => {
+    const bannerPromise = loadBanner(adUnit, format, style, beacon, customDefaultImage, customDefaultCtaUrl).then(banner => {
       if (banner.img && typeof banner.img != 'string') {
         assets.appendChild(banner.img);
       }
@@ -168,8 +166,8 @@ async function createBanner(el, adUnit, format, style, height, beacon, prebid = 
   setInterval(getBanner, AD_REFRESH_INTERVAL);
 }
 
-async function loadBanner(adUnit, format, style, beacon, prebid = true, customDefaultImage = '', customDefaultCtaUrl = '') {
-  const activeCampaign = await fetchCampaignAd(adUnit, format, style, prebid, customDefaultImage, customDefaultCtaUrl);
+async function loadBanner(adUnit, format, style, beacon, customDefaultImage = '', customDefaultCtaUrl = '') {
+  const activeCampaign = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeCampaign.Ads[0];
 
