@@ -50,3 +50,16 @@ test.describe('Navigation', () => {
     expect(title).not.toBe('Playcanvas Test');
   });
 });
+
+test.describe('Modal', () => {
+  test('An ad modal is created when the modal trigger event is fired @skip', async ({ page }) => {
+    await page.waitForFunction(() => window.banner1?.findComponent('render').meshInstances[0]?._material._diffuseMap?.name != null);
+    await page.evaluate(() => document.dispatchEvent(new CustomEvent('lose')));
+    const modal = await page.waitForSelector('[popover="manual"]');
+    expect(modal).toBeTruthy();
+    const modalImage = await page.$eval('[popover="manual"] > a > img', el => el.src);
+    const modalLink = await page.$eval('[popover="manual"] > a', el => el.href);
+    expect(modalImage).toBeTruthy();
+    expect(modalLink).toBeTruthy();
+  });
+});

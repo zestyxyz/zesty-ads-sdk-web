@@ -87,3 +87,21 @@ test.describe('Navigation', () => {
     expect(title).not.toBe('A-Frame Test');
   });
 });
+
+test.describe('Modal', () => {
+  test('An ad modal is created when the modal trigger event is fired @skip', async ({ page }) => {
+    let img;
+    const banner = page.locator('#banner1 > a-plane');
+    while (!img) {
+      img = await banner.evaluate(srcEvaluate);
+      if (!img) await page.waitForTimeout(100);
+    }
+    await page.evaluate(() => document.dispatchEvent(new CustomEvent('lose')));
+    const modal = await page.waitForSelector('[popover="manual"]');
+    expect(modal).toBeTruthy();
+    const modalImage = await page.$eval('[popover="manual"] > a > img', el => el.src);
+    const modalLink = await page.$eval('[popover="manual"] > a', el => el.href);
+    expect(modalImage).toBeTruthy();
+    expect(modalLink).toBeTruthy();
+  });
+});

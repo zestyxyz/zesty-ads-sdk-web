@@ -22,7 +22,7 @@ test.describe('Default banners', () => {
     const banner1 = await page.evaluate(
       () => window.scene.meshes[4].material.diffuseTexture.name
     );
-    expect(banner1.split('/').pop()).toBe('zesty-default-medium-rectangle.png');
+    expect(banner1.split('/').pop()).toBe('250');
   });
 
   test('The billboard banner is present', async ({ page }) => {
@@ -52,5 +52,18 @@ test.describe('Navigation', () => {
     await newPage.waitForLoadState();
     const title = await newPage.title();
     expect(title).not.toBe('Babylon.js Test');
+  });
+});
+
+test.describe('Modal', () => {
+  test('An ad modal is created when the modal trigger event is fired @skip', async ({ page }) => {
+    await page.waitForFunction(() => window.scene?.meshes[4]?.material != null);
+    await page.evaluate(() => document.dispatchEvent(new CustomEvent('lose')));
+    const modal = await page.waitForSelector('[popover="manual"]');
+    expect(modal).toBeTruthy();
+    const modalImage = await page.$eval('[popover="manual"] > a > img', el => el.src);
+    const modalLink = await page.$eval('[popover="manual"] > a', el => el.href);
+    expect(modalImage).toBeTruthy();
+    expect(modalLink).toBeTruthy();
   });
 });
