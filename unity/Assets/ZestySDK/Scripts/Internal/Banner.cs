@@ -32,7 +32,6 @@ namespace Zesty
         public string hostURL;
         public Formats.Types format;
         public bool beaconEnabled = true;
-        public bool prebidEnabled = true;
 
         public Material[] placeholderMaterials = new Material[3];
         public Material runtimeBanner;
@@ -65,8 +64,6 @@ namespace Zesty
         [DllImport("__Internal")] private static extern void _sendOnLoadMetric(string adUnitId, string campaignId);
         [DllImport("__Internal")] private static extern void _sendOnClickMetric(string adUnitId, string campaignId);
         [DllImport("__Internal")] private static extern void _open(string url);
-        [DllImport("__Internal")] private static extern void _initPrebid(string adUnitId, int format);
-        [DllImport("__Internal")] private static extern string _tryGetWinningBidInfo();
         [DllImport("__Internal")] private static extern void _updateAdModal(string adUnitId, string campaignId, int format, string defaultImage, string defaultCTA, string modalTrigger, bool modalBackground, int modalDelay);
 
         string bannerTextureURL;
@@ -83,13 +80,6 @@ namespace Zesty
             m_Renderer = GetComponent<MeshRenderer>();
             m_Collider = GetComponent<MeshCollider>();
             FetchCampaignAd();
-            if (prebidEnabled)
-            {
-#if !UNITY_EDITOR
-                _initPrebid(adUnit, (int)format);
-                StartCoroutine(TryGetWinningBidInfo());
-#endif
-            }
 
             string tags = string.Join(",", this.specifiedTags.ToArray());
 #if !UNITY_EDITOR
@@ -281,48 +271,5 @@ namespace Zesty
             return bannerInfo;
         }
 
-        private IEnumerator TryGetWinningBidInfo()
-        {
-            if (m_Renderer.isVisible)
-            {
-                if (useTestTraffic)
-                {
-                    SetBannerInfo(ConstructSampleAd());
-                }
-                else
-                {
-                    for (int i = 0; i < Constants.MAX_PREBID_RETRIES; i++)
-                    {
-                        string adInfo = _tryGetWinningBidInfo();
-                        if (adInfo == "")
-                        {
-                            yield return new WaitForSeconds(1);
-                        }
-                        else
-                        {
-                            string[] els = adInfo.Split('|');
-                            BannerInfo bannerData = new()
-                            {
-                                Ads = new List<Ad>()
-                            };
-                            Ad ad = new()
-                            {
-                                asset_url = els[0],
-                                cta_url = els[1]
-                            };
-                            bannerData.Ads.Add(ad);
-                            bannerData.CampaignId = els[2];
-
-                            SetBannerInfo(bannerData);
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-            yield return new WaitForSeconds(Constants.PREBID_REFRESH_INTERVAL);
-            StartCoroutine(TryGetWinningBidInfo());
-        }
     }
 }

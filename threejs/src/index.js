@@ -23,9 +23,8 @@ export default class ZestyBanner extends Mesh {
    * @param {Number} height Height of the banner
    * @param {WebGLRenderer} renderer Optional field to pass in the WebGLRenderer in a WebXR project
    * @param {boolean} beacon Whether to send analytics events
-   * @param {boolean} prebid Whether to use Prebid for programmatic ads
    */
-  constructor(adUnit, format, style, height, renderer = null, beacon = true, prebid = true, config = {}) {
+  constructor(adUnit, format, style, height, renderer = null, beacon = true, config = {}) {
     super();
     this.geometry = new PlaneGeometry(formats[format].width * height, height, 1, 1);
 
@@ -35,7 +34,6 @@ export default class ZestyBanner extends Mesh {
     this.style = style;
     this.renderer = renderer;
     this.beacon = beacon;
-    this.prebid = prebid;
     this.customDefaultImage = config.customDefaultImage ?? null;
     this.customDefaultCtaUrl = config.customDefaultCtaUrl ?? null;
     this.modalTrigger = config.modalTrigger ?? null;
@@ -43,7 +41,7 @@ export default class ZestyBanner extends Mesh {
     this.modalDelay = config.modalDelay ?? 0;
     this.banner = {};
 
-    this.bannerPromise = loadBanner(adUnit, format, style, this.prebid, this.customDefaultImage, this.customDefaultCtaUrl, this.modalTrigger, this.modalBackground, this.modalDelay).then(banner => {
+    this.bannerPromise = loadBanner(adUnit, format, style, this.customDefaultImage, this.customDefaultCtaUrl, this.modalTrigger, this.modalBackground, this.modalDelay).then(banner => {
       this.material = new MeshBasicMaterial({
         map: banner.texture
       });
@@ -111,8 +109,8 @@ export default class ZestyBanner extends Mesh {
   }
 }
 
-async function loadBanner(adUnit, format, style, prebid = true, customDefaultImage = null, customDefaultCtaUrl = null, modalTrigger = null, modalBackground = false, modalDelay = 0) {
-  const activeBanner = await fetchCampaignAd(adUnit, format, style, prebid, customDefaultImage, customDefaultCtaUrl);
+async function loadBanner(adUnit, format, style, customDefaultImage = null, customDefaultCtaUrl = null, modalTrigger = null, modalBackground = false, modalDelay = 0) {
+  const activeBanner = await fetchCampaignAd(adUnit, format, style, customDefaultImage, customDefaultCtaUrl);
 
   const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
 
