@@ -61,7 +61,7 @@ namespace Zesty
         private MeshCollider m_Collider;
 
         // Banner info
-        string url = Constants.ZESTY_URL;
+        string url = Constants.RELAY_URL;
         [DllImport("__Internal")] private static extern void _sendOnLoadMetric(string adUnitId, string campaignId);
         [DllImport("__Internal")] private static extern void _sendOnClickMetric(string adUnitId, string campaignId);
         [DllImport("__Internal")] private static extern void _open(string url);
@@ -277,7 +277,7 @@ namespace Zesty
             bannerInfo.Ads = new List<Ad>();
             bannerInfo.Ads.Add(new Ad());
             bannerInfo.Ads[0].asset_url = $"{Constants.AD_SERVER_URL}/ad/sample?format={formatName}";
-            bannerInfo.Ads[0].cta_url = customDefaultCTA ?? "relay.zesty.xyz";
+            bannerInfo.Ads[0].cta_url = customDefaultCTA ?? "relay.borellion.com";
             return bannerInfo;
         }
 

@@ -2,5 +2,3 @@
 /**/node_modules
 /**/cache
 test-results/
-tests/wonderland/deploy/
-tests/wonderland/js/zesty-wonderland-sdk.js
