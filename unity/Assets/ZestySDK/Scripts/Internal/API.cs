@@ -111,7 +111,7 @@ namespace Zesty {
                         new Ad()
                         {
                             asset_url = customDefaultImage ?? Formats.MediumRectangle.Images[0],
-                            cta_url = customDefaultCTA ?? "relay.zesty.xyz"
+                            cta_url = customDefaultCTA ?? "relay.borellion.com"
                         } 
                     };
                     string fallbackCampaignId = "TestCampaign";

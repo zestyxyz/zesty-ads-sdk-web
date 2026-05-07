@@ -5,7 +5,7 @@ import Beacon from '@zestyxyz/beacon';
 
 const BEACON_API_BASE = 'https://beacon.zesty.market'
 const BEACON_GRAPHQL_URI = 'https://beacon2.zesty.market/zgraphql'
-const DEFAULT_CTA_URL = 'https://relay.zesty.xyz/';
+const DEFAULT_CTA_URL = 'https://relay.borellion.com/';
 const DEFAULT_CAMPAIGN_ID = 'DefaultCampaign';
 
 const DB_ENDPOINT = 'https://api.zesty.market/api';
@@ -27,7 +27,7 @@ let divCount = 0;
 
 // Instantiate the beacon prototype as an import side-effect for now
 // just so we don't need to modify all the other SDKs
-const beacon = new Beacon('https://relay.zesty.xyz');
+const beacon = new Beacon('https://relay.borellion.com');
 beacon.signal();
 
 // Check if the Zesty debug param is present

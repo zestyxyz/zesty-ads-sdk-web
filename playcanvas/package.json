@@ -27,7 +27,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "esbuild": "^0.25.5",
+    "esbuild": "^0.28.0",
     "playcanvas": "^2.8.0"
   }
 }
