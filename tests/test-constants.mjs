@@ -18,11 +18,11 @@ export const BILLBOARD_ID = '10000000-0000-4000-8000-000000000000';
 export const MOBILE_PHONE_INTERSTITIAL_ID = '20000000-0000-4000-8000-000000000000';
 
 export async function injectIFrame(page, url, image, adUnitId) {
-  await page.waitForFunction((adUnitId) => document.querySelector(`#zesty-div-${adUnitId}`) != null, adUnitId);
+  await page.waitForFunction((adUnitId) => document.querySelector(`#borellion-div-${adUnitId}`) != null, adUnitId);
   await page.evaluate(([url, image, adUnitId]) => {
     const iframe = document.createElement('iframe');
     iframe.id = `injected-${adUnitId}`;
-    document.querySelector(`#zesty-div-${adUnitId}`).appendChild(iframe)
+    document.querySelector(`#borellion-div-${adUnitId}`).appendChild(iframe)
     iframe.contentDocument.write(`<html><body><a href="${url}"><img src="${image}"></a></body></html>`);
   }, [url, image, adUnitId]);
 }
@@ -30,9 +30,9 @@ export async function injectIFrame(page, url, image, adUnitId) {
 export async function checkZestyDiv(page, format) {
   let div;
   if (!format) {
-    div = await page.frameLocator('#unknown').locator('#zesty-div-00000000-0000-0000-0000-000000000000');
+    div = await page.frameLocator('#unknown').locator('#borellion-div-00000000-0000-0000-0000-000000000000');
   } else {
-    div = await page.frameLocator(`#${format}`).locator(`#zesty-div-00000000-0000-0000-0000-000000000000`);
+    div = await page.frameLocator(`#${format}`).locator(`#borellion-div-00000000-0000-0000-0000-000000000000`);
   }
 
   const { width, height } = await div.boundingBox();

@@ -40,7 +40,7 @@
       app.setCanvasFillMode(pc.FILLMODE_FILL_WINDOW);
       app.start();
 
-      await import("../../playcanvas/dist/zesty-playcanvas-sdk.js");
+      await import("../../playcanvas/dist/borellion-playcanvas-sdk.js");
 
       // create a camera
       const camera = new pc.Entity();
@@ -61,15 +61,15 @@
       const createBanner = (adUnitId, format, customDefaultImage = null, customDefaultCtaUrl = null, modalTrigger = null, modalBackground = false, modalDelay = 0) => {
         const banner = new pc.Entity();
         banner.addComponent('script');
-        banner.script.create('zesty-banner');
-        banner.script['zesty-banner'].adUnitId = adUnitId;
-        banner.script['zesty-banner'].format = format;
-        banner.script['zesty-banner'].cameraEntity = camera;
-        banner.script['zesty-banner'].customDefaultImage = customDefaultImage;
-        banner.script['zesty-banner'].customDefaultCtaUrl = customDefaultCtaUrl;
-        banner.script['zesty-banner'].modalTrigger = modalTrigger;
-        banner.script['zesty-banner'].modalBackground = modalBackground;
-        banner.script['zesty-banner'].modalDelay = modalDelay;
+        banner.script.create('borellion-banner');
+        banner.script['borellion-banner'].adUnitId = adUnitId;
+        banner.script['borellion-banner'].format = format;
+        banner.script['borellion-banner'].cameraEntity = camera;
+        banner.script['borellion-banner'].customDefaultImage = customDefaultImage;
+        banner.script['borellion-banner'].customDefaultCtaUrl = customDefaultCtaUrl;
+        banner.script['borellion-banner'].modalTrigger = modalTrigger;
+        banner.script['borellion-banner'].modalBackground = modalBackground;
+        banner.script['borellion-banner'].modalDelay = modalDelay;
         banner.setEulerAngles(90, 0, 0);
         return banner;
       }
