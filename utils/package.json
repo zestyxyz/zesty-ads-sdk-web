@@ -1,18 +1,18 @@
 {
-  "name": "zesty-sdk-utils",
+  "name": "borellion-sdk-utils",
   "version": "1.0.0",
   "description": "Scripts with functionality shared between SDKs. Should not be published.",
   "main": "networking.js",
   "scripts": {
-    "build": "esbuild formats.js --format=iife --global-name=zestyFormats --bundle --minify --outfile=dist/zesty-formats.js",
-    "build-networking": "esbuild networking.js --format=esm --global-name=zestyNetworking --bundle --minify --outfile=dist/zesty-networking.js",
+    "build": "esbuild formats.js --format=iife --global-name=borellionFormats --bundle --minify --outfile=dist/borellion-formats.js",
+    "build-networking": "esbuild networking.js --format=esm --global-name=borellionNetworking --bundle --minify --outfile=dist/borellion-networking.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Borellion",
   "license": "ISC",
   "dependencies": {
-    "@zestyxyz/beacon": "latest",
+    "@borellion/beacon": "latest",
     "three": "^0.166.1",
     "uuid": "^8.3.2"
   },

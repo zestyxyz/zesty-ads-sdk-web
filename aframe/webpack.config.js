@@ -3,7 +3,7 @@ const TerserWebpackPlugin = require('terser-webpack-plugin')
 
 module.exports = {
     entry: {
-        'zesty-aframe-sdk': './src/index.js'
+        'borellion-aframe-sdk': './src/index.js'
     },
     output: {
         filename: '[name].js',

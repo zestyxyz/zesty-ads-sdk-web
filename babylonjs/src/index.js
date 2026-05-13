@@ -5,18 +5,18 @@ import { formats } from '../../utils/formats';
 import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import { version } from '../package.json';
 
-console.log('Zesty SDK Version: ', version);
+console.log('Borellion SDK Version: ', version);
 
 let modalTriggers = {};
 
-export default class ZestyBanner {
+export default class BorellionBanner {
   constructor(adUnit, format, style, height, scene, webXRExperienceHelper = null, beacon = true, prebid = true, config = {}) {
     const options = {
       height: height,
       width: formats[format].width * height
     };
 
-    this.zestyBanner = BABYLON.MeshBuilder.CreatePlane('zestybanner', options);
+    this.zestyBanner = BABYLON.MeshBuilder.CreatePlane('borellionbanner', options);
     this.scene = scene;
     this.xr = webXRExperienceHelper;
     this.prebid = prebid;
@@ -107,4 +107,4 @@ async function loadBanner(adUnit, format, style, prebid = true, customDefaultIma
   return { mat: mat, src: image, uri: activeBanner.uri, url: url, campaignId: activeBanner.CampaignId };
 }
 
-window.ZestyBanner = ZestyBanner;
+window.BorellionBanner = BorellionBanner;

@@ -1,8 +1,8 @@
 {
-  "name": "@zestyxyz/aframe-sdk",
+  "name": "@borellion/aframe-sdk",
   "version": "3.2.2",
-  "description": "This is the A-Frame SDK for Zesty Banner integration.",
-  "main": "dist/zesty-aframe-sdk.js",
+  "description": "This is the A-Frame SDK for Borellion Banner integration.",
+  "main": "dist/borellion-aframe-sdk.js",
   "files": [
     "dist"
   ],
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "url": "git+https://github.com/borellion/sdk.git",
     "directory": "aframe"
   },
-  "author": "Zesty",
+  "author": "Borellion",
   "publishConfig": {
     "access": "public"
   },

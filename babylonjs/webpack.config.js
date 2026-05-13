@@ -2,13 +2,13 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        'zesty-babylonjs-sdk': './src/index.js',
+        'borellion-babylonjs-sdk': './src/index.js',
     },
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
         library: {
-            name: 'ZestyBanner',
+            name: 'BorellionBanner',
             type: 'umd',
             export: 'default',
         },

@@ -1,6 +1,6 @@
 {
-  "name": "zesty-sdk",
-  "description": "Monorepo for Zesty integration SDKS.",
+  "name": "borellion-sdk",
+  "description": "Monorepo for Borellion integration SDKs.",
   "version": "1.0.0",
   "main": "index.js",
   "directories": {
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zestymarket/zesty-sdk.git"
+    "url": "git+https://github.com/borellion/sdk.git"
   },
-  "author": "Zesty Market",
+  "author": "Borellion",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zestymarket/zesty-sdk/issues"
+    "url": "https://github.com/borellion/sdk/issues"
   },
-  "homepage": "https://github.com/zestymarket/zesty-sdk#readme",
+  "homepage": "https://github.com/borellion/sdk#readme",
   "devDependencies": {
     "@babel/core": "^7.18.5",
     "@babel/plugin-transform-runtime": "^7.18.5",

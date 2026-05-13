@@ -1,8 +1,8 @@
 {
-  "name": "@zestyxyz/threejs-sdk",
+  "name": "@borellion/threejs-sdk",
   "version": "3.2.2",
-  "description": "This is the three.js SDK for Zesty Banner integration.",
-  "main": "dist/zesty-threejs-sdk.js",
+  "description": "This is the three.js SDK for Borellion Banner integration.",
+  "main": "dist/borellion-threejs-sdk.js",
   "files": [
     "dist"
   ],
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "url": "git+https://github.com/borellion/sdk.git",
     "directory": "threejs"
   },
-  "author": "Zesty",
+  "author": "Borellion",
   "publishConfig": {
     "access": "public"
   },

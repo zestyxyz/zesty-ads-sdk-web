@@ -3,9 +3,9 @@ import { formats, defaultFormat } from '../../utils/formats';
 import { openURL } from '../../utils/helpers';
 import { version } from '../package.json';
 
-console.log('Zesty SDK Version: ', version);
+console.log('Borellion SDK Version: ', version);
 
-class Zesty extends HTMLElement {
+class Borellion extends HTMLElement {
   constructor() {
     super();
     this.adUnit = '';
@@ -115,4 +115,4 @@ class Zesty extends HTMLElement {
   }
 }
 
-customElements.define('zesty-web', Zesty);
+customElements.define('borellion-ad', Borellion);

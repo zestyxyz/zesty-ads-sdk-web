@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        'zesty-beacon': './src/index.js'
+        'borellion-beacon': './src/index.js'
     },
     output: {
         filename: '[name].js',

@@ -159,8 +159,8 @@ const urlContainsUTMParams = (url) => {
 
 const appendUTMParams = (url, adUnitId) => {
   let new_url = new URL(url)
-  new_url.searchParams.set('utm_source', 'ZestyMarket');
-  new_url.searchParams.set('utm_campaign', 'ZestyCampaign');
+  new_url.searchParams.set('utm_source', 'Borellion');
+  new_url.searchParams.set('utm_campaign', 'Borellion');
   new_url.searchParams.set('utm_channel', `AdUnitId_${adUnitId}`);
   return new_url.href;
 }

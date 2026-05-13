@@ -9,12 +9,12 @@ import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers'
 export * from '../../utils/formats';
 import { version } from '../package.json';
 
-console.log('Zesty SDK Version: ', version);
+console.log('Borellion SDK Version: ', version);
 
 let interval = null;
 let modalTriggers = {};
 
-export default function ZestyBanner(props) {
+export default function BorellionBanner(props) {
   const [bannerData, setBannerData] = useState(false);
   const [material, setMaterial] = useState(new THREE.MeshBasicMaterial());
   const [refreshInterval, setRefreshInterval] = useState(null);
