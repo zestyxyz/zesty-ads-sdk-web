@@ -1,6 +1,6 @@
-# Zesty Babylon.js Integration
+# Borellion Babylon.js Integration
 
-This is the babylon.js SDK for Zesty Banner integration.
+This is the babylon.js SDK for Borellion Banner integration.
 
 ## Getting started
 

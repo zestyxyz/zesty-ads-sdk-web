@@ -1,6 +1,6 @@
-# Zesty Three.js Integration
+# Borellion Three.js Integration
 
-This is the three.js SDK for Zesty Banner integration.
+This is the three.js SDK for Borellion Banner integration.
 
 ## Getting started
 
