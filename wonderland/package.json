@@ -1,0 +1,35 @@
+{
+  "name": "@borellion/wonderland-sdk",
+  "version": "3.2.2",
+  "description": "Wonderland Engine SDK for Borellion Banner integration.",
+  "main": "dist/borellion-wonderland-sdk.js",
+  "exports": {
+    ".": "./dist/borellion-wonderland-sdk.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.js --minify --sourcemap --format=esm --bundle --outfile=dist/borellion-wonderland-sdk.js --external:@wonderlandengine/*",
+    "build-dev": "esbuild src/index.js --sourcemap --format=esm --bundle --outfile=dist/borellion-wonderland-sdk.js --external:@wonderlandengine/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/borellion/sdk.git",
+    "directory": "wonderland"
+  },
+  "wonderlandengine": {},
+  "author": "Borellion",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@wonderlandengine/api": "^1.0.0",
+    "@wonderlandengine/components": "^1.0.0",
+    "gl-matrix": "^3.4.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.17.18"
+  }
+}

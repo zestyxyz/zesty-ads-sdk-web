@@ -1,0 +1,35 @@
+{
+    "views": {
+        "console": {
+            "showInfo": true,
+            "showWarnings": true,
+            "showErrors": true
+        },
+        "sceneView": {
+            "visualizeObjects": false,
+            "visualizeLights": true,
+            "visualizeCollision": true,
+            "visualizeOverdraw": false,
+            "visualizePhysics": true
+        },
+        "mainView": {
+            "launchSSL": false
+        }
+    },
+    "openViews": {
+        "Main Window": true,
+        "Scene View": true,
+        "Asset Browser": true,
+        "Console": true,
+        "Scene Outline": true,
+        "Properties": true,
+        "Project Settings": true,
+        "Resources": true,
+        "Project Data": false,
+        "Benchmark": false,
+        "Profile": false,
+        "Preferences": false,
+        "Localization": false,
+        "Animation Editor": false
+    }
+}
