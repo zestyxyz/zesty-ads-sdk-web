@@ -10,7 +10,6 @@ import {
   EXAMPLE_IMAGE2_MEDIUM_RECTANGLE,
   EXAMPLE_IMAGE2_BILLBOARD,
   EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
-  PREBID_LOAD_TEST_WAIT_INTERVAL,
   MEDIUM_RECTANGLE_ID,
   BILLBOARD_ID,
   MOBILE_PHONE_INTERSTITIAL_ID,
@@ -72,8 +71,10 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
-    await page.waitForFunction(() => window.banner1?.findComponent('render')?.meshInstances[0]?._material?._diffuseMap?.name != null);
+    await page.waitForFunction(() => {
+      const name = window.banner1?.findComponent('render')?.meshInstances[0]?._material?._diffuseMap?.name;
+      return name != null && !name.includes('default');
+    });
     const img1 = await page.evaluate(() => window.banner1.findComponent('render').meshInstances[0]._material._diffuseMap.name);
     const img2 = await page.evaluate(() => window.banner2.findComponent('render').meshInstances[0]._material._diffuseMap.name);
     const img3 = await page.evaluate(() => window.banner3.findComponent('render').meshInstances[0]._material._diffuseMap.name);
@@ -86,8 +87,7 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
-    await page.waitForFunction(() => window.banner1?.findComponent('render')?.meshInstances[0]?._material?._diffuseMap?.name != null);
+    await page.waitForFunction(() => window.banner1?.script?.['borellion-banner']?.ctaUrl != null);
     const link1 = await page.evaluate(() => window.banner1.script['borellion-banner'].ctaUrl);
     const link2 = await page.evaluate(() => window.banner2.script['borellion-banner'].ctaUrl);
     const link3 = await page.evaluate(() => window.banner3.script['borellion-banner'].ctaUrl);

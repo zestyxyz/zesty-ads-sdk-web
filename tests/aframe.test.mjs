@@ -10,7 +10,6 @@ import {
   EXAMPLE_IMAGE2_MEDIUM_RECTANGLE,
   EXAMPLE_IMAGE2_BILLBOARD,
   EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
-  PREBID_LOAD_TEST_WAIT_INTERVAL,
   MEDIUM_RECTANGLE_ID,
   BILLBOARD_ID,
   MOBILE_PHONE_INTERSTITIAL_ID,
@@ -93,7 +92,7 @@ test.describe('Navigation', () => {
       img = await banner.evaluate(srcEvaluate);
       if (!img) await page.waitForTimeout(100);
     }
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await page.waitForFunction(() => document.querySelector('#banner3').url != null);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
       page.mouse.click(page.viewportSize().width / 2, page.viewportSize().height / 2)
@@ -112,7 +111,7 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
+    await page.waitForFunction(([v]) => document.querySelector('#banner1 > a-plane')?.components?.material?.data?.src?.currentSrc == v, [EXAMPLE_IMAGE_MEDIUM_RECTANGLE]);
     const img1 = await banner1.evaluate(srcEvaluate);
     const img2 = await banner2.evaluate(srcEvaluate);
     const img3 = await banner3.evaluate(srcEvaluate);

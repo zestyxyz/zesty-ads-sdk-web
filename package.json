@@ -10,7 +10,7 @@
     "build": "node scripts/build.js",
     "publish": "node scripts/build_publish.js",
     "test": "npx playwright test --grep-invert @skip",
-    "serve": "npx http-server"
+    "serve": "http-server"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "@babel/plugin-transform-runtime": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "@playwright/test": "^1.22.2",
+    "http-server": "^14.1.1",
     "eslint": "^8.17.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
