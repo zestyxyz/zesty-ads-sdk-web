@@ -2,7 +2,7 @@ import React from "react";
 import { Canvas } from "@react-three/fiber";
 import { XR } from "@react-three/xr";
 import { ExposeBanners } from "./ExposeBanners";
-import ZestyBanner from "./zesty-reactxr-sdk";
+import ZestyBanner from "./borellion-reactxr-sdk";
 
 export default () => (
   <Canvas>

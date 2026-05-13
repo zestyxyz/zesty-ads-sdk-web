@@ -34,6 +34,8 @@ const cameraFuture = getCamera();
 let sdkLoaded = false;
 let modalTriggers = {};
 
+function registerSDK() {
+
 AFRAME.registerComponent('borellion-banner', {
   data: {},
   schema: {
@@ -319,3 +321,11 @@ AFRAME.registerPrimitive('a-zesty', {
     'visibility-check': {}
   }
 });
+
+} // end registerSDK
+
+if (window.AFRAME) {
+  registerSDK();
+} else {
+  window.addEventListener('load', registerSDK);
+}

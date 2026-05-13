@@ -16,10 +16,12 @@ import {
 } from './test-constants.mjs';
 
 function srcEvaluate(node) {
-  if (typeof node.components.material.data.src === 'string') {
-    return node.components.material.data.src;
+  const src = node.components?.material?.data?.src;
+  if (!src) return null;
+  if (typeof src === 'string') {
+    return src;
   } else {
-    return node.components.material.data.src.currentSrc;
+    return src.currentSrc || null;
   }
 }
 
@@ -37,17 +39,17 @@ test.describe('Initial load', () => {
   });
 
   test('The medium-rectangle banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner1').getAttribute('zesty-banner');
+    const banner = await page.locator('#banner1').getAttribute('borellion-banner');
     expect(banner).not.toBeFalsy();
   });
 
   test('The billboard banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner2').getAttribute('zesty-banner');
+    const banner = await page.locator('#banner2').getAttribute('borellion-banner');
     expect(banner).not.toBeFalsy();
   });
 
   test('The mobile-phone-interstitial banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner3').getAttribute('zesty-banner');
+    const banner = await page.locator('#banner3').getAttribute('borellion-banner');
     expect(banner).not.toBeFalsy();
   });
 });
@@ -57,7 +59,7 @@ test.describe('Default banners', () => {
     let img;
     const banner = page.locator('#banner1 > a-plane');
     while (!img) {
-      img = await banner.evaluate(srcEvaluate);
+      try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
     expect(img.split('/').pop()).toBe('250'); // Custom default image
@@ -67,7 +69,7 @@ test.describe('Default banners', () => {
     let img;
     const banner = page.locator('#banner2 > a-plane');
     while (!img) {
-      img = await banner.evaluate(srcEvaluate);
+      try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
     expect(img.split('/').pop()).toBe('zesty-default-billboard.png');
@@ -77,7 +79,7 @@ test.describe('Default banners', () => {
     let img;
     const banner = page.locator('#banner3 > a-plane');
     while (!img) {
-      img = await banner.evaluate(srcEvaluate);
+      try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
     expect(img.split('/').pop()).toBe('zesty-default-mobile-phone-interstitial.png');
@@ -89,7 +91,7 @@ test.describe('Navigation', () => {
     let img;
     const banner = page.locator('#banner3 > a-plane');
     while (!img) {
-      img = await banner.evaluate(srcEvaluate);
+      try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
     await page.waitForFunction(() => document.querySelector('#banner3').url != null);

@@ -25,7 +25,7 @@
     <script type="module">
       import * as THREE from 'three';
       import { VRButton } from 'three/examples/jsm/webxr/VRButton';
-      import ZestyBanner from '../../threejs/dist/zesty-threejs-sdk.js';
+      import ZestyBanner from '../../threejs/dist/borellion-threejs-sdk.js';
 
       var raycaster = new THREE.Raycaster();
       var mouse = new THREE.Vector2();
@@ -69,7 +69,7 @@
           raycaster.setFromCamera(mouse, camera);
           var intersects = raycaster.intersectObjects(scene.children);
           intersects.forEach(obj => {
-              if (obj.object.type == "ZestyBanner") {
+              if (obj.object.type == "BorellionBanner") {
                   obj.object.onClick();
               }
           })

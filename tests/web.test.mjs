@@ -19,7 +19,7 @@ test.describe('Initial load', () => {
 
   test('All 3 banners are currently loaded', async ({ page }) => {
     const bannerCount = await page.evaluate(
-      () => document.getElementsByTagName('zesty-web').length
+      () => document.getElementsByTagName('borellion-ad').length
     );
     expect(bannerCount).toBe(3);
   });

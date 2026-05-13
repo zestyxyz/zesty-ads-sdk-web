@@ -87,7 +87,10 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await page.waitForFunction(() => window.banner1?.script?.['borellion-banner']?.ctaUrl != null);
+    await page.waitForFunction(() => {
+      const url = window.banner1?.script?.['borellion-banner']?.ctaUrl;
+      return url != null && !url.includes('relay.borellion.com');
+    });
     const link1 = await page.evaluate(() => window.banner1.script['borellion-banner'].ctaUrl);
     const link2 = await page.evaluate(() => window.banner2.script['borellion-banner'].ctaUrl);
     const link3 = await page.evaluate(() => window.banner3.script['borellion-banner'].ctaUrl);
