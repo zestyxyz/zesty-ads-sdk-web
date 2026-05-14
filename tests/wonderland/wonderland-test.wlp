@@ -1000,7 +1000,7 @@
                         "dynamicFormats": false,
                         "assignAlphaMaskTexture": true,
                         "customDefaultCtaUrl": "https://www.example.com",
-                        "customDefaultImage": "https://picsum.photos/300/250",
+                        "customDefaultImage": "http://localhost:8080/tests/images/custom-default-300x250.png",
                         "modalTrigger": "lose",
                         "modalDelay": 5000.0,
                         "modalBackground": true

@@ -36,7 +36,7 @@ test.describe('Default banners @skip', () => {
   test('The medium-rectangle banner is present', async ({ page }) => {
     await page.waitForFunction(() => window.testBanners[0].banner != null);
     const banner1 = await page.evaluate(() => window.testBanners[0].banner.imageSrc);
-    expect(banner1.split('/').pop()).toBe('250');
+    expect(banner1.split('/').pop()).toBe('custom-default-300x250.png');
   });
 
   test('The billboard banner is present', async ({ page }) => {

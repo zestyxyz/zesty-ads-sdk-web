@@ -62,7 +62,7 @@ test.describe('Default banners', () => {
       try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
-    expect(img.split('/').pop()).toBe('250'); // Custom default image
+    expect(img.split('/').pop()).toBe('custom-default-300x250.png'); // Custom default image
   });
 
   test('The billboard banner is displaying the correct default image', async ({ page }) => {
