@@ -12,7 +12,7 @@ console.log('Borellion SDK Version: ', version);
 
 let modalTriggers = {};
 
-export default function BorellionBanner(props) {
+export default function Borellion(props) {
   const [bannerData, setBannerData] = useState(false);
   const [material, setMaterial] = useState(new THREE.MeshBasicMaterial());
   const [refreshInterval, setRefreshInterval] = useState(null);

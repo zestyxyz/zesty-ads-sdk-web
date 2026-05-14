@@ -22,9 +22,9 @@ Monetize your 3D and WebXR experiences with the Borellion Ads SDK. Display banne
 
 ```jsx
 // React Three Fiber example
-import { BorellionBanner } from '@borellion/r3f-sdk';
+import { Borellion } from '@borellion/r3f-sdk';
 
-<BorellionBanner
+<Borellion
   adUnit="your-ad-unit-id"
   format="medium-rectangle"
   position={[0, 2, -3]}
@@ -33,9 +33,9 @@ import { BorellionBanner } from '@borellion/r3f-sdk';
 
 ```javascript
 // Three.js example
-import { BorellionBanner } from '@borellion/threejs-sdk';
+import { Borellion } from '@borellion/threejs-sdk';
 
-const banner = new BorellionBanner({
+const banner = new Borellion({
   adUnit: 'your-ad-unit-id',
   format: 'medium-rectangle',
 });

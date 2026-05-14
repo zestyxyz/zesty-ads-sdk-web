@@ -19,7 +19,7 @@ import {MouseLookComponent} from '@wonderlandengine/components';
 import {PlayerHeight} from '@wonderlandengine/components';
 import {VrModeActiveSwitch} from '@wonderlandengine/components';
 import {ExposeBanners} from './expose-banners.js';
-import {BorellionBanner} from './borellion-wonderland-sdk.js';
+import {Borellion} from './borellion-wonderland-sdk.js';
 /* wle:auto-imports:end */
 
 import {loadRuntime} from '@wonderlandengine/api';
@@ -90,7 +90,7 @@ engine.registerComponent(MouseLookComponent);
 engine.registerComponent(PlayerHeight);
 engine.registerComponent(VrModeActiveSwitch);
 engine.registerComponent(ExposeBanners);
-engine.registerComponent(BorellionBanner);
+engine.registerComponent(Borellion);
 /* wle:auto-register:end */
 
 engine.scene.load(`${Constants.ProjectName}.bin`);

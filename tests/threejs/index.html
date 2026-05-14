@@ -25,7 +25,7 @@
     <script type="module">
       import * as THREE from 'three';
       import { VRButton } from 'three/examples/jsm/webxr/VRButton';
-      import ZestyBanner from '../../threejs/dist/borellion-threejs-sdk.js';
+      import Borellion from '../../threejs/dist/borellion-threejs-sdk.js';
 
       var raycaster = new THREE.Raycaster();
       var mouse = new THREE.Vector2();
@@ -41,7 +41,7 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      const banner = new ZestyBanner("00000000-0000-0000-0000-000000000000", 'medium-rectangle', 'standard', 1, renderer, false, {
+      const banner = new Borellion("00000000-0000-0000-0000-000000000000", 'medium-rectangle', 'standard', 1, renderer, false, {
         customDefaultImage: 'http://localhost:8080/assets/zesty-ad-square.png',
         customDefaultCtaUrl: 'https://www.example.com',
         modalTrigger: 'lose',
@@ -51,11 +51,11 @@
       banner.position.set(0, 1, -2);
       scene.add(banner);
 
-      const banner2 = new ZestyBanner("10000000-0000-4000-8000-000000000000", 'billboard', 'standard', 1, renderer);
+      const banner2 = new Borellion("10000000-0000-4000-8000-000000000000", 'billboard', 'standard', 1, renderer);
       banner2.position.set(0, 0, -2);
       scene.add(banner2);
 
-      const banner3 = new ZestyBanner("20000000-0000-4000-8000-000000000000", 'mobile-phone-interstitial', 'standard', 1, renderer);
+      const banner3 = new Borellion("20000000-0000-4000-8000-000000000000", 'mobile-phone-interstitial', 'standard', 1, renderer);
       banner3.position.set(0, -1, -2);
       scene.add(banner3);
 
@@ -69,7 +69,7 @@
           raycaster.setFromCamera(mouse, camera);
           var intersects = raycaster.intersectObjects(scene.children);
           intersects.forEach(obj => {
-              if (obj.object.type == "BorellionBanner") {
+              if (obj.object.type == "Borellion") {
                   obj.object.onClick();
               }
           })

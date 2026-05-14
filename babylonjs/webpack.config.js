@@ -8,7 +8,7 @@ module.exports = {
         filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
         library: {
-            name: 'BorellionBanner',
+            name: 'Borellion',
             type: 'umd',
             export: 'default',
         },

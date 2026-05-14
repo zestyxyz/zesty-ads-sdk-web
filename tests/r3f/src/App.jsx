@@ -2,15 +2,15 @@ import React from "react";
 import { Canvas } from "@react-three/fiber";
 import { XR } from "@react-three/xr";
 import { ExposeBanners } from "./ExposeBanners";
-import ZestyBanner from "./borellion-reactxr-sdk";
+import Borellion from "./borellion-reactxr-sdk";
 
 export default () => (
   <Canvas>
     <XR>
       <ExposeBanners />
-      <ZestyBanner adUnit='00000000-0000-0000-0000-000000000000' format='medium-rectangle' position={[0, 2, 0]} height={4} beacon={false} customDefaultImage={'http://localhost:8080/assets/zesty-ad-square.png'} customDefaultCtaUrl={'https://www.example.com'} modalTrigger={'lose'} modalBackground={true} modalDelay={5000} />
-      <ZestyBanner adUnit='10000000-0000-4000-8000-000000000000' format='billboard' position={[0, 0, 0]} height={4} beacon={false} />
-      <ZestyBanner adUnit='20000000-0000-4000-8000-000000000000' format='mobile-phone-interstitial' position={[0, -2, 0]} height={4} beacon={false} />
+      <Borellion adUnit='00000000-0000-0000-0000-000000000000' format='medium-rectangle' position={[0, 2, 0]} height={4} beacon={false} customDefaultImage={'http://localhost:8080/assets/zesty-ad-square.png'} customDefaultCtaUrl={'https://www.example.com'} modalTrigger={'lose'} modalBackground={true} modalDelay={5000} />
+      <Borellion adUnit='10000000-0000-4000-8000-000000000000' format='billboard' position={[0, 0, 0]} height={4} beacon={false} />
+      <Borellion adUnit='20000000-0000-4000-8000-000000000000' format='mobile-phone-interstitial' position={[0, -2, 0]} height={4} beacon={false} />
     </XR>
   </Canvas>
 )

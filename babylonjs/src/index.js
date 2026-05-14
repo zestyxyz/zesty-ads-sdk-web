@@ -9,7 +9,7 @@ console.log('Borellion SDK Version: ', version);
 
 let modalTriggers = {};
 
-export default class BorellionBanner {
+export default class Borellion {
   constructor(adUnit, format, style, height, scene, webXRExperienceHelper = null, beacon = true, prebid = true, config = {}) {
     const options = {
       height: height,
@@ -107,4 +107,4 @@ async function loadBanner(adUnit, format, style, prebid = true, customDefaultIma
   return { mat: mat, src: image, uri: activeBanner.uri, url: url, campaignId: activeBanner.CampaignId };
 }
 
-window.BorellionBanner = BorellionBanner;
+window.Borellion = Borellion;

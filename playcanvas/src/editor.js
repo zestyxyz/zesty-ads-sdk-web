@@ -4,10 +4,10 @@ import { formats } from '../../utils/formats';
 import { getDefaultBanner } from '../../utils/networking';
 
 /** @type {typeof import("playcanvas").ScriptType} */
-const BorellionBanner = pc.createScript('borellion-banner');
+const Borellion = pc.createScript('borellion-banner');
 
-BorellionBanner.attributes.add("adUnitId", { type: "string" });
-BorellionBanner.attributes.add("format", {
+Borellion.attributes.add("adUnitId", { type: "string" });
+Borellion.attributes.add("format", {
     type: "number",
     enum: [
         { "Medium Rectangle": 1 },
@@ -16,14 +16,14 @@ BorellionBanner.attributes.add("format", {
     ],
     default: 1,
 });
-BorellionBanner.attributes.add("cameraEntity", { type: "entity" });
-BorellionBanner.attributes.add("useActiveCamera", { type: "boolean", default: false });
-BorellionBanner.attributes.add("prebid", { type: "boolean", default: true });
-BorellionBanner.attributes.add("customDefaultImage", { type: "string" });
-BorellionBanner.attributes.add("customDefaultCtaUrl", { type: "string" });
-BorellionBanner.attributes.add("modalTrigger", { type: "string" });
-BorellionBanner.attributes.add("modalDelay", { type: "number", default: 0 });
-BorellionBanner.attributes.add("modalBackground", { type: "boolean", default: false });
+Borellion.attributes.add("cameraEntity", { type: "entity" });
+Borellion.attributes.add("useActiveCamera", { type: "boolean", default: false });
+Borellion.attributes.add("prebid", { type: "boolean", default: true });
+Borellion.attributes.add("customDefaultImage", { type: "string" });
+Borellion.attributes.add("customDefaultCtaUrl", { type: "string" });
+Borellion.attributes.add("modalTrigger", { type: "string" });
+Borellion.attributes.add("modalDelay", { type: "number", default: 0 });
+Borellion.attributes.add("modalBackground", { type: "boolean", default: false });
 
 const FORMATS = {
     1: "medium-rectangle",
@@ -34,7 +34,7 @@ const FORMATS = {
 let modalTriggers = {};
 
 // initialize code called once per entity
-BorellionBanner.prototype.initialize = function() {
+Borellion.prototype.initialize = function() {
     this.ctaUrl = DEFAULT_CTA_URL;
     this.campaignId = DEFAULT_CAMPAIGN_ID;
 
@@ -68,7 +68,7 @@ BorellionBanner.prototype.initialize = function() {
     this.refreshIfVisible.bind(this)();
 };
 
-BorellionBanner.prototype.loadBanner = async function() {
+Borellion.prototype.loadBanner = async function() {
     const activeBanner = await fetchCampaignAd(this.adUnitId, FORMATS[this.format], 'standard', this.prebid, this.customDefaultImage, this.customDefaultCtaUrl);
 
     const { asset_url: image, cta_url: url } = activeBanner.Ads[0];
@@ -92,7 +92,7 @@ BorellionBanner.prototype.loadBanner = async function() {
     return { image, url, campaignId: activeBanner.CampaignId };
 }
 
-BorellionBanner.prototype.refreshIfVisible = function() {
+Borellion.prototype.refreshIfVisible = function() {
     /** @type {import("playcanvas").CameraComponent} */
     const camera = this.useActiveCamera ? this.app.scene._activeCamera : this.cameraEntity.camera;
     if (!camera) return;
@@ -138,7 +138,7 @@ BorellionBanner.prototype.refreshIfVisible = function() {
  * @param {MouseEvent} e
  * @param {import("playcanvas").XrInputSource} inputSource
  */
-BorellionBanner.prototype.onSelect = function(e, inputSource) {
+Borellion.prototype.onSelect = function(e, inputSource) {
     let from, to;
     if (inputSource) {
         from = inputSource.getOrigin();

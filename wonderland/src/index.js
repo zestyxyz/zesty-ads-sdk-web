@@ -31,7 +31,7 @@ let modalTriggers = {};
  *
  * Make sure that you set up a cursor to enable clicking.
  */
-export class BorellionBanner extends Component {
+export class Borellion extends Component {
   static TypeName = 'borellion-banner';
   static Properties = {
     /* Your banner ad unit ID */
