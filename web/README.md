@@ -1,30 +1,49 @@
-# borellion-web
+# @borellion/web-sdk
 
-This is the Web SDK for Borellion integration.
+Monetize your web experiences with Borellion banner ads via Web Components.
+
+## Installation
+
+**CDN:**
+```html
+<script src="https://cdn.borellion.com/sdk/borellion-web-sdk.js"></script>
+```
+
+**NPM:**
+```sh
+npm install @borellion/web-sdk
+```
+
+## Quick Start
 
 ```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <script src="https://cdn.borellion.com/sdk/borellion-web-sdk.js"></script>
-  </head>
-  <body>
-    <borellion-ad id="banner1" ad-unit="00000000-0000-0000-0000-000000000000" format="medium-rectangle" width="300px"></borellion-ad>
-  </body>
-</html>
+<borellion-ad
+  ad-unit="YOUR_AD_UNIT_ID"
+  format="medium-rectangle"
+  width="300px">
+</borellion-ad>
 ```
 
-## Local dev
+## Attributes
 
-```sh
-yarn
-yarn dev
-```
+| Attribute | Required | Description |
+|-----------|----------|-------------|
+| `ad-unit` | yes | Your ad unit ID |
+| `format` | yes | `billboard`, `medium-rectangle`, or `mobile-phone-interstitial` |
+| `width` | no | Width of the banner element (e.g. `300px`, `100%`) |
 
-If you've run `yarn` at the top level, you don't need to run it here again.
+## Banner Formats
 
-## Build
+| Format | Dimensions |
+|--------|-----------|
+| `medium-rectangle` | 300 x 250 |
+| `billboard` | 970 x 250 |
+| `mobile-phone-interstitial` | 750 x 1334 |
 
-```sh
-yarn build
-```
+## Testing Locally
+
+Add `?debug=true` to your URL to load sample ads during development.
+
+## Documentation
+
+Full integration guide: [borellion.com/docs](https://www.borellion.com/docs/guides/developers/integrate/web)

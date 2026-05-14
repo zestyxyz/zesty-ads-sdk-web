@@ -1,49 +1,49 @@
-# Borellion A-Frame Integration
+# @borellion/aframe-sdk
 
-This is the A-Frame SDK for Borellion Banner integration.
+Monetize your A-Frame WebXR experiences with Borellion banner ads.
 
-## Getting started
+## Installation
 
-```sh
-yarn
+**CDN:**
+```html
+<script src="https://cdn.borellion.com/sdk/borellion-aframe-sdk.js"></script>
 ```
 
-If you've run `yarn` at the top level, you don't need to run it here again.
-
-## Local dev server
-
+**NPM:**
 ```sh
-yarn serve
+npm install @borellion/aframe-sdk
 ```
 
-## Build
+## Quick Start
 
-```sh
-yarn build
+Add a banner to your `<a-scene>`:
+
+```html
+<a-entity borellion="adUnit: YOUR_AD_UNIT_ID; format: medium-rectangle;" position="0 2 0"></a-entity>
 ```
 
-## Prototyping with tunneling
+## Options
 
-If you'd like to test the changes you've made on a browser on a headset, the best way to do that is through tunnelling.
+| Attribute | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `adUnit` | yes | — | Your ad unit ID |
+| `format` | yes | — | `billboard`, `medium-rectangle`, or `mobile-phone-interstitial` |
+| `height` | no | `1` | Scale of the banner |
+| `beacon` | no | `true` | Set to `false` to opt out of analytics |
+| `prebid` | no | `true` | Set to `false` to disable Prebid and fetch ads directly |
 
-We use [`localtunnel`](https://localtunnel.github.io/www/).
+## Banner Formats
 
-Run the tunnel with:
+| Format | Dimensions |
+|--------|-----------|
+| `medium-rectangle` | 300 x 250 |
+| `billboard` | 970 x 250 |
+| `mobile-phone-interstitial` | 750 x 1334 |
 
-```sh
-lt --port 8080
-```
+## Testing Locally
 
-## Using the aframe inspector
+Add `?debug=true` to your URL to load sample ads during development.
 
-It's a really handy tool that allows you to drag and drop items into place and edit them without having specify everything with code.
+## Documentation
 
-Simply activate it with: `<ctrl> + <alt> + i`.
-
-## Automatically saving from the inspector
-
-You can automatically save things from the inspector to the files, just download `aframe-watcher`.
-
-```sh
-yarn global add aframe-watcher
-```
+Full integration guide: [borellion.com/docs](https://www.borellion.com/docs/guides/developers/integrate/a-frame)
