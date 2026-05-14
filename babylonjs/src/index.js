@@ -16,21 +16,21 @@ export default class Borellion {
       width: formats[format].width * height
     };
 
-    this.zestyBanner = BABYLON.MeshBuilder.CreatePlane('borellionbanner', options);
+    this.banner = BABYLON.MeshBuilder.CreatePlane('borellionbanner', options);
     this.scene = scene;
     this.xr = webXRExperienceHelper;
     this.prebid = prebid;
 
     loadBanner(adUnit, format, style, prebid, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(data => {
-      this.zestyBanner.material = data.mat;
-      this.zestyBanner.actionManager = new BABYLON.ActionManager(scene);
-      this.zestyBanner.url = data.url;
+      this.banner.material = data.mat;
+      this.banner.actionManager = new BABYLON.ActionManager(scene);
+      this.banner.url = data.url;
 
       if (beacon) {
         sendOnLoadMetric(adUnit, data.campaignId);
       }
 
-      this.zestyBanner.actionManager.registerAction(
+      this.banner.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, () => {
           if (webXRExperienceHelper?.baseExperience) {
             webXRExperienceHelper.baseExperience.sessionManager.exitXRAsync().then(() => {
@@ -48,7 +48,7 @@ export default class Borellion {
 
     setInterval(() => {
       const camera = this.getCamera();
-      const boundingBox = this.zestyBanner.getBoundingInfo().boundingBox;
+      const boundingBox = this.banner.getBoundingInfo().boundingBox;
       const isVisible = visibilityCheck(
         boundingBox.minimumWorld.asArray(),
         boundingBox.maximumWorld.asArray(),
@@ -57,12 +57,12 @@ export default class Borellion {
       );
       if (isVisible) {
         loadBanner(adUnit, format, style, this.prebid, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(banner => {
-          this.zestyBanner.material.diffuseTexture.updateURL(banner.src);
+          this.banner.material.diffuseTexture.updateURL(banner.src);
         });
       }
     }, AD_REFRESH_INTERVAL);
 
-    return this.zestyBanner;
+    return this.banner;
   }
 
   getCamera() {
