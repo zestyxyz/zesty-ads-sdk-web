@@ -1,6 +1,6 @@
-# Zesty React-three-fiber Integration
+# Borellion React-three-fiber Integration
 
-This is the react-three-fiber SDK for Zesty Banner integration.
+This is the react-three-fiber SDK for Borellion integration.
 
 ## Usage
 

@@ -35,7 +35,7 @@ test.describe('Default banners', () => {
   test('The medium-rectangle banner is present', async ({ page }) => {
     await page.waitForFunction(() => window.scene?.children[1]?.children[0]?.material?.map?.source != null);
     const banner1 = await page.evaluate(() => window.scene.children[1].children[0].material.map.source.data.currentSrc);
-    expect(banner1.split('/').pop()).toBe('zesty-ad-square.png');
+    expect(banner1.split('/').pop()).toBe('custom-default-300x250.png');
   });
 
   test('The billboard banner is present', async ({ page }) => {

@@ -1,4 +1,4 @@
-const assetsURL = 'https://cdn.zesty.xyz/sdk/assets';
+const assetsURL = 'https://cdn.borellion.com/sdk/assets';
 
 const formats = {
     'tall': {

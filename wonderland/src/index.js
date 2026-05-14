@@ -17,8 +17,8 @@ import { mat4 } from 'gl-matrix';
 
 console.log('Borellion SDK Version: ', version);
 
-const formatsLink = 'https://cdn.zesty.xyz/sdk/borellion-formats.js';
-const networkingLink = 'https://cdn.zesty.xyz/sdk/borellion-networking.js';
+const formatsLink = 'https://cdn.borellion.com/sdk/borellion-formats.js';
+const networkingLink = 'https://cdn.borellion.com/sdk/borellion-networking.js';
 
 let sdkLoaded = false;
 let modalTriggers = {};

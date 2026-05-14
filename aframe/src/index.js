@@ -313,14 +313,6 @@ AFRAME.registerPrimitive('a-borellion', {
   }
 });
 
-// Backward-compat aliases for sites using the old Zesty SDK names
-AFRAME.registerComponent('zesty-banner', AFRAME.components['borellion']);
-AFRAME.registerPrimitive('a-zesty', {
-  defaultComponents: {
-    'borellion': { adUnit: '' },
-    'visibility-check': {}
-  }
-});
 
 } // end registerSDK
 

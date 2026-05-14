@@ -1,15 +1,15 @@
-# zesty-web
+# borellion-web
 
-This is the Web SDK for Zesty Banner integration.
+This is the Web SDK for Borellion integration.
 
 ```html
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://cdn.zesty.xyz/sdk/zesty-web-sdk.js"></script>
+    <script src="https://cdn.borellion.com/sdk/borellion-web-sdk.js"></script>
   </head>
   <body>
-    <zesty-web id="banner1" ad-unit="00000000-0000-0000-0000-000000000000" format="medium-rectangle" width="300px"></zesty-web>
+    <borellion-ad id="banner1" ad-unit="00000000-0000-0000-0000-000000000000" format="medium-rectangle" width="300px"></borellion-ad>
   </body>
 </html>
 ```

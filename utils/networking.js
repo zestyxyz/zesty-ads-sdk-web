@@ -238,7 +238,7 @@ Check https://docs.borellion.com/guides/developers/ad-units for more information
         const { asset_url, cta_url } = bids[adUnitId];
         if (asset_url.startsWith('canvas://')) {
           const canvasIframe = document.createElement('iframe');
-          canvasIframe.id = "zesty-canvas-iframe";
+          canvasIframe.id = "borellion-canvas-iframe";
           document.body.appendChild(canvasIframe);
           canvasIframe.contentDocument.open();
           canvasIframe.contentDocument.write(asset_url.split('canvas://')[1]);

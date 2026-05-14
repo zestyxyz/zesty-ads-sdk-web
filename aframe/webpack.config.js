@@ -23,7 +23,7 @@ module.exports = {
                     nth_identifier: {
                         get: n => {
                             // This is needed to avoid a potential var collision
-                            // in the minified zesty-aframe-sdk bundle.
+                            // in the minified borellion-aframe-sdk bundle.
                             // If n is less than 26, map identifier to two alphabetic characters,
                             // i.e. 'aa', 'ab', 'ac', etc.
                             // If greater, add another while less than 52, and so on.
