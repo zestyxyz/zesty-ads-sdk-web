@@ -1,8 +1,8 @@
 {
-	"name": "com.zesty.unity-sdk",
-	"displayName":"com.zesty.unity-sdk",
+	"name": "com.borellion.unity-sdk",
+	"displayName":"com.borellion.unity-sdk",
 	"version": "3.2.2",
 	"unity": "2020.1",
-	"description": "Zesty ads integration for Unity.",
+	"description": "Borellion ads integration for Unity.",
 	"dependencies": {}
 }
