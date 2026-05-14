@@ -39,17 +39,17 @@ test.describe('Initial load', () => {
   });
 
   test('The medium-rectangle banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner1').getAttribute('borellion-banner');
+    const banner = await page.locator('#banner1').getAttribute('borellion');
     expect(banner).not.toBeFalsy();
   });
 
   test('The billboard banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner2').getAttribute('borellion-banner');
+    const banner = await page.locator('#banner2').getAttribute('borellion');
     expect(banner).not.toBeFalsy();
   });
 
   test('The mobile-phone-interstitial banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner3').getAttribute('borellion-banner');
+    const banner = await page.locator('#banner3').getAttribute('borellion');
     expect(banner).not.toBeFalsy();
   });
 });

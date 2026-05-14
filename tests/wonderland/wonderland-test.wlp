@@ -990,8 +990,8 @@
                     "type": "cursor-target"
                 },
                 {
-                    "type": "borellion-banner",
-                    "borellion-banner": {
+                    "type": "borellion",
+                    "borellion": {
                         "adUnit": "00000000-0000-0000-0000-000000000000",
                         "beacon": true,
                         "format": "medium-rectangle",
@@ -1052,8 +1052,8 @@
                     "type": "cursor-target"
                 },
                 {
-                    "type": "borellion-banner",
-                    "borellion-banner": {
+                    "type": "borellion",
+                    "borellion": {
                         "adUnit": "10000000-0000-4000-8000-000000000000",
                         "beacon": false,
                         "format": "billboard",
@@ -1109,8 +1109,8 @@
                     "type": "cursor-target"
                 },
                 {
-                    "type": "borellion-banner",
-                    "borellion-banner": {
+                    "type": "borellion",
+                    "borellion": {
                         "adUnit": "20000000-0000-4000-8000-000000000000",
                         "beacon": false,
                         "style": "standard",

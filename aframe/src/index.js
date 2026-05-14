@@ -36,7 +36,7 @@ let modalTriggers = {};
 
 function registerSDK() {
 
-AFRAME.registerComponent('borellion-banner', {
+AFRAME.registerComponent('borellion', {
   data: {},
   schema: {
     adUnit: { type: 'string' },
@@ -149,9 +149,9 @@ async function createBanner(el, adUnit, format, style, height, beacon, prebid = 
       mesh.geometry.computeBoundingBox();
     }
     const { min, max } = new THREE.Box3().setFromObject(el.object3D);
-    const camera = el.components['borellion-banner'].camera;
-    if (!el.components['borellion-banner'].loadedFirstAd) {
-      el.components['borellion-banner'].loadedFirstAd = true;
+    const camera = el.components['borellion'].camera;
+    if (!el.components['borellion'].loadedFirstAd) {
+      el.components['borellion'].loadedFirstAd = true;
     } else {
       if (!visibilityCheck([min.x, min.y, min.z], [max.x, max.y, max.z], camera.projectionMatrix.toArray(), camera.matrixWorld.toArray())) return;
     }
@@ -201,21 +201,21 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.oldFormat;
 
   // Reset canvas attributes
-  if (el.components['borellion-banner'].canvasInterval) {
-    clearInterval(el.components['borellion-banner'].canvasInterval);
-    el.components['borellion-banner'].canvasInterval = null;
+  if (el.components['borellion'].canvasInterval) {
+    clearInterval(el.components['borellion'].canvasInterval);
+    el.components['borellion'].canvasInterval = null;
   }
-  if (el.components['borellion-banner'].canvasTexture) {
-    el.components['borellion-banner'].canvasTexture.dispose();
-    el.components['borellion-banner'].canvasTexture = null;
+  if (el.components['borellion'].canvasTexture) {
+    el.components['borellion'].canvasTexture.dispose();
+    el.components['borellion'].canvasTexture = null;
   }
-  if (el.components['borellion-banner'].canvasIframe) {
-    document.body.removeChild(el.components['borellion-banner'].canvasIframe);
-    el.components['borellion-banner'].canvasIframe = null;
+  if (el.components['borellion'].canvasIframe) {
+    document.body.removeChild(el.components['borellion'].canvasIframe);
+    el.components['borellion'].canvasIframe = null;
   }
-  if (el.components['borellion-banner'].canvas) {
-    document.body.removeChild(el.components['borellion-banner'].canvas);
-    el.components['borellion-banner'].canvas = null;
+  if (el.components['borellion'].canvas) {
+    document.body.removeChild(el.components['borellion'].canvas);
+    el.components['borellion'].canvas = null;
   }
 
   // don't attach plane if element's visibility is false
@@ -235,21 +235,21 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
         canvas.id = "borellionCanvas";
         canvas.style.zIndex = -3;
         document.body.appendChild(canvas);
-        el.components['borellion-banner'].canvas = canvas;
-        el.components['borellion-banner'].canvasIframe = canvasIframe;
-        el.components['borellion-banner'].canvasInterval = setInterval(() => {
-          el.components['borellion-banner'].updateCanvasTexture();
+        el.components['borellion'].canvas = canvas;
+        el.components['borellion'].canvasIframe = canvasIframe;
+        el.components['borellion'].canvasInterval = setInterval(() => {
+          el.components['borellion'].updateCanvasTexture();
         }, 25);
       } else if (banner.img.src.includes('.gif')) {
         const canvas = document.createElement('canvas');
         canvas.id = "borellionCanvas";
         canvas.style.zIndex = -3;
         document.body.appendChild(canvas);
-        el.components['borellion-banner'].canvas = canvas;
+        el.components['borellion'].canvas = canvas;
 
         gifler(banner.img.src).animate('#borellionCanvas');
-        el.components['borellion-banner'].canvasInterval = setInterval(() => {
-          el.components['borellion-banner'].updateCanvasTexture();
+        el.components['borellion'].canvasInterval = setInterval(() => {
+          el.components['borellion'].updateCanvasTexture();
         }, 100);
       } else {
         plane.setAttribute('src', `#${banner.img.id}`);
@@ -308,16 +308,16 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
 
 AFRAME.registerPrimitive('a-borellion', {
   defaultComponents: {
-    'borellion-banner': { adUnit: '' },
+    'borellion': { adUnit: '' },
     'visibility-check': {}
   }
 });
 
 // Backward-compat aliases for sites using the old Zesty SDK names
-AFRAME.registerComponent('zesty-banner', AFRAME.components['borellion-banner']);
+AFRAME.registerComponent('zesty-banner', AFRAME.components['borellion']);
 AFRAME.registerPrimitive('a-zesty', {
   defaultComponents: {
-    'borellion-banner': { adUnit: '' },
+    'borellion': { adUnit: '' },
     'visibility-check': {}
   }
 });

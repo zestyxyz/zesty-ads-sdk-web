@@ -32,7 +32,7 @@ let modalTriggers = {};
  * Make sure that you set up a cursor to enable clicking.
  */
 export class Borellion extends Component {
-  static TypeName = 'borellion-banner';
+  static TypeName = 'borellion';
   static Properties = {
     /* Your banner ad unit ID */
     adUnit: Property.string(''),
@@ -85,7 +85,7 @@ export class Borellion extends Component {
   start() {
     this.mesh = this.object.getComponent(MeshComponent);
     if (!this.mesh) {
-      throw new Error("'borellion-banner' missing mesh component");
+      throw new Error("'borellion' missing mesh component");
     }
 
     this.collision =
@@ -229,7 +229,7 @@ export class Borellion extends Component {
           }
         } else {
           throw Error(
-            "'borellion-banner' unable to apply banner texture: unsupported pipeline"
+            "'borellion' unable to apply banner texture: unsupported pipeline"
           );
         }
         this.mesh.material = m;

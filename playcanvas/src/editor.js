@@ -4,7 +4,7 @@ import { formats } from '../../utils/formats';
 import { getDefaultBanner } from '../../utils/networking';
 
 /** @type {typeof import("playcanvas").ScriptType} */
-const Borellion = pc.createScript('borellion-banner');
+const Borellion = pc.createScript('borellion');
 
 Borellion.attributes.add("adUnitId", { type: "string" });
 Borellion.attributes.add("format", {

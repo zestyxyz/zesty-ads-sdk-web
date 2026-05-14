@@ -58,7 +58,7 @@ test.describe('Navigation', () => {
     await page.waitForFunction(() => window.banner1?.findComponent('render').meshInstances[0].material?.diffuseMap?.name != null);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
-      page.evaluate(() => window.banner1.script['borellion-banner'].onSelect({ x: window.banner1._app.renderer.scene.device.canvas.width / 2, y: window.banner1._app.renderer.scene.device.canvas.height / 4 }))
+      page.evaluate(() => window.banner1.script['borellion'].onSelect({ x: window.banner1._app.renderer.scene.device.canvas.width / 2, y: window.banner1._app.renderer.scene.device.canvas.height / 4 }))
     ])
     await newPage.waitForLoadState();
     const title = await newPage.title();
@@ -88,12 +88,12 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await page.waitForFunction(() => {
-      const ok = (b) => { const u = b?.script?.['borellion-banner']?.ctaUrl; return u != null && !u.includes('relay.borellion.com'); };
+      const ok = (b) => { const u = b?.script?.['borellion']?.ctaUrl; return u != null && !u.includes('relay.borellion.com'); };
       return ok(window.banner1) && ok(window.banner2) && ok(window.banner3);
     });
-    const link1 = await page.evaluate(() => window.banner1.script['borellion-banner'].ctaUrl);
-    const link2 = await page.evaluate(() => window.banner2.script['borellion-banner'].ctaUrl);
-    const link3 = await page.evaluate(() => window.banner3.script['borellion-banner'].ctaUrl);
+    const link1 = await page.evaluate(() => window.banner1.script['borellion'].ctaUrl);
+    const link2 = await page.evaluate(() => window.banner2.script['borellion'].ctaUrl);
+    const link3 = await page.evaluate(() => window.banner3.script['borellion'].ctaUrl);
     expect(link1).toContain(EXAMPLE_URL);
     expect(link2).toContain(EXAMPLE_URL2);
     expect(link3).toContain(EXAMPLE_URL3);
