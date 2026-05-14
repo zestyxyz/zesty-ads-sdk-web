@@ -2,3 +2,6 @@
 /**/node_modules
 /**/cache
 test-results/
+tests/r3f/src/borellion-r3f-sdk.js
+tests/r3f/src/borellion-reactxr-sdk.js
+tests/wonderland/js/borellion-wonderland-sdk.js
