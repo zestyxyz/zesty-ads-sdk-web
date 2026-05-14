@@ -1,6 +1,6 @@
 {
   "name": "@borellion/web-sdk",
-  "version": "3.2.2",
+  "version": "4.0.0",
   "description": "Web SDK for Borellion Banner integration into an HTML page via WebComponents.",
   "main": "dist/borellion-web-sdk.js",
   "files": [
