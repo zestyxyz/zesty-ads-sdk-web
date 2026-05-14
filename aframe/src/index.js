@@ -3,7 +3,8 @@
 import { fetchCampaignAd, sendOnLoadMetric, sendOnClickMetric, analyticsSession, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats, defaultFormat, defaultStyle } from '../../utils/formats';
 import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
-import { version } from '../package.json';
+import pkg from '../package.json';
+const { version } = pkg;
 import { getOverrideUnitInfo } from '../../utils/networking';
 
 console.log('Borellion SDK Version: ', version);

@@ -1,7 +1,8 @@
 import { sendOnLoadMetric, sendOnClickMetric, fetchCampaignAd, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats, defaultFormat } from '../../utils/formats';
 import { openURL } from '../../utils/helpers';
-import { version } from '../package.json';
+import pkg from '../package.json';
+const { version } = pkg;
 
 console.log('Borellion SDK Version: ', version);
 
