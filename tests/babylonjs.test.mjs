@@ -75,7 +75,12 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await page.waitForFunction(([v]) => window.scene.meshes[4].material?.diffuseTexture?.url == v, [EXAMPLE_IMAGE_MEDIUM_RECTANGLE]);
+    await page.waitForFunction(([v]) =>
+      window.scene.meshes[4].material?.diffuseTexture?.url == v &&
+      window.scene.meshes[5].material?.diffuseTexture != null &&
+      window.scene.meshes[6].material?.diffuseTexture != null,
+      [EXAMPLE_IMAGE_MEDIUM_RECTANGLE]
+    );
     const img1 = await page.evaluate(() => window.scene.meshes[4].material.diffuseTexture.url);
     const img2 = await page.evaluate(() => window.scene.meshes[5].material.diffuseTexture.url);
     const img3 = await page.evaluate(() => window.scene.meshes[6].material.diffuseTexture.url);

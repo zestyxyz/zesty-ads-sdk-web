@@ -72,8 +72,8 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await page.waitForFunction(() => {
-      const name = window.banner1?.findComponent('render')?.meshInstances[0]?._material?._diffuseMap?.name;
-      return name != null && !name.includes('default');
+      const check = (b) => { const n = b?.findComponent('render')?.meshInstances[0]?._material?._diffuseMap?.name; return n != null && !n.includes('default'); };
+      return check(window.banner1) && check(window.banner2) && check(window.banner3);
     });
     const img1 = await page.evaluate(() => window.banner1.findComponent('render').meshInstances[0]._material._diffuseMap.name);
     const img2 = await page.evaluate(() => window.banner2.findComponent('render').meshInstances[0]._material._diffuseMap.name);
@@ -88,8 +88,8 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
     await page.waitForFunction(() => {
-      const url = window.banner1?.script?.['borellion-banner']?.ctaUrl;
-      return url != null && !url.includes('relay.borellion.com');
+      const ok = (b) => { const u = b?.script?.['borellion-banner']?.ctaUrl; return u != null && !u.includes('relay.borellion.com'); };
+      return ok(window.banner1) && ok(window.banner2) && ok(window.banner3);
     });
     const link1 = await page.evaluate(() => window.banner1.script['borellion-banner'].ctaUrl);
     const link2 = await page.evaluate(() => window.banner2.script['borellion-banner'].ctaUrl);
