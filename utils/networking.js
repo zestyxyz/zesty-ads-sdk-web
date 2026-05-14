@@ -1,7 +1,7 @@
 import { formats } from '../utils/formats.js';
 import { checkUserPlatform } from '../utils/helpers.js';
 import { parse as parseUUID } from 'uuid'
-import Beacon from '@zestyxyz/beacon';
+import Beacon from '@borellion/beacon';
 
 const BEACON_API_BASE = 'https://beacon.zesty.market'
 const BEACON_GRAPHQL_URI = 'https://beacon2.zesty.market/zgraphql'
@@ -50,7 +50,7 @@ function getUrlsFromIframe(iframe) {
 
 function createPrebidDiv(adUnitId, format) {
   const div = document.createElement('div');
-  div.id = `zesty-div-${adUnitId}`;
+  div.id = `borellion-div-${adUnitId}`;
   div.style.height = '250px';
   div.style.width = '300px';
   div.style.position = 'fixed';
@@ -75,7 +75,7 @@ function createPrebidDiv(adUnitId, format) {
   document.body.appendChild(div);
 
   intervals[adUnitId] = setInterval(() => {
-    let div = document.getElementById(`zesty-div-${adUnitId}`);
+    let div = document.getElementById(`borellion-div-${adUnitId}`);
     const iframe = div?.querySelector('iframe:not([title*="prpb"])'); // Don't grab the iframe if professor prebid is installed
     if (iframe) {
       let urls = getUrlsFromIframe(iframe);
@@ -133,7 +133,7 @@ const initPrebid = (adUnitId, format) => {
     tude.cmd.push(function() {
       tude.refreshAdsViaDivMappings([
         {
-          divId: `zesty-div-${adUnitId}`,
+          divId: `borellion-div-${adUnitId}`,
           baseDivId: baseDivIds[adUnitId],
         }
       ]);
@@ -179,7 +179,7 @@ const fetchFromZestyAPI = async (adUnitId, format, style, shouldOverride, overri
 const fetchCampaignAd = async (adUnitId, format = 'tall', style = 'standard', prebid = true, customDefaultImage = null, customDefaultCtaUrl = null) => {
   if (['tall', 'wide', 'square'].includes(format)) {
     console.warn(`The old Zesty banner formats (tall, wide, and square) are being deprecated and will be removed in a future version. Please update to one of the new IAB formats (mobile-phone-interstitial, billboard, and medium-rectangle).
-Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
+Check https://docs.borellion.com/guides/developers/ad-units for more information.`);
   }
 
   if (isDebug) {
@@ -238,7 +238,7 @@ Check https://docs.zesty.xyz/guides/developers/ad-units for more information.`);
         const { asset_url, cta_url } = bids[adUnitId];
         if (asset_url.startsWith('canvas://')) {
           const canvasIframe = document.createElement('iframe');
-          canvasIframe.id = "zesty-canvas-iframe";
+          canvasIframe.id = "borellion-canvas-iframe";
           document.body.appendChild(canvasIframe);
           canvasIframe.contentDocument.open();
           canvasIframe.contentDocument.write(asset_url.split('canvas://')[1]);

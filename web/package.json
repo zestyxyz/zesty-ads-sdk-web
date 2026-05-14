@@ -1,8 +1,8 @@
 {
-  "name": "@zestyxyz/web-sdk",
+  "name": "@borellion/web-sdk",
   "version": "3.2.2",
-  "description": "Web SDK for Zesty Banner integration into an HTML page via WebComponents.",
-  "main": "dist/zesty-web-sdk.js",
+  "description": "Web SDK for Borellion Banner integration into an HTML page via WebComponents.",
+  "main": "dist/borellion-web-sdk.js",
   "files": [
     "dist"
   ],
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "url": "git+https://github.com/borellion/sdk.git",
     "directory": "web"
   },
-  "author": "Zesty",
+  "author": "Borellion",
   "bugs": {
-    "url": "https://github.com/zestyxyz/zesty-ads-sdk-web/issues"
+    "url": "https://github.com/borellion/sdk/issues"
   },
-  "homepage": "https://github.com/zestyxyz/zesty-ads-sdk-web#readme",
+  "homepage": "https://github.com/borellion/sdk#readme",
   "publishConfig": {
     "access": "public"
   },

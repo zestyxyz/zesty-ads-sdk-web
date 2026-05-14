@@ -1,6 +1,6 @@
 {
-  "name": "zesty-sdk",
-  "description": "Monorepo for Zesty integration SDKS.",
+  "name": "borellion-sdk",
+  "description": "Monorepo for Borellion integration SDKs.",
   "version": "1.0.0",
   "main": "index.js",
   "directories": {
@@ -10,23 +10,24 @@
     "build": "node scripts/build.js",
     "publish": "node scripts/build_publish.js",
     "test": "npx playwright test --grep-invert @skip",
-    "serve": "npx http-server"
+    "serve": "http-server"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zestymarket/zesty-sdk.git"
+    "url": "git+https://github.com/borellion/sdk.git"
   },
-  "author": "Zesty Market",
+  "author": "Borellion",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zestymarket/zesty-sdk/issues"
+    "url": "https://github.com/borellion/sdk/issues"
   },
-  "homepage": "https://github.com/zestymarket/zesty-sdk#readme",
+  "homepage": "https://github.com/borellion/sdk#readme",
   "devDependencies": {
     "@babel/core": "^7.18.5",
     "@babel/plugin-transform-runtime": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "@playwright/test": "^1.22.2",
+    "http-server": "^14.1.1",
     "eslint": "^8.17.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
@@ -42,6 +43,7 @@
     "r3f",
     "threejs",
     "utils",
-    "web"
+    "web",
+    "wonderland"
   ]
 }

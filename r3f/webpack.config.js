@@ -2,8 +2,8 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        'zesty-r3f-sdk': './src/ZestyBanner.js',
-        'zesty-reactxr-sdk': './src/ZestyBannerXR.js'
+        'borellion-r3f-sdk': './src/Borellion.js',
+        'borellion-reactxr-sdk': './src/BorellionXR.js'
     },
     output: {
         filename: '[name].js',

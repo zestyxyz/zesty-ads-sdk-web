@@ -12,9 +12,9 @@ import { formats } from '../../utils/formats';
 import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import { version } from '../package.json';
 
-console.log('Zesty SDK Version: ', version);
+console.log('Borellion SDK Version: ', version);
 
-export default class ZestyBanner extends Mesh {
+export default class Borellion extends Mesh {
   /**
    * @constructor
    * @param {string} adUnit The ad unit ID
@@ -29,7 +29,7 @@ export default class ZestyBanner extends Mesh {
     super();
     this.geometry = new PlaneGeometry(formats[format].width * height, height, 1, 1);
 
-    this.type = 'ZestyBanner';
+    this.type = 'Borellion';
     this.adUnit = adUnit;
     this.format = format;
     this.style = style;
@@ -142,4 +142,4 @@ async function loadBanner(adUnit, format, style, prebid = true, customDefaultIma
   });
 }
 
-window.ZestyBanner = ZestyBanner;
+window.Borellion = Borellion;

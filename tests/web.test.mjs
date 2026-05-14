@@ -5,7 +5,6 @@ import {
   EXAMPLE_IMAGE,
   EXAMPLE_IMAGE2,
   PREBID_LOAD_TEST_WAIT_INTERVAL,
-  PREBID_REFRESH_TEST_WAIT_INTERVAL,
   MEDIUM_RECTANGLE_ID
 } from './test-constants.mjs';
 
@@ -20,7 +19,7 @@ test.describe('Initial load', () => {
 
   test('All 3 banners are currently loaded', async ({ page }) => {
     const bannerCount = await page.evaluate(
-      () => document.getElementsByTagName('zesty-web').length
+      () => document.getElementsByTagName('borellion-ad').length
     );
     expect(bannerCount).toBe(3);
   });
@@ -87,10 +86,10 @@ test.describe('Prebid', () => {
   test('A new ad creative is loaded after passing visibility check', async ({ page }) => {
     await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]);
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE, MEDIUM_RECTANGLE_ID);
-    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
+    await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]?.src?.includes('300x250.jpg'));
     await page.evaluate((id) => document.querySelector(`#injected-${id}`).remove(), MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE2, MEDIUM_RECTANGLE_ID);
-    await new Promise(res => setTimeout(res, PREBID_REFRESH_TEST_WAIT_INTERVAL));
+    await page.waitForFunction(() => document.getElementById('banner1').shadowRoot.children[0]?.src?.includes('300x250_2.jpg'));
     const img = await page.evaluate(
       () => document.getElementById('banner1').shadowRoot.children[0].src
     );

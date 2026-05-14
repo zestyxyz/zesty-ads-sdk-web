@@ -1,8 +1,8 @@
 {
-  "name": "@zestyxyz/beacon",
+  "name": "@borellion/beacon",
   "version": "3.2.2",
-  "description": "Enables a Zesty Beacon on a virtual space, allowing users to collect analytics on visitor numbers.",
-  "main": "dist/zesty-beacon.js",
+  "description": "Enables a Borellion Beacon on a virtual space, allowing users to collect analytics on visitor numbers.",
+  "main": "dist/borellion-beacon.js",
   "files": [
     "dist"
   ],
@@ -13,10 +13,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "url": "git+https://github.com/borellion/sdk.git",
     "directory": "beacon"
   },
-  "author": "Zesty",
+  "author": "Borellion",
   "publishConfig": {
     "access": "public"
   },

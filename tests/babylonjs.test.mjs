@@ -10,7 +10,6 @@ import {
   EXAMPLE_IMAGE2_MEDIUM_RECTANGLE,
   EXAMPLE_IMAGE2_BILLBOARD,
   EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
-  PREBID_LOAD_TEST_WAIT_INTERVAL,
   MEDIUM_RECTANGLE_ID,
   BILLBOARD_ID,
   MOBILE_PHONE_INTERSTITIAL_ID,
@@ -76,7 +75,12 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
+    await page.waitForFunction(([v]) =>
+      window.scene.meshes[4].material?.diffuseTexture?.url == v &&
+      window.scene.meshes[5].material?.diffuseTexture != null &&
+      window.scene.meshes[6].material?.diffuseTexture != null,
+      [EXAMPLE_IMAGE_MEDIUM_RECTANGLE]
+    );
     const img1 = await page.evaluate(() => window.scene.meshes[4].material.diffuseTexture.url);
     const img2 = await page.evaluate(() => window.scene.meshes[5].material.diffuseTexture.url);
     const img3 = await page.evaluate(() => window.scene.meshes[6].material.diffuseTexture.url);
@@ -89,7 +93,7 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
+    await page.waitForFunction(() => window.scene.meshes[4].url != null && window.scene.meshes[5].url != null && window.scene.meshes[6].url != null);
     const link1 = await page.evaluate(() => window.scene.meshes[4].url);
     const link2 = await page.evaluate(() => window.scene.meshes[5].url);
     const link3 = await page.evaluate(() => window.scene.meshes[6].url);

@@ -5,32 +5,32 @@ import { formats } from '../../utils/formats';
 import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
 import { version } from '../package.json';
 
-console.log('Zesty SDK Version: ', version);
+console.log('Borellion SDK Version: ', version);
 
 let modalTriggers = {};
 
-export default class ZestyBanner {
+export default class Borellion {
   constructor(adUnit, format, style, height, scene, webXRExperienceHelper = null, beacon = true, prebid = true, config = {}) {
     const options = {
       height: height,
       width: formats[format].width * height
     };
 
-    this.zestyBanner = BABYLON.MeshBuilder.CreatePlane('zestybanner', options);
+    this.banner = BABYLON.MeshBuilder.CreatePlane('borellionbanner', options);
     this.scene = scene;
     this.xr = webXRExperienceHelper;
     this.prebid = prebid;
 
     loadBanner(adUnit, format, style, prebid, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(data => {
-      this.zestyBanner.material = data.mat;
-      this.zestyBanner.actionManager = new BABYLON.ActionManager(scene);
-      this.zestyBanner.url = data.url;
+      this.banner.material = data.mat;
+      this.banner.actionManager = new BABYLON.ActionManager(scene);
+      this.banner.url = data.url;
 
       if (beacon) {
         sendOnLoadMetric(adUnit, data.campaignId);
       }
 
-      this.zestyBanner.actionManager.registerAction(
+      this.banner.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, () => {
           if (webXRExperienceHelper?.baseExperience) {
             webXRExperienceHelper.baseExperience.sessionManager.exitXRAsync().then(() => {
@@ -48,7 +48,7 @@ export default class ZestyBanner {
 
     setInterval(() => {
       const camera = this.getCamera();
-      const boundingBox = this.zestyBanner.getBoundingInfo().boundingBox;
+      const boundingBox = this.banner.getBoundingInfo().boundingBox;
       const isVisible = visibilityCheck(
         boundingBox.minimumWorld.asArray(),
         boundingBox.maximumWorld.asArray(),
@@ -57,12 +57,12 @@ export default class ZestyBanner {
       );
       if (isVisible) {
         loadBanner(adUnit, format, style, this.prebid, config.customDefaultImage, config.customDefaultCtaUrl, config.modalTrigger, config.modalBackground, config.modalDelay).then(banner => {
-          this.zestyBanner.material.diffuseTexture.updateURL(banner.src);
+          this.banner.material.diffuseTexture.updateURL(banner.src);
         });
       }
     }, AD_REFRESH_INTERVAL);
 
-    return this.zestyBanner;
+    return this.banner;
   }
 
   getCamera() {
@@ -107,4 +107,4 @@ async function loadBanner(adUnit, format, style, prebid = true, customDefaultIma
   return { mat: mat, src: image, uri: activeBanner.uri, url: url, campaignId: activeBanner.CampaignId };
 }
 
-window.ZestyBanner = ZestyBanner;
+window.Borellion = Borellion;

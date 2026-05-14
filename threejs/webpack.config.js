@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        'zesty-threejs-sdk': './src/index.js',
+        'borellion-threejs-sdk': './src/index.js',
     },
     output: {
         filename: '[name].js',

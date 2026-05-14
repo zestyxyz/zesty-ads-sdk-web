@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import React, { useRef, useState, useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
-import { Interactive } from '@react-three/xr';
 import { sendOnLoadMetric, sendOnClickMetric, fetchCampaignAd, AD_REFRESH_INTERVAL } from '../../utils/networking';
 import { formats, defaultFormat, defaultStyle } from '../../utils/formats';
 import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers';
@@ -9,12 +8,11 @@ import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers'
 export * from '../../utils/formats';
 import { version } from '../package.json';
 
-console.log('Zesty SDK Version: ', version);
+console.log('Borellion SDK Version: ', version);
 
-let interval = null;
 let modalTriggers = {};
 
-export default function ZestyBanner(props) {
+export default function Borellion(props) {
   const [bannerData, setBannerData] = useState(false);
   const [material, setMaterial] = useState(new THREE.MeshBasicMaterial());
   const [refreshInterval, setRefreshInterval] = useState(null);
@@ -78,13 +76,10 @@ export default function ZestyBanner(props) {
     }
   }, [bannerData]);
 
+
   const onClick = (event) => {
     const banner = bannerData;
     let url = banner.url || banner.properties?.url;
-    if (gl.xr.isPresenting) {
-      const session = gl.xr.getSession();
-      if (session) session.end();
-    }
     openURL(url);
     if (props.beacon) sendOnClickMetric(props.adUnit, bannerData.campaignId);
   };
@@ -116,7 +111,8 @@ export default function ZestyBanner(props) {
       );
       if (isVisible) {
         loadBanner(adUnit, format, newStyle).then(banner => {
-          setBannerData({ image: banner.asset_url, url: banner.cta_url, campaignId: banner.campaignId });
+          setMaterial(new THREE.MeshBasicMaterial({ map: banner.texture, transparent: true }));
+          this.banner = banner;
         });
       }
     }, AD_REFRESH_INTERVAL);
@@ -124,12 +120,10 @@ export default function ZestyBanner(props) {
   }, []);
 
   return (
-    <Interactive onSelect={onClick}>
-      <mesh {...props} ref={mesh} scale={0.5} onClick={onClick} material={material}>
-        <planeGeometry
-          args={[formats[format].width * height, height]}
-        />
-      </mesh>
-    </Interactive>
+    <mesh {...props} ref={mesh} scale={0.5} onClick={onClick} material={material}>
+      <planeGeometry
+        args={[formats[format].width * height, height]}
+      />
+    </mesh>
   );
 }

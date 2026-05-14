@@ -10,17 +10,18 @@ import {
   EXAMPLE_IMAGE2_MEDIUM_RECTANGLE,
   EXAMPLE_IMAGE2_BILLBOARD,
   EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
-  PREBID_LOAD_TEST_WAIT_INTERVAL,
   MEDIUM_RECTANGLE_ID,
   BILLBOARD_ID,
   MOBILE_PHONE_INTERSTITIAL_ID,
 } from './test-constants.mjs';
 
 function srcEvaluate(node) {
-  if (typeof node.components.material.data.src === 'string') {
-    return node.components.material.data.src;
+  const src = node.components?.material?.data?.src;
+  if (!src) return null;
+  if (typeof src === 'string') {
+    return src;
   } else {
-    return node.components.material.data.src.currentSrc;
+    return src.currentSrc || null;
   }
 }
 
@@ -38,17 +39,17 @@ test.describe('Initial load', () => {
   });
 
   test('The medium-rectangle banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner1').getAttribute('zesty-banner');
+    const banner = await page.locator('#banner1').getAttribute('borellion');
     expect(banner).not.toBeFalsy();
   });
 
   test('The billboard banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner2').getAttribute('zesty-banner');
+    const banner = await page.locator('#banner2').getAttribute('borellion');
     expect(banner).not.toBeFalsy();
   });
 
   test('The mobile-phone-interstitial banner is present', async ({ page }) => {
-    const banner = await page.locator('#banner3').getAttribute('zesty-banner');
+    const banner = await page.locator('#banner3').getAttribute('borellion');
     expect(banner).not.toBeFalsy();
   });
 });
@@ -58,17 +59,17 @@ test.describe('Default banners', () => {
     let img;
     const banner = page.locator('#banner1 > a-plane');
     while (!img) {
-      img = await banner.evaluate(srcEvaluate);
+      try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
-    expect(img.split('/').pop()).toBe('250'); // Custom default image
+    expect(img.split('/').pop()).toBe('custom-default-300x250.png'); // Custom default image
   });
 
   test('The billboard banner is displaying the correct default image', async ({ page }) => {
     let img;
     const banner = page.locator('#banner2 > a-plane');
     while (!img) {
-      img = await banner.evaluate(srcEvaluate);
+      try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
     expect(img.split('/').pop()).toBe('zesty-default-billboard.png');
@@ -78,7 +79,7 @@ test.describe('Default banners', () => {
     let img;
     const banner = page.locator('#banner3 > a-plane');
     while (!img) {
-      img = await banner.evaluate(srcEvaluate);
+      try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
     expect(img.split('/').pop()).toBe('zesty-default-mobile-phone-interstitial.png');
@@ -90,10 +91,10 @@ test.describe('Navigation', () => {
     let img;
     const banner = page.locator('#banner3 > a-plane');
     while (!img) {
-      img = await banner.evaluate(srcEvaluate);
+      try { img = await banner.evaluate(srcEvaluate); } catch (e) {}
       if (!img) await page.waitForTimeout(100);
     }
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await page.waitForFunction(() => document.querySelector('#banner3').url != null);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
       page.mouse.click(page.viewportSize().width / 2, page.viewportSize().height / 2)
@@ -112,7 +113,7 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
+    await page.waitForFunction(([v]) => document.querySelector('#banner1 > a-plane')?.components?.material?.data?.src?.currentSrc == v, [EXAMPLE_IMAGE_MEDIUM_RECTANGLE]);
     const img1 = await banner1.evaluate(srcEvaluate);
     const img2 = await banner2.evaluate(srcEvaluate);
     const img3 = await banner3.evaluate(srcEvaluate);

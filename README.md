@@ -1,31 +1,30 @@
-# Zesty Ads SDK
+# Borellion Ads SDK
 
-Monetize your 3D and WebXR experiences with the Zesty Ads SDK. Display banner ads in virtual environments across multiple frameworks.
-
-[![Documentation](https://img.shields.io/badge/docs-zesty.xyz-blue)](https://docs.zesty.xyz)
+Monetize your 3D and WebXR experiences with the Borellion Ads SDK. Display banner ads in virtual environments across multiple frameworks.
 
 ## Supported Platforms
 
 | Platform | Package | Install |
 |----------|---------|---------|
-| [A-Frame](./aframe) | `@zestyxyz/aframe-sdk` | `npm i @zestyxyz/aframe-sdk` |
-| [Babylon.js](./babylonjs) | `@zestyxyz/babylonjs-sdk` | `npm i @zestyxyz/babylonjs-sdk` |
-| [PlayCanvas](./playcanvas) | `@zestyxyz/playcanvas-sdk` | `npm i @zestyxyz/playcanvas-sdk` |
-| [React Three Fiber](./r3f) | `@zestyxyz/r3f-sdk` | `npm i @zestyxyz/r3f-sdk` |
-| [Three.js](./threejs) | `@zestyxyz/threejs-sdk` | `npm i @zestyxyz/threejs-sdk` |
-| [Web Components](./web) | `@zestyxyz/web-sdk` | `npm i @zestyxyz/web-sdk` |
+| [A-Frame](./aframe) | `@borellion/aframe-sdk` | `npm i @borellion/aframe-sdk` |
+| [Babylon.js](./babylonjs) | `@borellion/babylonjs-sdk` | `npm i @borellion/babylonjs-sdk` |
+| [PlayCanvas](./playcanvas) | `@borellion/playcanvas-sdk` | `npm i @borellion/playcanvas-sdk` |
+| [React Three Fiber](./r3f) | `@borellion/r3f-sdk` | `npm i @borellion/r3f-sdk` |
+| [Three.js](./threejs) | `@borellion/threejs-sdk` | `npm i @borellion/threejs-sdk` |
+| [Web Components](./web) | `@borellion/web-sdk` | `npm i @borellion/web-sdk` |
+| [Wonderland Engine](./wonderland) | `@borellion/wonderland-sdk` | `npm i @borellion/wonderland-sdk` |
 
 ## Quick Start
 
-1. **Create an ad unit** at [zesty.xyz](https://www.zesty.xyz) to get your Ad Unit ID
+1. **Create an ad unit** at [borellion.com](https://www.borellion.com) to get your Ad Unit ID
 2. **Install the SDK** for your framework (see table above)
 3. **Add a banner** to your scene:
 
 ```jsx
 // React Three Fiber example
-import { ZestyBanner } from '@zestyxyz/r3f-sdk';
+import { Borellion } from '@borellion/r3f-sdk';
 
-<ZestyBanner
+<Borellion
   adUnit="your-ad-unit-id"
   format="medium-rectangle"
   position={[0, 2, -3]}
@@ -34,9 +33,9 @@ import { ZestyBanner } from '@zestyxyz/r3f-sdk';
 
 ```javascript
 // Three.js example
-import { ZestyBanner } from '@zestyxyz/threejs-sdk';
+import { Borellion } from '@borellion/threejs-sdk';
 
-const banner = new ZestyBanner({
+const banner = new Borellion({
   adUnit: 'your-ad-unit-id',
   format: 'medium-rectangle',
 });
@@ -60,7 +59,7 @@ http://localhost:3000/?debug=true
 
 ## Documentation
 
-Full integration guides for each platform: [docs.zesty.xyz](https://docs.zesty.xyz/guides/developers/integrate)
+Full integration guides for each platform: [borellion.com](https://www.borellion.com)
 
 ## Development
 

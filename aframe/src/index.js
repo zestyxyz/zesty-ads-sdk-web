@@ -6,7 +6,7 @@ import { openURL, visibilityCheck, constructAdModal } from '../../utils/helpers'
 import { version } from '../package.json';
 import { getOverrideUnitInfo } from '../../utils/networking';
 
-console.log('Zesty SDK Version: ', version);
+console.log('Borellion SDK Version: ', version);
 
 function getCameraHelper(callback) {
   const camera = document.querySelector('[camera]');
@@ -34,7 +34,9 @@ const cameraFuture = getCamera();
 let sdkLoaded = false;
 let modalTriggers = {};
 
-AFRAME.registerComponent('zesty-banner', {
+function registerSDK() {
+
+AFRAME.registerComponent('borellion', {
   data: {},
   schema: {
     adUnit: { type: 'string' },
@@ -147,9 +149,9 @@ async function createBanner(el, adUnit, format, style, height, beacon, prebid = 
       mesh.geometry.computeBoundingBox();
     }
     const { min, max } = new THREE.Box3().setFromObject(el.object3D);
-    const camera = el.components['zesty-banner'].camera;
-    if (!el.components['zesty-banner'].loadedFirstAd) {
-      el.components['zesty-banner'].loadedFirstAd = true;
+    const camera = el.components['borellion'].camera;
+    if (!el.components['borellion'].loadedFirstAd) {
+      el.components['borellion'].loadedFirstAd = true;
     } else {
       if (!visibilityCheck([min.x, min.y, min.z], [max.x, max.y, max.z], camera.projectionMatrix.toArray(), camera.matrixWorld.toArray())) return;
     }
@@ -199,28 +201,28 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
   let shouldOverride = overrideEntry?.format && format !== overrideEntry.oldFormat;
 
   // Reset canvas attributes
-  if (el.components['zesty-banner'].canvasInterval) {
-    clearInterval(el.components['zesty-banner'].canvasInterval);
-    el.components['zesty-banner'].canvasInterval = null;
+  if (el.components['borellion'].canvasInterval) {
+    clearInterval(el.components['borellion'].canvasInterval);
+    el.components['borellion'].canvasInterval = null;
   }
-  if (el.components['zesty-banner'].canvasTexture) {
-    el.components['zesty-banner'].canvasTexture.dispose();
-    el.components['zesty-banner'].canvasTexture = null;
+  if (el.components['borellion'].canvasTexture) {
+    el.components['borellion'].canvasTexture.dispose();
+    el.components['borellion'].canvasTexture = null;
   }
-  if (el.components['zesty-banner'].canvasIframe) {
-    document.body.removeChild(el.components['zesty-banner'].canvasIframe);
-    el.components['zesty-banner'].canvasIframe = null;
+  if (el.components['borellion'].canvasIframe) {
+    document.body.removeChild(el.components['borellion'].canvasIframe);
+    el.components['borellion'].canvasIframe = null;
   }
-  if (el.components['zesty-banner'].canvas) {
-    document.body.removeChild(el.components['zesty-banner'].canvas);
-    el.components['zesty-banner'].canvas = null;
+  if (el.components['borellion'].canvas) {
+    document.body.removeChild(el.components['borellion'].canvas);
+    el.components['borellion'].canvas = null;
   }
 
   // don't attach plane if element's visibility is false
   if (el.getAttribute('visible') !== false) {
     if (banner.img) {
       if (banner.img.src.includes('canvas://')) {
-        const canvasIframe = document.querySelector('#zesty-canvas-iframe');
+        const canvasIframe = document.querySelector('#borellion-canvas-iframe');
         const canvas = await new Promise(res => {
           let interval = setInterval(() => {
             const canvas = canvasIframe.contentDocument.querySelector('canvas');
@@ -230,24 +232,24 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
             }
           }, 25);
         })
-        canvas.id = "zestyCanvas";
+        canvas.id = "borellionCanvas";
         canvas.style.zIndex = -3;
         document.body.appendChild(canvas);
-        el.components['zesty-banner'].canvas = canvas;
-        el.components['zesty-banner'].canvasIframe = canvasIframe;
-        el.components['zesty-banner'].canvasInterval = setInterval(() => {
-          el.components['zesty-banner'].updateCanvasTexture();
+        el.components['borellion'].canvas = canvas;
+        el.components['borellion'].canvasIframe = canvasIframe;
+        el.components['borellion'].canvasInterval = setInterval(() => {
+          el.components['borellion'].updateCanvasTexture();
         }, 25);
       } else if (banner.img.src.includes('.gif')) {
         const canvas = document.createElement('canvas');
-        canvas.id = "zestyCanvas";
+        canvas.id = "borellionCanvas";
         canvas.style.zIndex = -3;
         document.body.appendChild(canvas);
-        el.components['zesty-banner'].canvas = canvas;
+        el.components['borellion'].canvas = canvas;
 
-        gifler(banner.img.src).animate('#zestyCanvas');
-        el.components['zesty-banner'].canvasInterval = setInterval(() => {
-          el.components['zesty-banner'].updateCanvasTexture();
+        gifler(banner.img.src).animate('#borellionCanvas');
+        el.components['borellion'].canvasInterval = setInterval(() => {
+          el.components['borellion'].updateCanvasTexture();
         }, 100);
       } else {
         plane.setAttribute('src', `#${banner.img.id}`);
@@ -304,9 +306,18 @@ async function updateBanner(banner, plane, el, adUnit, format, style, height, be
   }
 }
 
-AFRAME.registerPrimitive('a-zesty', {
+AFRAME.registerPrimitive('a-borellion', {
   defaultComponents: {
-    'zesty-banner': { adUnit: '' },
+    'borellion': { adUnit: '' },
     'visibility-check': {}
   }
 });
+
+
+} // end registerSDK
+
+if (window.AFRAME) {
+  registerSDK();
+} else {
+  window.addEventListener('load', registerSDK);
+}

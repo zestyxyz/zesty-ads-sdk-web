@@ -8,7 +8,7 @@ const config = {
     timeout: 180 * 1000,
     reuseExistingServer: !process.env.CI,
   },
-  retries: process.env.CI ? 3 : 1,
+  retries: process.env.CI ? 2 : 1,
   timeout: 120000,
   fullyParallel: true,
   workers: process.env.CI ? 4 : undefined, // Use all available CPUs locally

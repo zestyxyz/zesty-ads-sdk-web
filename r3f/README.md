@@ -1,13 +1,13 @@
-# Zesty React-three-fiber Integration
+# Borellion React-three-fiber Integration
 
-This is the react-three-fiber SDK for Zesty Banner integration.
+This is the react-three-fiber SDK for Borellion integration.
 
 ## Usage
 
-Import the ZestyBanner component and add it to the scene like so:
+Import the Borellion component and add it to the scene like so:
 
 ```js
-<ZestyBanner
+<Borellion
    adUnit={'YOUR_AD_UNIT_ID'}
    format={'YOUR_AD_UNIT_FORMAT'}
    position={[X, Y, Z]} />

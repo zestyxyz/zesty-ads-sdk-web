@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { fetchCampaignAd, DEFAULT_CTA_URL, DEFAULT_CAMPAIGN_ID } from '../../utils/networking.js';
 
-const DEFAULT_BANNER = 'https://cdn.zesty.xyz/sdk/assets/zesty-banner-tall.png'
+const DEFAULT_BANNER = 'https://cdn.borellion.com/sdk/assets/zesty-banner-tall.png'
 
 const MOCK_IFRAME_SETUP = {
   window: {

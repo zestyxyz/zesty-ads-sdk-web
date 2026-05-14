@@ -1,11 +1,11 @@
 {
-  "name": "@zestyxyz/r3f-sdk",
+  "name": "@borellion/r3f-sdk",
   "version": "3.2.2",
-  "description": "This is the react-three-fiber SDK for Zesty Banner integration.",
-  "main": "dist/zesty-r3f-sdk.js",
+  "description": "This is the react-three-fiber SDK for Borellion Banner integration.",
+  "main": "dist/borellion-r3f-sdk.js",
   "exports": {
-    ".": "./dist/zesty-r3f-sdk.js",
-    "./xr": "./dist/zesty-reactxr-sdk.js"
+    ".": "./dist/borellion-r3f-sdk.js",
+    "./xr": "./dist/borellion-reactxr-sdk.js"
   },
   "files": [
     "dist"
@@ -18,11 +18,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zestyxyz/zesty-ads-sdk-web.git",
+    "url": "git+https://github.com/borellion/sdk.git",
     "directory": "r3f"
   },
   "keywords": [],
-  "author": "Zesty",
+  "author": "Borellion",
   "publishConfig": {
     "access": "public"
   },

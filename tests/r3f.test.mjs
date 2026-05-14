@@ -10,7 +10,6 @@ import {
   EXAMPLE_IMAGE2_MEDIUM_RECTANGLE,
   EXAMPLE_IMAGE2_BILLBOARD,
   EXAMPLE_IMAGE2_MOBILE_PHONE_INTERSTITIAL,
-  PREBID_LOAD_TEST_WAIT_INTERVAL,
   MEDIUM_RECTANGLE_ID,
   BILLBOARD_ID,
   MOBILE_PHONE_INTERSTITIAL_ID,
@@ -36,7 +35,7 @@ test.describe('Default banners', () => {
   test('The medium-rectangle banner is present', async ({ page }) => {
     await page.waitForFunction(() => window.scene?.children[1]?.children[0]?.material?.map?.source != null);
     const banner1 = await page.evaluate(() => window.scene.children[1].children[0].material.map.source.data.currentSrc);
-    expect(banner1.split('/').pop()).toBe('zesty-ad-square.png');
+    expect(banner1.split('/').pop()).toBe('custom-default-300x250.png');
   });
 
   test('The billboard banner is present', async ({ page }) => {
@@ -70,7 +69,7 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
+    await page.waitForFunction(([v]) => window.scene.children[1].children[0].material?.map?.source?.data?.currentSrc == v, [EXAMPLE_IMAGE_MEDIUM_RECTANGLE]);
     const img1 = await page.evaluate(() => window.scene.children[1].children[0].material.map.source.data.currentSrc);
     const img2 = await page.evaluate(() => window.scene.children[2].children[0].material.map.source.data.currentSrc);
     const img3 = await page.evaluate(() => window.scene.children[3].children[0].material.map.source.data.currentSrc);
@@ -83,7 +82,7 @@ test.describe('Prebid', () => {
     await injectIFrame(page, EXAMPLE_URL, EXAMPLE_IMAGE_MEDIUM_RECTANGLE, MEDIUM_RECTANGLE_ID);
     await injectIFrame(page, EXAMPLE_URL2, EXAMPLE_IMAGE_BILLBOARD, BILLBOARD_ID);
     await injectIFrame(page, EXAMPLE_URL3, EXAMPLE_IMAGE_MOBILE_PHONE_INTERSTITIAL, MOBILE_PHONE_INTERSTITIAL_ID);
-    await new Promise(res => setTimeout(res, PREBID_LOAD_TEST_WAIT_INTERVAL));
+    await page.waitForFunction(() => window.scene.children[1].children[0].url != null);
     const link1 = await page.evaluate(() => window.scene.children[1].children[0].url);
     const link2 = await page.evaluate(() => window.scene.children[2].children[0].url);
     const link3 = await page.evaluate(() => window.scene.children[3].children[0].url);

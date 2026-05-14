@@ -32,49 +32,49 @@ jobs:
           chmod +x scripts/build.sh
           scripts/build.sh
 
-      - name: Publish @zestyxyz/aframe-sdk
+      - name: Publish @borellion/aframe-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: aframe
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestyxyz/babylonjs-sdk
+      - name: Publish @borellion/babylonjs-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: babylonjs
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestyxyz/playcanvas-sdk
+      - name: Publish @borellion/playcanvas-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: playcanvas
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestyxyz/r3f-sdk
+      - name: Publish @borellion/r3f-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: r3f
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestyxyz/threejs-sdk
+      - name: Publish @borellion/threejs-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: threejs
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestyxyz/web-sdk
+      - name: Publish @borellion/web-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: web
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @zestyxyz/wonderland-sdk
+      - name: Publish @borellion/wonderland-sdk
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: wonderland
         run: npm publish --access public

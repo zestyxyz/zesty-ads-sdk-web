@@ -1,6 +1,6 @@
-# Zesty A-Frame Integration
+# Borellion A-Frame Integration
 
-This is the A-Frame SDK for Zesty Banner integration.
+This is the A-Frame SDK for Borellion Banner integration.
 
 ## Getting started
 
