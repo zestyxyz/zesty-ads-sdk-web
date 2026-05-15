@@ -2,6 +2,8 @@
 
 Monetize your 3D and WebXR experiences with the Borellion Ads SDK. Display banner ads in virtual environments across multiple frameworks.
 
+[![Documentation](https://img.shields.io/badge/docs-borellion.com-blue)](https://www.borellion.com/docs)
+
 ## Supported Platforms
 
 | Platform | Package | Install |
@@ -13,6 +15,7 @@ Monetize your 3D and WebXR experiences with the Borellion Ads SDK. Display banne
 | [Three.js](./threejs) | `@borellion/threejs-sdk` | `npm i @borellion/threejs-sdk` |
 | [Web Components](./web) | `@borellion/web-sdk` | `npm i @borellion/web-sdk` |
 | [Wonderland Engine](./wonderland) | `@borellion/wonderland-sdk` | `npm i @borellion/wonderland-sdk` |
+| [Unity](./unity) | `com.borellion.unity-sdk` | See [Unity README](./unity/README.md) |
 
 ## Quick Start
 
@@ -21,25 +24,27 @@ Monetize your 3D and WebXR experiences with the Borellion Ads SDK. Display banne
 3. **Add a banner** to your scene:
 
 ```jsx
-// React Three Fiber example
+// React Three Fiber
 import { Borellion } from '@borellion/r3f-sdk';
 
 <Borellion
-  adUnit="your-ad-unit-id"
+  adUnit="YOUR_AD_UNIT_ID"
   format="medium-rectangle"
   position={[0, 2, -3]}
 />
 ```
 
-```javascript
-// Three.js example
-import { Borellion } from '@borellion/threejs-sdk';
+```js
+// Three.js
+import Borellion from '@borellion/threejs-sdk';
 
-const banner = new Borellion({
-  adUnit: 'your-ad-unit-id',
-  format: 'medium-rectangle',
-});
+const banner = new Borellion('YOUR_AD_UNIT_ID', 'medium-rectangle', 'standard', 3);
 scene.add(banner);
+```
+
+```html
+<!-- A-Frame -->
+<a-entity borellion="adUnit: YOUR_AD_UNIT_ID; format: medium-rectangle;" position="0 2 0"></a-entity>
 ```
 
 ## Banner Formats
@@ -59,17 +64,17 @@ http://localhost:3000/?debug=true
 
 ## Documentation
 
-Full integration guides for each platform: [borellion.com](https://www.borellion.com)
+Full integration guides for each platform: [borellion.com/docs](https://www.borellion.com/docs/guides/developers/integrate)
 
 ## Development
 
 ```bash
-# Install dependencies (uses yarn workspaces)
+# Install dependencies
 yarn
 
 # Build all SDKs
-yarn build
+scripts/build.sh
 
 # Run tests
-yarn test
+npm test
 ```
